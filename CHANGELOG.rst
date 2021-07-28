@@ -12,3 +12,7 @@ Version 0.9.0 (2021/07/28)
 
 * Added: Initial release
 * Added: ``audmath.inverse_normal_distribution()``
+
+
+.. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
+.. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
