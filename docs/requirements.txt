@@ -1,0 +1,5 @@
+audeer
+sphinx >=3.0.0
+sphinx-audeering-theme >=1.0.14
+sphinx_autodoc_typehints
+sphinx-copybutton
