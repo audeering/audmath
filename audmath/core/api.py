@@ -28,11 +28,12 @@ def inverse_normal_distribution(
 
     The output is identical to the implementation
     provided by :func:`scipy.special.ndtri`,
-    and :func:`scipy.stats.norm.ppf`.
-    This implementation allows you
+    and :func:`scipy.stats.norm.ppf`,
+    and allows you
     to avoid installing
-    and importing :mod:`scipy`,
-    but it slower for large arrays
+    and importing :mod:`scipy`.
+    :func:`audmath.inverse_normal_distribution`
+    is slower for large arrays
     as the following comparison of execution times
     on a standard PC show.
 
