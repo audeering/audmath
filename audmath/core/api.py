@@ -30,6 +30,25 @@ def inverse_normal_distribution(
     provided by :func:`scipy.special.ndtri`,
     and :func:`scipy.stats.norm.ppf`.
 
+    This implementation allows you
+    to avoid installing
+    and importing :mod:`scipy`,
+    but it slower for large arrays
+    as the following comparison of execution times
+    on a standard PC show.
+
+    .. table::
+
+        ========== ======= =======
+        Samples    scipy   audmath
+        ========== ======= =======
+            10.000   0.00s   0.01s
+           100.000   0.00s   0.09s
+         1.000.000   0.02s   0.88s
+        10.000.000   0.25s   9.30s
+        ========== ======= =======
+
+
     .. _Cephes C code: https://github.com/jeremybarnes/cephes/blob/60f27df395b8322c2da22c83751a2366b82d50d1/cprob/ndtri.c
     .. _implemented it in pure Python: https://github.com/dougthor42/PyErf/blob/cf38a2c62556cbd4927c9b3f5523f39b6a492472/pyerf/pyerf.py#L183-L287
 
@@ -44,27 +63,28 @@ def inverse_normal_distribution(
         array([-1.64485363, -0.2533471 , 0.2533471 , 1.64485363])
 
     """  # noqa: E501
-    func = np.vectorize(_ndtri, otypes=[np.float])
-    x = func(y)
-    if (
-            x.ndim == 0
-            or x.ndim == 1 and len(x) < 2
-    ):
-        x = float(x)
-    return x
+    if isinstance(y, np.ndarray):
+        y = y.copy()
+    y = np.atleast_1d(y)
+    x = np.zeros(y.shape)
+    switch_sign = np.ones(y.shape)
 
+    # Handle edge cases
+    idx1 = y == 0
+    x[idx1] = -np.Inf
+    idx2 = y == 1
+    x[idx2] = np.Inf
+    idx3 = y < 0
+    x[idx3] = np.NaN
+    idx4 = y > 1
+    x[idx4] = np.NaN
+    non_valid = np.array([any(i) for i in zip(idx1, idx2, idx3, idx4)])
 
-def _ndtri(
-        y: float,
-) -> float:
-    r"""None vectorized version of ndtri."""
-    # Return for non-suited values
-    if y == 0:
-        return -np.Inf
-    if y == 1:
-        return np.Inf
-    if y < 0 or y > 1:
-        return np.NaN
+    # Return if no other values are left
+    if non_valid.sum() == len(x):
+        return _force_float(x)
+
+    switch_sign[non_valid] = 0
 
     # Constants to avoid recalculation
     ROOT_2PI = np.sqrt(2 * np.pi)
@@ -142,30 +162,42 @@ def _ndtri(
         6.79019408009981274425E-9,
     ]
 
-    switch_sign = True
-
-    if y > (1 - EXP_NEG2):  # y > 0.864...
-        y = 1.0 - y
-        switch_sign = False
+    idx1 = y > (1 - EXP_NEG2)  # y > 0.864...
+    idx = np.where(non_valid, False, idx1)
+    y[idx] = 1.0 - y[idx]
+    switch_sign[idx] = 0
 
     # Case where we don't need high precision
-    if y > EXP_NEG2:  # y > 0.135...
-        y -= 0.5
-        y2 = y ** 2
-        x = y + y * (y2 * polyval(y2, P0) / polyval(y2, Q0))
-        x = x * ROOT_2PI
-        return x
+    idx2 = y > EXP_NEG2  # y > 0.135...
+    idx = np.where(non_valid, False, idx2)
+    y[idx] = y[idx] - 0.5
+    y2 = y[idx] ** 2
+    x[idx] = y[idx] + y[idx] * (y2 * polyval(y2, P0) / polyval(y2, Q0))
+    x[idx] = x[idx] * ROOT_2PI
+    switch_sign[idx] = 0
 
-    x = np.sqrt(-2.0 * np.log(y))
-    x0 = x - np.log(x) / x
-    z = 1.0 / x
-    if x < 8.0:  # y > exp(-32) = 1.2664165549e-14
-        x1 = z * polyval(z, P1) / polyval(z, Q1)
-    else:
-        x1 = z * polyval(z, P2) / polyval(z, Q2)
+    idx3 = ~idx2
+    idx = np.where(non_valid, False, idx3)
+    x[idx] = np.sqrt(-2.0 * np.log(y[idx]))
+    x0 = x[idx] - np.log(x[idx]) / x[idx]
+    z = 1.0 / x[idx]
+    x1 = np.where(
+        x[idx] < 8.0,  # y > exp(-32) = 1.2664165549e-14
+        z * polyval(z, P1) / polyval(z, Q1),
+        z * polyval(z, P2) / polyval(z, Q2),
+    )
+    x[idx] = x0 - x1
 
-    x = x0 - x1
-    if switch_sign:
-        x = -x
+    x = np.where(switch_sign == 1, -1 * x, x)
 
+    return _force_float(x)
+
+
+def _force_float(x):
+    r"""Force float values for one digit arrays."""
+    if (
+            x.ndim == 0
+            or x.ndim == 1 and len(x) < 2
+    ):
+        x = float(x)
     return x
