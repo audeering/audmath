@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                v0.9.0
+                v0.9.1
               </div>
             
           
@@ -198,7 +198,26 @@
 
 <span class="sd">    The output is identical to the implementation</span>
 <span class="sd">    provided by :func:`scipy.special.ndtri`,</span>
-<span class="sd">    and :func:`scipy.stats.norm.ppf`.</span>
+<span class="sd">    and :func:`scipy.stats.norm.ppf`,</span>
+<span class="sd">    and allows you</span>
+<span class="sd">    to avoid installing</span>
+<span class="sd">    and importing :mod:`scipy`.</span>
+<span class="sd">    :func:`audmath.inverse_normal_distribution`</span>
+<span class="sd">    is slower for large arrays</span>
+<span class="sd">    as the following comparison of execution times</span>
+<span class="sd">    on a standard PC show.</span>
+
+<span class="sd">    .. table::</span>
+
+<span class="sd">        ========== ======= =======</span>
+<span class="sd">        Samples    scipy   audmath</span>
+<span class="sd">        ========== ======= =======</span>
+<span class="sd">            10.000   0.00s   0.01s</span>
+<span class="sd">           100.000   0.00s   0.09s</span>
+<span class="sd">         1.000.000   0.02s   0.88s</span>
+<span class="sd">        10.000.000   0.25s   9.30s</span>
+<span class="sd">        ========== ======= =======</span>
+
 
 <span class="sd">    .. _Cephes C code: https://github.com/jeremybarnes/cephes/blob/60f27df395b8322c2da22c83751a2366b82d50d1/cprob/ndtri.c</span>
 <span class="sd">    .. _implemented it in pure Python: https://github.com/dougthor42/PyErf/blob/cf38a2c62556cbd4927c9b3f5523f39b6a492472/pyerf/pyerf.py#L183-L287</span>
@@ -214,27 +233,28 @@
 <span class="sd">        array([-1.64485363, -0.2533471 , 0.2533471 , 1.64485363])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-    <span class="n">func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">_ndtri</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">])</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span>
-            <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span>
-            <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span>
-    <span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">x</span></div>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">switch_sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
+    <span class="c1"># Handle edge cases</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+    <span class="n">idx2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
+    <span class="n">idx3</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+    <span class="n">idx4</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+    <span class="n">non_valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">any</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">,</span> <span class="n">idx3</span><span class="p">,</span> <span class="n">idx4</span><span class="p">)])</span>
 
-<span class="k">def</span> <span class="nf">_ndtri</span><span class="p">(</span>
-        <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;None vectorized version of ndtri.&quot;&quot;&quot;</span>
-    <span class="c1"># Return for non-suited values</span>
-    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
-    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">Inf</span>
-    <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+    <span class="c1"># Return if no other values are left</span>
+    <span class="k">if</span> <span class="n">non_valid</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_force_float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">switch_sign</span><span class="p">[</span><span class="n">non_valid</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># Constants to avoid recalculation</span>
     <span class="n">ROOT_2PI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
@@ -312,32 +332,44 @@
         <span class="mf">6.79019408009981274425E-9</span><span class="p">,</span>
     <span class="p">]</span>
 
-    <span class="n">switch_sign</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">EXP_NEG2</span><span class="p">):</span>  <span class="c1"># y &gt; 0.864...</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">y</span>
-        <span class="n">switch_sign</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">EXP_NEG2</span><span class="p">)</span>  <span class="c1"># y &gt; 0.864...</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">non_valid</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">idx1</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">switch_sign</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># Case where we don&#39;t need high precision</span>
-    <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">EXP_NEG2</span><span class="p">:</span>  <span class="c1"># y &gt; 0.135...</span>
-        <span class="n">y</span> <span class="o">-=</span> <span class="mf">0.5</span>
-        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">Q0</span><span class="p">))</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">ROOT_2PI</span>
-        <span class="k">return</span> <span class="n">x</span>
+    <span class="n">idx2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">EXP_NEG2</span>  <span class="c1"># y &gt; 0.135...</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">non_valid</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">P0</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">Q0</span><span class="p">))</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">ROOT_2PI</span>
+    <span class="n">switch_sign</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-    <span class="n">x0</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">x</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">x</span>
-    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">8.0</span><span class="p">:</span>  <span class="c1"># y &gt; exp(-32) = 1.2664165549e-14</span>
-        <span class="n">x1</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">P1</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">Q1</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">x1</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">P2</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">Q2</span><span class="p">)</span>
+    <span class="n">idx3</span> <span class="o">=</span> <span class="o">~</span><span class="n">idx2</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">non_valid</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">idx3</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">8.0</span><span class="p">,</span>  <span class="c1"># y &gt; exp(-32) = 1.2664165549e-14</span>
+        <span class="n">z</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">P1</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">Q1</span><span class="p">),</span>
+        <span class="n">z</span> <span class="o">*</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">P2</span><span class="p">)</span> <span class="o">/</span> <span class="n">polyval</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">Q2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span>
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span>
-    <span class="k">if</span> <span class="n">switch_sign</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">switch_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">_force_float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_force_float</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Force float values for one digit arrays.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span>
+    <span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span>
 </pre></div>
 
@@ -354,7 +386,7 @@
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2021/07/28 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2021/07/29 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
