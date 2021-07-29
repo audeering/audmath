@@ -7,6 +7,16 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 0.9.1 (2021/07/29)
+--------------------------
+
+* Added: benchmarks for ``audmath.inverse_normal_distribution()``
+  against ``scipy``
+* Changed: implement ``audmath.inverse_normal_distribution()``
+  in a native vectorized way
+* Fixed: missing links in changelog
+
+
 Version 0.9.0 (2021/07/28)
 --------------------------
 
