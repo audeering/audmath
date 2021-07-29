@@ -29,7 +29,6 @@ def inverse_normal_distribution(
     The output is identical to the implementation
     provided by :func:`scipy.special.ndtri`,
     and :func:`scipy.stats.norm.ppf`.
-
     This implementation allows you
     to avoid installing
     and importing :mod:`scipy`,
