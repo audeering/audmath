@@ -1,7 +1,7 @@
 Installation
 ============
 
-To install :mod:`audeer` run:
+To install :mod:`audmath` run:
 
 .. code-block:: bash
 
