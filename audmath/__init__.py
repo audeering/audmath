@@ -2,7 +2,7 @@ from audmath.core.api import (
     inverse_normal_distribution,
 )
 
-# Discourage from audeer import *
+# Discourage from audmath import *
 __all__ = []
 
 # Dynamically get the version of the installed module
