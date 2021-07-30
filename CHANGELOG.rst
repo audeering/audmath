@@ -7,6 +7,12 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 0.9.2 (2021/07/30)
+--------------------------
+
+* Fixed: package name in installation docs
+
+
 Version 0.9.1 (2021/07/29)
 --------------------------
 
