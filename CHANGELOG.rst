@@ -7,6 +7,12 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 0.9.4 (2021/10/25)
+--------------------------
+
+* Fixed: bottom margin in API table
+
+
 Version 0.9.3 (2021/10/25)
 --------------------------
 
