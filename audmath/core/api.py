@@ -7,6 +7,50 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
+def db(
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Convert value to decibels (dB).
+
+    Args:
+        x: input signal
+
+    Returns:
+        input signal in dB
+
+    Example:
+        >>> db(2)
+        6.020599913279624
+
+    """
+    x = np.array(x)
+    mask = (x <= 0)
+    print(mask)
+    print(x[mask])
+    x[mask] = -np.Inf
+    x[~mask] = 20 * np.log10(x[~mask])
+    return x
+
+
+def inverse_db(
+        y: typing.Union[int, float, typing.Sequence, np.ndarray],
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Convert decibels (dB) to amplitude value.
+
+    Args:
+        y: input signal in decibels
+
+    Returns:
+        input signal
+
+    Example:
+        >>> inverse_db(-3)
+        0.7079457843841379
+
+    """
+    return np.power(10.0, y / 20.0)
+
+
 def inverse_normal_distribution(
     y: typing.Union[int, float, typing.Sequence, np.ndarray],
 ) -> typing.Union[np.floating, np.ndarray]:

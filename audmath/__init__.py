@@ -1,4 +1,6 @@
 from audmath.core.api import (
+    db,
+    inverse_db,
     inverse_normal_distribution,
     rms,
     rms_db,
