@@ -13,18 +13,17 @@ import audmath
     [
         (0, -np.Inf),
         (1, np.Inf),
-        ([0, 1], [-np.Inf, np.Inf]),
+        ([0, 1], np.array([-np.Inf, np.Inf])),
         (np.array([0, 1]), np.array([-np.Inf, np.Inf])),
     ]
 )
 def test_ndtri(y, expected_x):
     x = audmath.inverse_normal_distribution(y)
     np.testing.assert_allclose(x, expected_x)
-    if isinstance(y, (np.ndarray, collections.Sequence)) and len(y) > 1:
-        assert type(x) == np.ndarray
-        assert x.dtype == float
+    if isinstance(x, np.ndarray):
+        assert np.issubdtype(x.dtype, np.floating)
     else:
-        assert type(x) == float
+        np.issubdtype(type(x), np.floating)
 
 
 @pytest.mark.parametrize(
