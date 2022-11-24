@@ -196,7 +196,7 @@ def inverse_normal_distribution(
 
 
 def rms(
-        x: typing.Union[float, typing.Sequence[float], np.ndarray],
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
         *,
         axis: typing.Union[int, typing.Tuple[int]] = None,
         keepdims: bool = False,
