@@ -1,4 +1,6 @@
+import collections
 import typing
+import warnings
 
 import numpy as np
 
@@ -191,3 +193,125 @@ def inverse_normal_distribution(
     x = np.where(switch_sign == 1, -1 * x, x)
 
     return np.float64(x)
+
+
+def rms(
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        axis: typing.Union[int, typing.Tuple[int]] = None,
+        keepdims: bool = False,
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Root mean square.
+
+    The root mean square
+    for a signal of length :math:`N`
+    is given by
+
+    .. math::
+
+        \sqrt{\frac{1}{N} \sum_{n=1}^N x_n^2}
+
+    where :math:`x_n` is the value
+    of a single sample
+    of the signal.
+
+    For an empty signal
+    0 is returned.
+
+    Args:
+        x: input signal
+        axis: axis or axes
+            along which the root mean squares are computed.
+            The default is to compute the root mean square
+            of the flattened signal
+        keepdims: if this is set to ``True``,
+            the axes which are reduced
+            are left in the result
+            as dimensions with size one
+
+    Returns:
+        root mean square of input signal
+
+    Example:
+        >>> rms([])
+        0.0
+        >>> rms([0, 1])
+        0.7071067811865476
+        >>> rms([[0, 1], [0, 1]])
+        0.7071067811865476
+        >>> rms([[0, 1], [0, 1]], keepdims=True)
+        array([[0.70710678]])
+        >>> rms([[0, 1], [0, 1]], axis=1)
+        array([0.70710678, 0.70710678])
+
+    """
+    x = np.array(x)
+    if x.size == 0:
+        return np.float64(0.0)
+    return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
+
+
+def rms_db(
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        axis: typing.Union[int, typing.Tuple[int]] = None,
+        keepdims: bool = False,
+        lower_limit: float = -120.,
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Root mean square in decibel.
+
+    The root mean square in decibel
+    for a signal of length :math:`N`
+    is given by
+
+    .. math::
+
+        20 \log_{10} \sqrt{\frac{1}{N} \sum_N x_n^2}
+
+    where :math:`x_n` is the value
+    of a single sample.
+
+    Very soft
+    or empty signals
+    are limited
+    to the value provided by
+    ``lower_limit``.
+
+    Args:
+        x: input signal
+        axis: axis or axes
+            along which the root mean squares are computed.
+            The default is to compute the root mean square
+            of the flattened signal
+        keepdims: if this is set to ``True``,
+            the axes which are reduced
+            are left in the result
+            as dimensions with size one
+        lower_limit: lower limit
+            for soft signals in decibel
+
+    Returns:
+        root mean square in decibel of input signal
+
+    Example:
+        >>> rms_db([])
+        -120.0
+        >>> rms_db([0, 1])
+        -3.010299956639812
+        >>> rms_db([[0, 1], [0, 1]])
+        -3.010299956639812
+        >>> rms_db([[0, 1], [0, 1]], keepdims=True)
+        array([[-3.01029996]])
+        >>> rms_db([[0, 1], [0, 1]], axis=1)
+        array([-3.01029996, -3.01029996])
+
+    """
+    x = np.array(x)
+    if x.size == 0:
+        return np.float64(lower_limit)
+    # It is:
+    # 20 * log10(rms) = 10 * log10(power)
+    # which saves us from calculating sqrt()
+    power = np.mean(np.square(x), axis=axis, keepdims=keepdims)
+    min_value = 10 ** (lower_limit / 10)
+    return 10 * np.log10(np.maximum(min_value, power))
