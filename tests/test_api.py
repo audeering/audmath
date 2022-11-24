@@ -141,6 +141,10 @@ def test_scipy_ndtri(y):
 def test_rms(x, axis, keepdims, expected):
     y = audmath.rms(x, axis=axis, keepdims=keepdims)
     np.testing.assert_array_equal(y, expected)
+    if isinstance(y, np.ndarray):
+        assert np.issubdtype(y.dtype, np.floating)
+    else:
+        assert np.issubdtype(type(y), np.floating)
 
 
 @pytest.mark.parametrize(
@@ -238,3 +242,7 @@ def test_rms(x, axis, keepdims, expected):
 def test_rms_db(x, axis, keepdims, expected):
     y = audmath.rms_db(x, axis=axis, keepdims=keepdims)
     np.testing.assert_allclose(y, expected)
+    if isinstance(y, np.ndarray):
+        assert np.issubdtype(y.dtype, np.floating)
+    else:
+        assert np.issubdtype(type(y), np.floating)

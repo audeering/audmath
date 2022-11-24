@@ -200,7 +200,7 @@ def rms(
         *,
         axis: typing.Union[int, typing.Tuple[int]] = None,
         keepdims: bool = False,
-) -> typing.Union[float, np.ndarray]:
+) -> typing.Union[np.floating, np.ndarray]:
     r"""Root mean square.
 
     The root mean square
@@ -247,7 +247,7 @@ def rms(
     """
     x = np.array(x)
     if x.size == 0:
-        return 0.0
+        return np.float64(0.0)
     return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
 
 
@@ -257,7 +257,7 @@ def rms_db(
         axis: typing.Union[int, typing.Tuple[int]] = None,
         keepdims: bool = False,
         lower_limit: float = -120.,
-) -> typing.Union[float, np.ndarray]:
+) -> typing.Union[np.floating, np.ndarray]:
     r"""Root mean square in decibel.
 
     The root mean square in decibel
@@ -308,7 +308,7 @@ def rms_db(
     """
     x = np.array(x)
     if x.size == 0:
-        return float(lower_limit)
+        return np.float64(lower_limit)
     # It is:
     # 20 * log10(rms) = 10 * log10(power)
     # which saves us from calculating sqrt()
