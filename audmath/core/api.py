@@ -23,12 +23,22 @@ def db(
         6.020599913279624
 
     """
+    if not isinstance(x, (collections.abc.Sequence, np.ndarray)):
+        if x <= 0:
+            return -np.Inf
+        else:
+            return 20 * np.log10(x)
+
     x = np.array(x)
+    if x.size == 0:
+        return x
+
+    if not np.issubdtype(x.dtype, np.floating):
+        x = x.astype(np.float64)
     mask = (x <= 0)
-    print(mask)
-    print(x[mask])
     x[mask] = -np.Inf
     x[~mask] = 20 * np.log10(x[~mask])
+
     return x
 
 
