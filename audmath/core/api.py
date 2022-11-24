@@ -315,14 +315,3 @@ def rms_db(
     power = np.mean(np.square(x), axis=axis, keepdims=keepdims)
     min_value = 10 ** (lower_limit / 10)
     return 10 * np.log10(np.maximum(min_value, power))
-
-
-def _force_float(x):
-    r"""Force float values for one digit arrays."""
-    if (
-            x.ndim == 0
-            or x.ndim == 1 and len(x) < 2
-    ):
-        x = float(x)
-    return x
->>>>>>> Add audmath.rms() and audmath.rms_db()
