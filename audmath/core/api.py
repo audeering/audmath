@@ -6,8 +6,8 @@ from audmath.core.utils import polyval
 
 
 def inverse_normal_distribution(
-    y: typing.Union[float, typing.Sequence[float], np.ndarray],
-) -> typing.Union[float, np.ndarray]:
+    y: typing.Union[int, float, typing.Sequence, np.ndarray],
+) -> typing.Union[np.floating, np.ndarray]:
     r"""Inverse normal distribution.
 
     Returns the argument :math:`x`
@@ -82,7 +82,7 @@ def inverse_normal_distribution(
 
     # Return if no other values are left
     if non_valid.sum() == len(x):
-        return _force_float(x)
+        return np.float64(x)
 
     switch_sign[non_valid] = 0
 
@@ -190,14 +190,4 @@ def inverse_normal_distribution(
 
     x = np.where(switch_sign == 1, -1 * x, x)
 
-    return _force_float(x)
-
-
-def _force_float(x):
-    r"""Force float values for one digit arrays."""
-    if (
-            x.ndim == 0
-            or x.ndim == 1 and len(x) < 2
-    ):
-        x = float(x)
-    return x
+    return np.float64(x)
