@@ -291,7 +291,7 @@ def rms_db(
             for soft signals in decibel
 
     Returns:
-        root mean square of input signal
+        root mean square in decibel of input signal
 
     Example:
         >>> rms_db([])
