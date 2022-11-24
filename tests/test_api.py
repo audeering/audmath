@@ -13,9 +13,18 @@ import audmath
     [
         (0, -np.Inf),
         (-1, -np.Inf),
+        (0., -np.Inf),
+        (-1., -np.Inf),
+        ([], np.array([])),
+        (np.array([]), np.array([])),
+        ([[]], np.array([[]])),
+        (np.array([[]]), np.array([[]])),
         ([0, 1], np.array([-np.Inf, 0.])),
+        ([0., 1.], np.array([-np.Inf, 0.])),
         (np.array([0, 1]), np.array([-np.Inf, 0.])),
+        (np.array([0., 1.]), np.array([-np.Inf, 0.])),
         (np.array([[0], [1]]), np.array([[-np.Inf], [0.]])),
+        (np.array([[0.], [1.]]), np.array([[-np.Inf], [0.]])),
     ],
 )
 def test_db(x, expected_y):
