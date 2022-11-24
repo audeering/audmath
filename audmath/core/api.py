@@ -239,6 +239,8 @@ def rms(
         0.7071067811865476
         >>> rms([[0, 1], [0, 1]])
         0.7071067811865476
+        >>> rms([[0, 1], [0, 1]], keepdims=True)
+        array([[0.70710678]])
         >>> rms([[0, 1], [0, 1]], axis=1)
         array([0.70710678, 0.70710678])
 
@@ -250,8 +252,12 @@ def rms(
 
 
 def rms_db(
-        x: typing.Union[float, typing.Sequence[float], np.ndarray],
-) -> float:
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        axis: typing.Union[int, typing.Tuple[int]] = None,
+        keepdims: bool = False,
+        lower_limit: float = -120.,
+) -> typing.Union[float, np.ndarray]:
     r"""Root mean square in decibel.
 
     The root mean square in decibel
@@ -268,27 +274,47 @@ def rms_db(
     Very soft
     or empty signals
     are limited
-    to a value of -120 dB.
+    to the value provided by
+    ``lower_limit``.
 
     Args:
         x: input signal
+        axis: axis or axes
+            along which the root mean squares are computed.
+            The default is to compute the root mean square
+            of the flattened signal
+        keepdims: if this is set to ``True``,
+            the axes which are reduced
+            are left in the result
+            as dimensions with size one
+        lower_limit: lower limit
+            for soft signals in decibel
 
     Returns:
         root mean square of input signal
 
     Example:
+        >>> rms_db([])
+        -120.0
         >>> rms_db([0, 1])
         -3.010299956639812
+        >>> rms_db([[0, 1], [0, 1]])
+        -3.010299956639812
+        >>> rms_db([[0, 1], [0, 1]], keepdims=True)
+        array([[-3.01029996]])
+        >>> rms_db([[0, 1], [0, 1]], axis=1)
+        array([-3.01029996, -3.01029996])
 
     """
+    x = np.array(x)
+    if x.size == 0:
+        return float(lower_limit)
     # It is:
     # 20 * log10(rms) = 10 * log10(power)
     # which saves us from calculating sqrt()
-    with warnings.catch_warnings():
-        # Don't raise warning for empty signal
-        warnings.simplefilter(action='ignore', category=RuntimeWarning)
-        power = np.mean(np.square(x))
-    return 10 * np.log10(max(1e-12, power))
+    power = np.mean(np.square(x), axis=axis, keepdims=keepdims)
+    min_value = 10 ** (lower_limit / 10)
+    return 10 * np.log10(np.maximum(min_value, power))
 
 
 def _force_float(x):
