@@ -44,3 +44,43 @@ def test_scipy_ndtri(y):
     x = audmath.inverse_normal_distribution(y)
     np.testing.assert_allclose(x, scipy.special.ndtri(y))
     np.testing.assert_allclose(x, scipy.stats.norm.ppf(y))
+
+
+@pytest.mark.parametrize(
+    'x, expected',
+    [
+        ([], np.NaN),
+        (0, 0),
+        (0.5, 0.5),
+        (3, 3),
+        ([3], 3),
+        (np.array([3]), 3),
+        (np.array([[3]]), 3),
+        ([0, 1, 2, 3], 1.8708286933869707),
+        (np.array([0, 1, 2, 3]), 1.8708286933869707),
+    ],
+)
+def test_rms(x, expected):
+    y = audmath.rms(x)
+    if np.isnan(expected):
+        assert np.isnan(y)
+    else:
+        assert y == expected
+
+
+@pytest.mark.parametrize(
+    'x, expected',
+    [
+        ([], -120),
+        (0, -120),
+        (0.5, -6.020599913279624),
+        (3, 9.542425094393248),
+        ([3], 9.542425094393248),
+        (np.array([3]), 9.542425094393248),
+        (np.array([[3]]), 9.542425094393248),
+        ([0, 1, 2, 3], 5.440680443502757),
+        (np.array([0, 1, 2, 3]), 5.440680443502757),
+    ],
+)
+def test_rms_db(x, expected):
+    assert audmath.rms_db(x) == expected

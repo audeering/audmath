@@ -1,5 +1,7 @@
 from audmath.core.api import (
     inverse_normal_distribution,
+    rms,
+    rms_db,
 )
 
 # Discourage from audmath import *

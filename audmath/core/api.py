@@ -1,4 +1,5 @@
 import typing
+import warnings
 
 import numpy as np
 
@@ -191,3 +192,94 @@ def inverse_normal_distribution(
     x = np.where(switch_sign == 1, -1 * x, x)
 
     return np.float64(x)
+
+
+def rms(
+        x: typing.Union[float, typing.Sequence[float], np.ndarray],
+) -> float:
+    r"""Root mean square.
+
+    The root mean square
+    for a signal of length :math:`N`
+    is given by
+
+    .. math::
+
+        \sqrt{\frac{1}{N} \sum_{n=1}^N x_n^2}
+
+    where :math:`x_n` is the value
+    of a single sample
+    of the signal.
+
+    For an empty signal
+    :const:`np.NaN` is returned.
+
+    Args:
+        x: input signal
+
+    Returns:
+        root mean square of input signal
+
+    Example:
+        >>> rms([0, 1])
+        0.7071067811865476
+
+    """
+    # Don't raise warning for empty signal
+    # when returning NaN
+    with warnings.catch_warnings():
+        warnings.simplefilter(action='ignore', category=RuntimeWarning)
+        return np.sqrt(np.mean(np.square(x)))
+
+
+def rms_db(
+        x: typing.Union[float, typing.Sequence[float], np.ndarray],
+) -> float:
+    r"""Root mean square in dB.
+
+    The root mean square in dB
+    for a signal of length :math:`N`
+    is given by
+
+    .. math::
+
+        20 \log_{10} \sqrt{\frac{1}{N} \sum_N x_n^2}
+
+    where :math:`x_n` is the value
+    of a single sample.
+
+    Very soft
+    or empty signals
+    are limited
+    to a value of -120 dB.
+
+    Args:
+        x: input signal
+
+    Returns:
+        root mean square of input signal
+
+    Example:
+        >>> rms_db([0, 1])
+        -3.010299956639812
+
+    """
+    # It is:
+    # 20 * log10(rms) = 10 * log10(power)
+    # which saves us from calculating sqrt()
+    with warnings.catch_warnings():
+        # Don't raise warning for empty signal
+        warnings.simplefilter(action='ignore', category=RuntimeWarning)
+        power = np.mean(np.square(x))
+    return 10 * np.log10(max(1e-12, power))
+
+
+def _force_float(x):
+    r"""Force float values for one digit arrays."""
+    if (
+            x.ndim == 0
+            or x.ndim == 1 and len(x) < 2
+    ):
+        x = float(x)
+    return x
+>>>>>>> Add audmath.rms() and audmath.rms_db()
