@@ -224,7 +224,7 @@ def rms(
             along which the root mean squares are computed.
             The default is to compute the root mean square
             of the flattened signal
-        keepdims: if this is set to True,
+        keepdims: if this is set to ``True``,
             the axes which are reduced
             are left in the result
             as dimensions with size one
@@ -243,8 +243,6 @@ def rms(
         array([0.70710678, 0.70710678])
 
     """
-    # Don't raise warning for empty signal
-    # when returning NaN
     x = np.array(x)
     if x.size == 0:
         return 0.0
