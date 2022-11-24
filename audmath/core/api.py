@@ -24,7 +24,7 @@ def inverse_normal_distribution(
 
     This function is a :mod:`numpy` port
     of the `Cephes C code`_.
-    Douglas Thor `implemented it in pure Python`_ under GPL-3 by.
+    Douglas Thor `implemented it in pure Python`_ under GPL-3.
 
     The output is identical to the implementation
     provided by :func:`scipy.special.ndtri`,
