@@ -1,3 +1,4 @@
+import collections
 import typing
 import warnings
 
@@ -196,7 +197,10 @@ def inverse_normal_distribution(
 
 def rms(
         x: typing.Union[float, typing.Sequence[float], np.ndarray],
-) -> float:
+        *,
+        axis: typing.Union[int, typing.Tuple[int]] = None,
+        keepdims: bool = False,
+) -> typing.Union[float, np.ndarray]:
     r"""Root mean square.
 
     The root mean square
@@ -212,32 +216,47 @@ def rms(
     of the signal.
 
     For an empty signal
-    :const:`np.NaN` is returned.
+    0 is returned.
 
     Args:
         x: input signal
+        axis: axis or axes
+            along which the root mean squares are computed.
+            The default is to compute the root mean square
+            of the flattened signal
+        keepdims: if this is set to True,
+            the axes which are reduced
+            are left in the result
+            as dimensions with size one
 
     Returns:
         root mean square of input signal
 
     Example:
+        >>> rms([])
+        0.0
         >>> rms([0, 1])
         0.7071067811865476
+        >>> rms([[0, 1], [0, 1]])
+        0.7071067811865476
+        >>> rms([[0, 1], [0, 1]], axis=1)
+        array([0.70710678, 0.70710678])
 
     """
     # Don't raise warning for empty signal
     # when returning NaN
-    with warnings.catch_warnings():
-        warnings.simplefilter(action='ignore', category=RuntimeWarning)
-        return np.sqrt(np.mean(np.square(x)))
+    x = np.array(x)
+    if x.size == 0:
+        return 0.0
+    return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
 
 
 def rms_db(
         x: typing.Union[float, typing.Sequence[float], np.ndarray],
 ) -> float:
-    r"""Root mean square in dB.
+    r"""Root mean square in decibel.
 
-    The root mean square in dB
+    The root mean square in decibel
     for a signal of length :math:`N`
     is given by
 
