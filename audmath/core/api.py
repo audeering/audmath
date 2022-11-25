@@ -180,7 +180,6 @@ def fadein(
         win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
     elif shape == 'exponential':
         x = np.arange(samples + 1)
-        win = 1 / np.exp(samples - 1) * (np.exp(x) - 1)
         win = (np.exp(x) - 1) / (np.exp(samples) - 1)
         win = win[:samples]
     elif shape == 'logarithmic':
