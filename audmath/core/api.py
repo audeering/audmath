@@ -7,6 +7,15 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
+FADEIN_SHAPES = [
+    'tukey',
+    'kaiser',
+    'linear',
+    'exponential',
+    'logarithmic',
+]
+
+
 def db(
         x: typing.Union[int, float, typing.Sequence, np.ndarray],
         *,
@@ -76,6 +85,111 @@ def db(
     x[~mask] = 20 * np.log10(x[~mask])
 
     return x
+
+
+def fadein(
+    samples: int,
+    shape: str = 'tukey',
+    level: float = -120.,
+    lower_limit: float = -120.,
+) -> np.ndarray:
+    r"""Fade-in half-window.
+
+    A fade-in is a gradual increase in amplitude
+    of a signal.
+    If ``level`` <= ``lower_limit``
+    the fadein will start from 0,
+    otherwise from the provided level.
+
+    The shape of the fade-in and fade-out
+    is selected via ``in_shape`` and ``out_shape``.
+    The following figure shows all available shapes
+    by the example of a fade-in.
+
+    .. plot::
+
+        import audmath
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as mtick
+        import numpy as np
+        import seaborn as sns
+
+        for shape in audmath.core.api.FADEIN_SHAPES:
+            win = audmath.fadein(100, shape=shape)
+            win = np.concatenate([win, np.array([1.])])
+            plt.plot(win, label=shape)
+        plt.ylabel('Magnitude')
+        plt.xlabel('Fade-in Length')
+        plt.grid(alpha=0.4)
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(mtick.PercentFormatter())
+        ax.tick_params(axis=u'both', which=u'both',length=0)
+        plt.xlim([-1.2, 100.3])
+        plt.ylim([-0.02, 1])
+        sns.despine(left=True, bottom=True)
+        # Put a legend to the top right of the current axis
+        plt.legend()
+        ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+        # Adjsut image size to contain outside legend
+        fig = plt.gcf()
+        fig.set_size_inches(6.4, 3.84)
+        plt.tight_layout()
+
+    Args:
+        samples: length of fade-in half-window
+        shape: shape of fade-in half-window
+        level: start level in decibel of fade-in
+        lower_limit: minimum level in decibel
+            above which the half-window
+            will not start at a value of 0
+
+    Returns:
+        fade-in half-window
+
+    Raises:
+        ValueError: if requested ``shape`` is not supported
+
+    Example:
+        >>> fadein(5)
+        array([0., 0.])
+
+    """
+    if shape not in FADEIN_SHAPES:
+        raise ValueError(
+            "shape has to be one of the following: "
+            f"{(', ').join(FADEIN_SHAPES)},"
+            f"not '{shape}'."
+        )
+    if samples == 0:
+        win = np.arange(samples)
+    elif samples < 2:
+        win = np.arange(samples)
+    elif shape == 'linear':
+        win = np.arange(samples) / samples
+    elif shape == 'kaiser':
+        # Kaiser windows as approximation of DPSS window
+        # as often used for tapering windows
+        win = np.kaiser(2 * samples, beta=14)[:samples]
+    elif shape == 'tukey':
+        # Tukey window,
+        # which is also often used as tapering window
+        # 1/2 * (1 - cos(2pi n / (4N alpha)))
+        x = np.arange(samples)
+        alpha = 0.5
+        width = 4 * samples * alpha
+        win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
+    elif shape == 'exponential':
+        x = np.arange(samples + 1)
+        win = 1 / np.exp(samples - 1) * (np.exp(x) - 1)
+        win = (np.exp(x) - 1) / (np.exp(samples) - 1)
+        win = win[:samples]
+    elif shape == 'logarithmic':
+        x = np.arange(samples + 1)
+        win = np.log10(x + 1) / np.log10(samples + 1)
+        win = win[:samples]
+    offset = inverse_db(level, lower_limit=lower_limit)
+    win = win * (1 - offset) + offset
+    return win
 
 
 def inverse_db(

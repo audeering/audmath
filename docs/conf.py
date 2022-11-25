@@ -24,6 +24,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
     'sphinxcontrib.katex',
+    'matplotlib.sphinxext.plot_directive',
 ]
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
@@ -39,6 +40,12 @@ copybutton_prompt_is_regexp = True
 # Disable auto-generation of TOC entries in the API
 # https://github.com/sphinx-doc/sphinx/issues/6316
 toc_object_entries = False
+
+# Matplot directive settings
+plot_html_show_source_link = False
+plot_html_show_formats = False
+plot_formats = ['png']
+plot_rcparams = {'font.size': 13}
 
 
 # HTML --------------------------------------------------------------------
