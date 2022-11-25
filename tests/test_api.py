@@ -9,26 +9,40 @@ import audmath
 
 
 @pytest.mark.parametrize(
-    'x, expected_y',
+    'x, lower_limit, expected_y',
     [
-        (0, -np.Inf),
-        (-1, -np.Inf),
-        (0., -np.Inf),
-        (-1., -np.Inf),
-        ([], np.array([])),
-        (np.array([]), np.array([])),
-        ([[]], np.array([[]])),
-        (np.array([[]]), np.array([[]])),
-        ([0, 1], np.array([-np.Inf, 0.])),
-        ([0., 1.], np.array([-np.Inf, 0.])),
-        (np.array([0, 1]), np.array([-np.Inf, 0.])),
-        (np.array([0., 1.]), np.array([-np.Inf, 0.])),
-        (np.array([[0], [1]]), np.array([[-np.Inf], [0.]])),
-        (np.array([[0.], [1.]]), np.array([[-np.Inf], [0.]])),
+        (0, None, -np.Inf),
+        (0, -120, -120),
+        (-1, None, -np.Inf),
+        (-1, -120, -120),
+        (0., None, -np.Inf),
+        (0., -120, -120),
+        (-1., None, -np.Inf),
+        (-1., -120, -120),
+        ([], None, np.array([])),
+        ([], -120, np.array([])),
+        (np.array([]), None, np.array([])),
+        (np.array([]), -120, np.array([])),
+        ([[]], None, np.array([[]])),
+        ([[]], -120, np.array([[]])),
+        (np.array([[]]), None, np.array([[]])),
+        (np.array([[]]), -120, np.array([[]])),
+        ([0, 1], None, np.array([-np.Inf, 0.])),
+        ([0, 1], -120, np.array([-120, 0.])),
+        ([0., 1.], None, np.array([-np.Inf, 0.])),
+        ([0., 1.], -120, np.array([-120, 0.])),
+        (np.array([0, 1]), None, np.array([-np.Inf, 0.])),
+        (np.array([0, 1]), -120, np.array([-120, 0.])),
+        (np.array([0., 1.]), None, np.array([-np.Inf, 0.])),
+        (np.array([0., 1.]), -120, np.array([-120, 0.])),
+        (np.array([[0], [1]]), None, np.array([[-np.Inf], [0.]])),
+        (np.array([[0], [1]]), -120, np.array([[-120], [0.]])),
+        (np.array([[0.], [1.]]), None, np.array([[-np.Inf], [0.]])),
+        (np.array([[0.], [1.]]), -120, np.array([[-120], [0.]])),
     ],
 )
-def test_db(x, expected_y):
-    y = audmath.db(x)
+def test_db(x, lower_limit, expected_y):
+    y = audmath.db(x, lower_limit=lower_limit)
     np.testing.assert_allclose(y, expected_y)
     if isinstance(y, np.ndarray):
         assert np.issubdtype(y.dtype, np.floating)
@@ -37,17 +51,64 @@ def test_db(x, expected_y):
 
 
 @pytest.mark.parametrize(
-    'y, expected_x',
+    'y, lower_limit, expected_x',
     [
-        (0, 1.),
-        (-1, 0.8912509381337456),
-        ([0, 1], np.array([1., 0.8912509381337456])),
-        (np.array([0, 1]), np.array([1., 0.8912509381337456])),
-        (np.array([[0], [1]]), np.array([[1.], [0.8912509381337456]])),
+        (0, None, 1.),
+        (0, -120, 1.),
+        (0., None, 1.),
+        (0., -120, 1.),
+        (-np.Inf, None, 0.),
+        (-np.Inf, -120, 0.),
+        (-160, None, 1e-08),
+        (-160, -120, 0.),
+        (-160., None, 1e-08),
+        (-160., -120, 0.),
+        (-120, None, 1e-06),
+        (-120, -120, 0.),
+        (-120., None, 1e-06),
+        (-120., -120, 0.),
+        (-1, None, 0.8912509381337456),
+        (-1, -120, 0.8912509381337456),
+        (-1., None, 0.8912509381337456),
+        (-1., -120, 0.8912509381337456),
+        ([-np.Inf, -120], None, np.array([0., 1e-06])),
+        ([-np.Inf, -120], -120, np.array([0., 0.])),
+        ([], None, np.array([])),
+        ([], -120, np.array([])),
+        (np.array([]), None, np.array([])),
+        (np.array([]), -120, np.array([])),
+        ([[]], None, np.array([[]])),
+        ([[]], -120, np.array([[]])),
+        (np.array([[]]), None, np.array([[]])),
+        (np.array([[]]), -120, np.array([[]])),
+        ([0, -1], None, np.array([1., 0.8912509381337456])),
+        ([0, -1], -120, np.array([1., 0.8912509381337456])),
+        ([0., -1.], None, np.array([1., 0.8912509381337456])),
+        ([0., -1.], -120, np.array([1., 0.8912509381337456])),
+        (np.array([-np.Inf, -120]), None, np.array([0., 1e-06])),
+        (np.array([-np.Inf, -120]), -120, np.array([0., 0.])),
+        (np.array([0, -1]), None, np.array([1., 0.8912509381337456])),
+        (np.array([0, -1]), -120, np.array([1., 0.8912509381337456])),
+        (np.array([0., -1.]), None, np.array([1., 0.8912509381337456])),
+        (np.array([0., -1.]), -120, np.array([1., 0.8912509381337456])),
+        (np.array([[-np.Inf], [-120]]), None, np.array([[0.], [1e-06]])),
+        (np.array([[-np.Inf], [-120]]), -120, np.array([[0.], [0.]])),
+        (np.array([[0], [-1]]), None, np.array([[1.], [0.8912509381337456]])),
+        (np.array([[0], [-1]]), -120, np.array([[1.], [0.8912509381337456]])),
+        (
+            np.array([[0.], [-1.]]),
+            None,
+            np.array([[1.], [0.8912509381337456]]),
+        ),
+        (
+            np.array([[0.], [-1.]]),
+            -120,
+            np.array([[1.], [0.8912509381337456]]),
+        ),
     ],
 )
-def test_inverse_db(y, expected_x):
-    x = audmath.inverse_db(y)
+def test_inverse_db(y, lower_limit, expected_x):
+    x = audmath.inverse_db(y, lower_limit=lower_limit)
     np.testing.assert_allclose(x, expected_x)
     if isinstance(x, np.ndarray):
         assert np.issubdtype(x.dtype, np.floating)

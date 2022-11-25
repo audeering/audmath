@@ -9,23 +9,42 @@ from audmath.core.utils import polyval
 
 def db(
         x: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        lower_limit: float = -120.,
 ) -> typing.Union[np.floating, np.ndarray]:
     r"""Convert value to decibels (dB).
 
     Args:
-        x: input signal
+        x: input value(s)
+        lower_limit: minimum decibel value
+            returned for very low input values.
+            If set to ``None``
+            it will return ``-np.Inf``
+            for values equal or less than 0
 
     Returns:
-        input signal in dB
+        input value(s) in dB
 
     Example:
+        >>> db(1)
+        0.0
+        >>> db(0)
+        -120.0
         >>> db(2)
         6.020599913279624
+        >>> db([0, 1])
+        array([-120.,    0.])
 
     """
+    if lower_limit is None:
+        min_value = 0
+        lower_limit = -np.Inf
+    else:
+        min_value = 10 ** (lower_limit / 20)
+
     if not isinstance(x, (collections.abc.Sequence, np.ndarray)):
-        if x <= 0:
-            return -np.Inf
+        if x <= min_value:
+            return lower_limit
         else:
             return 20 * np.log10(x)
 
@@ -35,8 +54,9 @@ def db(
 
     if not np.issubdtype(x.dtype, np.floating):
         x = x.astype(np.float64)
-    mask = (x <= 0)
-    x[mask] = -np.Inf
+
+    mask = (x <= min_value)
+    x[mask] = lower_limit
     x[~mask] = 20 * np.log10(x[~mask])
 
     return x
@@ -44,6 +64,8 @@ def db(
 
 def inverse_db(
         y: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        lower_limit: float = -120.,
 ) -> typing.Union[np.floating, np.ndarray]:
     r"""Convert decibels (dB) to amplitude value.
 
@@ -54,11 +76,37 @@ def inverse_db(
         input signal
 
     Example:
+        >>> inverse_db(0)
+        1.0
+        >>> inverse_db(-120)
+        0.0
         >>> inverse_db(-3)
         0.7079457843841379
+        >>> inverse_db([-120, 0])
+        array([0., 1.])
 
     """
-    return np.power(10.0, y / 20.0)
+    min_value = 0.
+    if lower_limit is None:
+        lower_limit = -np.Inf
+
+    if not isinstance(y, (collections.abc.Sequence, np.ndarray)):
+        if y <= lower_limit:
+            return min_value
+        else:
+            return np.power(10.0, y / 20.0)
+
+    y = np.array(y)
+    if y.size == 0:
+        return y
+
+    if not np.issubdtype(y.dtype, np.floating):
+        y = y.astype(np.float64)
+
+    mask = (y <= lower_limit)
+    y[mask] = min_value
+    y[~mask] = np.power(10.0, y[~mask] / 20.0)
+    return y
 
 
 def inverse_normal_distribution(
