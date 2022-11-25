@@ -23,6 +23,7 @@ extensions = [
     'sphinx_copybutton',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
+    'sphinxcontrib.katex',
 ]
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),

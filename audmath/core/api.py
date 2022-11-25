@@ -12,7 +12,22 @@ def db(
         *,
         lower_limit: float = -120.,
 ) -> typing.Union[np.floating, np.ndarray]:
-    r"""Convert value to decibels (dB).
+    r"""Convert value to decibels.
+
+    The decibel of a value :math:`x \in \R`
+    is given by
+
+    .. math::
+
+        \text{db}(x) = \begin{cases}
+            20 \log_{10} x,
+                & \text{if } x > 10^\frac{\text{lower\_limit}}{20} \\
+            \text{lower\_limit},
+                & \text{else}
+        \end{cases}
+
+    where :math:`\text{lower\_limit}` is provided
+    by the argument of same name.
 
     Args:
         x: input value(s)
@@ -67,10 +82,32 @@ def inverse_db(
         *,
         lower_limit: float = -120.,
 ) -> typing.Union[np.floating, np.ndarray]:
-    r"""Convert decibels (dB) to amplitude value.
+    r"""Convert decibels to amplitude value.
+
+    The inverse of a value :math:`y \in \R`
+    provided in decibel
+    is given by
+
+    .. math::
+
+        \text{inverse\_db}(y) = \begin{cases}
+            10^\frac{y}{20},
+                & \text{if } y > \text{lower\_limit} \\
+            0,
+                & \text{else}
+        \end{cases}
+
+    where :math:`\text{lower\_limit}` is provided
+    by the argument of same name.
 
     Args:
         y: input signal in decibels
+        lower_limit: minimum decibel value
+            which should be converted.
+            Lower values will be set to 0.
+            If set to ``None``
+            it will return 0
+            only for input values of ``-np.Inf``
 
     Returns:
         input signal
