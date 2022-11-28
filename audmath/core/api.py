@@ -90,7 +90,7 @@ def db(
 def fadein(
     samples: int,
     shape: str = 'tukey',
-    level: float = -120.,
+    level: typing.Union[int, float] = -120,
     bottom: typing.Union[int, float] = -120,
 ) -> np.ndarray:
     r"""Fade-in half-window.
@@ -139,9 +139,10 @@ def fadein(
         samples: length of fade-in half-window
         shape: shape of fade-in half-window
         level: start level in decibel of fade-in
-        bottom: minimum level in decibel
-            above which the half-window
-            will not start at a value of 0
+        bottom: minimum level in decibel.
+            If ``level`` <= ``bottom``
+            the half-window
+            will start at a value of 0
 
     Returns:
         fade-in half-window

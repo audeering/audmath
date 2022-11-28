@@ -3,6 +3,7 @@ audmath
 
 .. automodule:: audmath
 
+
 db
 --
 
@@ -19,7 +20,7 @@ inverse_db
 ----------
 
 .. autofunction:: inverse_db
- 
+
 
 inverse_normal_distribution
 ---------------------------
