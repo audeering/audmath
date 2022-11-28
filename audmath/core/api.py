@@ -135,6 +135,11 @@ def fadein(
         fig.set_size_inches(6.4, 3.84)
         plt.tight_layout()
 
+    If at least 2 samples are requested,
+    the fade-in half-window will always start at 0
+    or the value provided by ``level`` and ``bottom``
+    and end at 1.
+
     Args:
         samples: length of fade-in half-window
         shape: shape of fade-in half-window
@@ -151,7 +156,7 @@ def fadein(
 
     Example:
         >>> fadein(5)
-        array([0., 0.])
+        array([0.        , 0.14644661, 0.5       , 0.85355339, 1.        ])
 
     """
     if shape not in FADEIN_SHAPES:
@@ -160,32 +165,32 @@ def fadein(
             f"{(', ').join(FADEIN_SHAPES)},"
             f"not '{shape}'."
         )
-    if samples == 0:
-        win = np.arange(samples)
-    elif samples < 2:
+    if samples < 2:
         win = np.arange(samples)
     elif shape == 'linear':
-        win = np.arange(samples) / samples
+        win = np.arange(samples) / (samples - 1)
     elif shape == 'kaiser':
         # Kaiser windows as approximation of DPSS window
         # as often used for tapering windows
-        win = np.kaiser(2 * samples, beta=14)[:samples]
+        win = np.kaiser(2 * (samples - 1), beta=14)[:(samples - 1)]
+        # Ensure first entry is 0
+        win[0] = 0
+        # Add 1 at the end
+        win = np.concatenate([win, np.array([1])])
     elif shape == 'tukey':
         # Tukey window,
         # which is also often used as tapering window
         # 1/2 * (1 - cos(2pi n / (4N alpha)))
         x = np.arange(samples)
         alpha = 0.5
-        width = 4 * samples * alpha
+        width = 4 * (samples - 1) * alpha
         win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
     elif shape == 'exponential':
-        x = np.arange(samples + 1)
-        win = (np.exp(x) - 1) / (np.exp(samples) - 1)
-        win = win[:samples]
+        x = np.arange(samples)
+        win = (np.exp(x) - 1) / (np.exp(samples - 1) - 1)
     elif shape == 'logarithmic':
-        x = np.arange(samples + 1)
-        win = np.log10(x + 1) / np.log10(samples + 1)
-        win = win[:samples]
+        x = np.arange(samples)
+        win = np.log10(x + 1) / np.log10(samples)
     offset = inverse_db(level, bottom=bottom)
     win = win * (1 - offset) + offset
     return win
