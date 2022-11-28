@@ -100,11 +100,12 @@ def fadein(
     If ``level`` <= ``bottom``
     the fadein will start from 0,
     otherwise from the provided level.
+    If at least 2 samples are requested,
+    the fade-in will always end at 1.
 
-    The shape of the fade-in and fade-out
-    is selected via ``in_shape`` and ``out_shape``.
-    The following figure shows all available shapes
-    by the example of a fade-in.
+    The shape of the fade-in
+    is selected via ``shape``
+    The following figure shows all available shapes.
 
     .. plot::
 
@@ -115,8 +116,7 @@ def fadein(
         import seaborn as sns
 
         for shape in audmath.core.api.FADEIN_SHAPES:
-            win = audmath.fadein(100, shape=shape)
-            win = np.concatenate([win, np.array([1.])])
+            win = audmath.fadein(101, shape=shape)
             plt.plot(win, label=shape)
         plt.ylabel('Magnitude')
         plt.xlabel('Fade-in Length')
@@ -135,11 +135,6 @@ def fadein(
         fig.set_size_inches(6.4, 3.84)
         plt.tight_layout()
 
-    If at least 2 samples are requested,
-    the fade-in half-window will always start at 0
-    or the value provided by ``level`` and ``bottom``
-    and end at 1.
-
     Args:
         samples: length of fade-in half-window
         shape: shape of fade-in half-window
@@ -157,6 +152,10 @@ def fadein(
     Example:
         >>> fadein(5)
         array([0.        , 0.14644661, 0.5       , 0.85355339, 1.        ])
+        >>> fadein(5, level=-20)
+        array([0.1       , 0.23180195, 0.55      , 0.86819805, 1.        ])
+        >>> fadein(5, shape='linear')
+        array([0.  , 0.25, 0.5 , 0.75, 1.  ])
 
     """
     if shape not in FADEIN_SHAPES:
