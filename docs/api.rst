@@ -26,9 +26,3 @@ rms
 ---
 
 .. autofunction:: rms
-
-
-rms_db
-------
-
-.. autofunction:: rms_db
