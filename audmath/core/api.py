@@ -7,6 +7,146 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
+def db(
+        x: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        bottom: typing.Union[int, float] = -120,
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Convert value to decibels.
+
+    The decibel of a value :math:`x \in \R`
+    is given by
+
+    .. math::
+
+        \text{db}(x) = \begin{cases}
+            20 \log_{10} x,
+                & \text{if } x > 10^\frac{\text{bottom}}{20} \\
+            \text{bottom},
+                & \text{else}
+        \end{cases}
+
+    where :math:`\text{bottom}` is provided
+    by the argument of same name.
+
+    Args:
+        x: input value(s)
+        bottom: minimum decibel value
+            returned for very low input values.
+            If set to ``None``
+            it will return ``-np.Inf``
+            for values equal or less than 0
+
+    Returns:
+        input value(s) in dB
+
+    Example:
+        >>> db(1)
+        0.0
+        >>> db(0)
+        -120.0
+        >>> db(2)
+        6.020599913279624
+        >>> db([0, 1])
+        array([-120.,    0.])
+
+    """
+    if bottom is None:
+        min_value = 0
+        bottom = -np.Inf
+    else:
+        bottom = np.float64(bottom)
+        min_value = 10 ** (bottom / 20)
+
+    if not isinstance(x, (collections.abc.Sequence, np.ndarray)):
+        if x <= min_value:
+            return bottom
+        else:
+            return 20 * np.log10(x)
+
+    x = np.array(x)
+    if x.size == 0:
+        return x
+
+    if not np.issubdtype(x.dtype, np.floating):
+        x = x.astype(np.float64)
+
+    mask = (x <= min_value)
+    x[mask] = bottom
+    x[~mask] = 20 * np.log10(x[~mask])
+
+    return x
+
+
+def inverse_db(
+        y: typing.Union[int, float, typing.Sequence, np.ndarray],
+        *,
+        bottom: typing.Union[int, float] = -120,
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Convert decibels to amplitude value.
+
+    The inverse of a value :math:`y \in \R`
+    provided in decibel
+    is given by
+
+    .. math::
+
+        \text{inverse\_db}(y) = \begin{cases}
+            10^\frac{y}{20},
+                & \text{if } y > \text{bottom} \\
+            0,
+                & \text{else}
+        \end{cases}
+
+    where :math:`\text{bottom}` is provided
+    by the argument of same name.
+
+    Args:
+        y: input signal in decibels
+        bottom: minimum decibel value
+            which should be converted.
+            Lower values will be set to 0.
+            If set to ``None``
+            it will return 0
+            only for input values of ``-np.Inf``
+
+    Returns:
+        input signal
+
+    Example:
+        >>> inverse_db(0)
+        1.0
+        >>> inverse_db(-120)
+        0.0
+        >>> inverse_db(-3)
+        0.7079457843841379
+        >>> inverse_db([-120, 0])
+        array([0., 1.])
+
+    """
+    min_value = 0.
+    if bottom is None:
+        bottom = -np.Inf
+
+    if not isinstance(y, (collections.abc.Sequence, np.ndarray)):
+        if y <= bottom:
+            return min_value
+        else:
+            return np.power(10., y / 20.)
+
+    y = np.array(y)
+    if y.size == 0:
+        return y
+
+    if not np.issubdtype(y.dtype, np.floating):
+        y = y.astype(np.float64)
+
+    mask = (y <= bottom)
+    y[mask] = min_value
+    y[~mask] = np.power(10., y[~mask] / 20.)
+    return y
+
+
 def inverse_normal_distribution(
     y: typing.Union[int, float, typing.Sequence, np.ndarray],
 ) -> typing.Union[np.floating, np.ndarray]:
