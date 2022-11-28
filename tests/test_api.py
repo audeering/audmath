@@ -9,7 +9,7 @@ import audmath
 
 
 @pytest.mark.parametrize(
-    'x, lower_limit, expected_y',
+    'x, bottom, expected_y',
     [
         (0, None, -np.Inf),
         (0, -120, -120),
@@ -41,8 +41,8 @@ import audmath
         (np.array([[0.], [1.]]), -120, np.array([[-120], [0.]])),
     ],
 )
-def test_db(x, lower_limit, expected_y):
-    y = audmath.db(x, lower_limit=lower_limit)
+def test_db(x, bottom, expected_y):
+    y = audmath.db(x, bottom=bottom)
     np.testing.assert_allclose(y, expected_y)
     if isinstance(y, np.ndarray):
         assert np.issubdtype(y.dtype, np.floating)
@@ -51,7 +51,7 @@ def test_db(x, lower_limit, expected_y):
 
 
 @pytest.mark.parametrize(
-    'y, lower_limit, expected_x',
+    'y, bottom, expected_x',
     [
         (0, None, 1.),
         (0, -120, 1.),
@@ -107,8 +107,8 @@ def test_db(x, lower_limit, expected_y):
         ),
     ],
 )
-def test_inverse_db(y, lower_limit, expected_x):
-    x = audmath.inverse_db(y, lower_limit=lower_limit)
+def test_inverse_db(y, bottom, expected_x):
+    x = audmath.inverse_db(y, bottom=bottom)
     np.testing.assert_allclose(x, expected_x)
     if isinstance(x, np.ndarray):
         assert np.issubdtype(x.dtype, np.floating)

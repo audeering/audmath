@@ -10,7 +10,7 @@ from audmath.core.utils import polyval
 def db(
         x: typing.Union[int, float, typing.Sequence, np.ndarray],
         *,
-        lower_limit: float = -120.,
+        bottom: typing.Union[int, float] = -120,
 ) -> typing.Union[np.floating, np.ndarray]:
     r"""Convert value to decibels.
 
@@ -21,17 +21,17 @@ def db(
 
         \text{db}(x) = \begin{cases}
             20 \log_{10} x,
-                & \text{if } x > 10^\frac{\text{lower\_limit}}{20} \\
-            \text{lower\_limit},
+                & \text{if } x > 10^\frac{\text{bottom}}{20} \\
+            \text{bottom},
                 & \text{else}
         \end{cases}
 
-    where :math:`\text{lower\_limit}` is provided
+    where :math:`\text{bottom}` is provided
     by the argument of same name.
 
     Args:
         x: input value(s)
-        lower_limit: minimum decibel value
+        bottom: minimum decibel value
             returned for very low input values.
             If set to ``None``
             it will return ``-np.Inf``
@@ -51,15 +51,16 @@ def db(
         array([-120.,    0.])
 
     """
-    if lower_limit is None:
+    if bottom is None:
         min_value = 0
-        lower_limit = -np.Inf
+        bottom = -np.Inf
     else:
-        min_value = 10 ** (lower_limit / 20)
+        bottom = np.float64(bottom)
+        min_value = 10 ** (bottom / 20)
 
     if not isinstance(x, (collections.abc.Sequence, np.ndarray)):
         if x <= min_value:
-            return lower_limit
+            return bottom
         else:
             return 20 * np.log10(x)
 
@@ -71,7 +72,7 @@ def db(
         x = x.astype(np.float64)
 
     mask = (x <= min_value)
-    x[mask] = lower_limit
+    x[mask] = bottom
     x[~mask] = 20 * np.log10(x[~mask])
 
     return x
@@ -80,7 +81,7 @@ def db(
 def inverse_db(
         y: typing.Union[int, float, typing.Sequence, np.ndarray],
         *,
-        lower_limit: float = -120.,
+        bottom: typing.Union[int, float] = -120,
 ) -> typing.Union[np.floating, np.ndarray]:
     r"""Convert decibels to amplitude value.
 
@@ -92,17 +93,17 @@ def inverse_db(
 
         \text{inverse\_db}(y) = \begin{cases}
             10^\frac{y}{20},
-                & \text{if } y > \text{lower\_limit} \\
+                & \text{if } y > \text{bottom} \\
             0,
                 & \text{else}
         \end{cases}
 
-    where :math:`\text{lower\_limit}` is provided
+    where :math:`\text{bottom}` is provided
     by the argument of same name.
 
     Args:
         y: input signal in decibels
-        lower_limit: minimum decibel value
+        bottom: minimum decibel value
             which should be converted.
             Lower values will be set to 0.
             If set to ``None``
@@ -124,14 +125,14 @@ def inverse_db(
 
     """
     min_value = 0.
-    if lower_limit is None:
-        lower_limit = -np.Inf
+    if bottom is None:
+        bottom = -np.Inf
 
     if not isinstance(y, (collections.abc.Sequence, np.ndarray)):
-        if y <= lower_limit:
+        if y <= bottom:
             return min_value
         else:
-            return np.power(10.0, y / 20.0)
+            return np.power(10., y / 20.)
 
     y = np.array(y)
     if y.size == 0:
@@ -140,9 +141,9 @@ def inverse_db(
     if not np.issubdtype(y.dtype, np.floating):
         y = y.astype(np.float64)
 
-    mask = (y <= lower_limit)
+    mask = (y <= bottom)
     y[mask] = min_value
-    y[~mask] = np.power(10.0, y[~mask] / 20.0)
+    y[~mask] = np.power(10., y[~mask] / 20.)
     return y
 
 
