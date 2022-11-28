@@ -7,7 +7,7 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
-FADEIN_SHAPES = [
+WINDOW_SHAPES = [
     'tukey',
     'kaiser',
     'linear',
@@ -87,23 +87,24 @@ def db(
     return x
 
 
-def fadein(
+def window(
     samples: int,
     shape: str = 'tukey',
+    half: str = None,
     level: typing.Union[int, float] = -120,
     bottom: typing.Union[int, float] = -120,
 ) -> np.ndarray:
-    r"""Fade-in half-window.
+    r"""Return a window.
 
-    A fade-in is a gradual increase in amplitude
-    of a signal.
     If ``level`` <= ``bottom``
-    the fadein will start from 0,
+    the window will start from 0
+    and end at 0,
     otherwise from the provided level.
-    If at least 2 samples are requested,
-    the fade-in will always end at 1.
+    If at least 3 samples are requested
+    and the number of samples is odd,
+    the windows maximum value will always be 1.
 
-    The shape of the fade-in
+    The shape of the window
     is selected via ``shape``
     The following figure shows all available shapes.
 
@@ -115,11 +116,11 @@ def fadein(
         import numpy as np
         import seaborn as sns
 
-        for shape in audmath.core.api.FADEIN_SHAPES:
-            win = audmath.fadein(101, shape=shape)
+        for shape in audmath.core.api.WINDOW_SHAPES:
+            win = audmath.window(101, shape=shape)
             plt.plot(win, label=shape)
         plt.ylabel('Magnitude')
-        plt.xlabel('Fade-in Length')
+        plt.xlabel('Window Length')
         plt.grid(alpha=0.4)
         ax = plt.gca()
         ax.xaxis.set_major_formatter(mtick.PercentFormatter())
@@ -136,63 +137,98 @@ def fadein(
         plt.tight_layout()
 
     Args:
-        samples: length of fade-in half-window
-        shape: shape of fade-in half-window
-        level: start level in decibel of fade-in
+        samples: length of window
+        shape: shape of window
+        half: if ``None`` return whole window,
+            if ``left`` or ``right``
+            return left or right window
+            inlcuding center
+        level: start and end level in decibel of window
         bottom: minimum level in decibel.
             If ``level`` <= ``bottom``
-            the half-window
-            will start at a value of 0
+            the window
+            will start and end
+            at a value of 0
 
     Returns:
-        fade-in half-window
+        window
 
     Raises:
         ValueError: if requested ``shape`` is not supported
+        ValueError: if requested ``half`` is not supported
 
     Example:
-        >>> fadein(5)
-        array([0.        , 0.14644661, 0.5       , 0.85355339, 1.        ])
-        >>> fadein(5, level=-20)
-        array([0.1       , 0.23180195, 0.55      , 0.86819805, 1.        ])
-        >>> fadein(5, shape='linear')
+        >>> window(7)
+        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
+        >>> window(6)
+        array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
+        >>> window(6, level=-20)
+        array([0.1  , 0.325, 0.775, 0.775, 0.325, 0.1  ])
+        >>> window(5, shape='linear', half='left')
         array([0.  , 0.25, 0.5 , 0.75, 1.  ])
 
     """
-    if shape not in FADEIN_SHAPES:
+    if shape not in WINDOW_SHAPES:
         raise ValueError(
             "shape has to be one of the following: "
-            f"{(', ').join(FADEIN_SHAPES)},"
+            f"{(', ').join(WINDOW_SHAPES)},"
             f"not '{shape}'."
         )
-    if samples < 2:
-        win = np.arange(samples)
-    elif shape == 'linear':
-        win = np.arange(samples) / (samples - 1)
-    elif shape == 'kaiser':
-        # Kaiser windows as approximation of DPSS window
-        # as often used for tapering windows
-        win = np.kaiser(2 * (samples - 1), beta=14)[:(samples - 1)]
-        # Ensure first entry is 0
-        win[0] = 0
-        # Add 1 at the end
-        win = np.concatenate([win, np.array([1])])
-    elif shape == 'tukey':
-        # Tukey window,
-        # which is also often used as tapering window
-        # 1/2 * (1 - cos(2pi n / (4N alpha)))
-        x = np.arange(samples)
-        alpha = 0.5
-        width = 4 * (samples - 1) * alpha
-        win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
-    elif shape == 'exponential':
-        x = np.arange(samples)
-        win = (np.exp(x) - 1) / (np.exp(samples - 1) - 1)
-    elif shape == 'logarithmic':
-        x = np.arange(samples)
-        win = np.log10(x + 1) / np.log10(samples)
-    offset = inverse_db(level, bottom=bottom)
-    win = win * (1 - offset) + offset
+    if (
+            half is not None
+            and half not in ['left', 'right']
+    ):
+        raise ValueError(
+            "half has to be 'left' or 'right' "
+            f"not '{half}'."
+        )
+
+    def left(samples, shape, level, bottom):
+        if samples < 2:
+            win = np.arange(samples)
+        elif shape == 'linear':
+            win = np.arange(samples) / (samples - 1)
+        elif shape == 'kaiser':
+            # Kaiser windows as approximation of DPSS window
+            # as often used for tapering windows
+            win = np.kaiser(2 * (samples - 1), beta=14)[:(samples - 1)]
+            # Ensure first entry is 0
+            win[0] = 0
+            # Add 1 at the end
+            win = np.concatenate([win, np.array([1])])
+        elif shape == 'tukey':
+            # Tukey window,
+            # which is also often used as tapering window
+            # 1/2 * (1 - cos(2pi n / (4N alpha)))
+            x = np.arange(samples)
+            alpha = 0.5
+            width = 4 * (samples - 1) * alpha
+            win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
+        elif shape == 'exponential':
+            x = np.arange(samples)
+            win = (np.exp(x) - 1) / (np.exp(samples - 1) - 1)
+        elif shape == 'logarithmic':
+            x = np.arange(samples)
+            win = np.log10(x + 1) / np.log10(samples)
+        offset = inverse_db(level, bottom=bottom)
+        return win * (1 - offset) + offset
+
+    if half is None:
+        # For odd (1, 3, 5, ...) number of samples
+        # we include 1 as window maximum.
+        # For even numbers we exclude 1 as window maximum
+        if samples % 2 != 0:
+            left_win = left(int(np.ceil(samples / 2)), shape, level, bottom)
+            right_win = np.flip(left_win)[1:]
+        else:
+            left_win = left(int(samples / 2) + 1, shape, level, bottom)[:-1]
+            right_win = np.flip(left_win)
+        win = np.concatenate([left_win, right_win])
+    elif half == 'left':
+        win = left(samples, shape, level, bottom)
+    elif half == 'right':
+        win = np.flip(left(samples, shape, level, bottom))
+
     return win
 
 

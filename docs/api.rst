@@ -10,12 +10,6 @@ db
 .. autofunction:: db
 
 
-fadein
-------
-
-.. autofunction:: fadein
-
-
 inverse_db
 ----------
 
@@ -32,3 +26,9 @@ rms
 ---
 
 .. autofunction:: rms
+
+
+window
+------
+
+.. autofunction:: window

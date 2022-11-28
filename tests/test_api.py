@@ -51,68 +51,6 @@ def test_db(x, bottom, expected_y):
 
 
 @pytest.mark.parametrize(
-    'shape',
-    [
-        'linear',
-        'kaiser',
-        'tukey',
-        'exponential',
-        'logarithmic',
-    ],
-)
-@pytest.mark.parametrize(
-    'samples, level, expected',
-    [
-        (-1, -120, np.array([])),
-        (0, -120, np.array([])),
-        (1, -120, np.array([0])),
-        (2, -120, np.array([0, 1])),
-        (1, -20, np.array([0.1])),
-        (2, -20, np.array([0.1, 1])),
-    ]
-)
-def test_fadein_level(shape, samples, level, expected):
-    win = audmath.fadein(samples, shape=shape, level=level)
-    np.testing.assert_allclose(win, expected)
-    assert np.issubdtype(win.dtype, np.floating)
-
-
-@pytest.mark.parametrize(
-    'samples, shape, expected',
-    [
-        (3, 'linear', np.array([0, 0.5, 1])),
-        (3, 'kaiser', np.array([0, 4.6272e-01, 1])),
-        (3, 'tukey', np.array([0, 0.5, 1])),
-        (3, 'exponential', np.array([0, 0.26894142, 1])),
-        (3, 'logarithmic', np.array([0, 0.63092975, 1])),
-    ]
-)
-def test_fadein_shape(samples, shape, expected):
-    win = audmath.fadein(samples, shape=shape)
-    np.testing.assert_allclose(win, expected, rtol=1e-05)
-    assert np.issubdtype(win.dtype, np.floating)
-
-
-@pytest.mark.parametrize(
-    'shape, error, error_msg',
-    [
-        (
-            'unknown',
-            ValueError,
-            (
-                "shape has to be one of the following: "
-                f"{(', ').join(audmath.core.api.FADEIN_SHAPES)},"
-                f"not 'unknown'."
-            ),
-        ),
-    ],
-)
-def test_fadein_error(shape, error, error_msg):
-    with pytest.raises(error, match=error_msg):
-        audmath.fadein(3, shape=shape)
-
-
-@pytest.mark.parametrize(
     'y, bottom, expected_x',
     [
         (0, None, 1.),
@@ -315,3 +253,104 @@ def test_rms(x, axis, keepdims, expected):
         assert np.issubdtype(y.dtype, np.floating)
     else:
         assert np.issubdtype(type(y), np.floating)
+
+
+@pytest.mark.parametrize(
+    'shape',
+    [
+        'linear',
+        'kaiser',
+        'tukey',
+        'exponential',
+        'logarithmic',
+    ],
+)
+@pytest.mark.parametrize(
+    'samples, level, half, expected',
+    [
+        (-1, -120, 'left', np.array([])),
+        (0, -120, 'left', np.array([])),
+        (1, -120, 'left', np.array([0])),
+        (2, -120, 'left', np.array([0, 1])),
+        (1, -20, 'left', np.array([0.1])),
+        (2, -20, 'left', np.array([0.1, 1])),
+        (-1, -120, 'right', np.array([])),
+        (0, -120, 'right', np.array([])),
+        (1, -120, 'right', np.array([0])),
+        (2, -120, 'right', np.array([1, 0])),
+        (1, -20, 'right', np.array([0.1])),
+        (2, -20, 'right', np.array([1, 0.1])),
+        (-1, -120, None, np.array([])),
+        (0, -120, None, np.array([])),
+        (1, -120, None, np.array([0])),
+        (2, -120, None, np.array([0, 0])),
+        (3, -120, None, np.array([0, 1, 0])),
+        (1, -20, None, np.array([0.1])),
+        (2, -20, None, np.array([0.1, 0.1])),
+        (3, -20, None, np.array([0.1, 1, 0.1])),
+    ]
+)
+def test_window_level(shape, samples, level, half, expected):
+    win = audmath.window(samples, shape=shape, half=half, level=level)
+    np.testing.assert_allclose(win, expected)
+    assert np.issubdtype(win.dtype, np.floating)
+
+
+@pytest.mark.parametrize(
+    'samples, shape, half, expected',
+    [
+        (3, 'linear', 'left', np.array([0, 0.5, 1])),
+        (3, 'kaiser', 'left', np.array([0, 4.6272e-01, 1])),
+        (3, 'tukey', 'left', np.array([0, 0.5, 1])),
+        (3, 'exponential', 'left', np.array([0, 0.26894142, 1])),
+        (3, 'logarithmic', 'left', np.array([0, 0.63092975, 1])),
+        (3, 'linear', 'right', np.array([1, 0.5, 0])),
+        (3, 'kaiser', 'right', np.array([1, 4.6272e-01, 0])),
+        (3, 'tukey', 'right', np.array([1, 0.5, 0])),
+        (3, 'exponential', 'right', np.array([1, 0.26894142, 0])),
+        (3, 'logarithmic', 'right', np.array([1, 0.63092975, 0])),
+        (5, 'linear', None, np.array([0, 0.5, 1, 0.5, 0])),
+        (5, 'kaiser', None, np.array([0, 4.6272e-01, 1, 4.6272e-01, 0])),
+        (5, 'tukey', None, np.array([0, 0.5, 1, 0.5, 0])),
+        (5, 'exponential', None, np.array([0, 0.26894142, 1, 0.26894142, 0])),
+        (5, 'logarithmic', None, np.array([0, 0.63092975, 1, 0.63092975, 0])),
+        (4, 'linear', None, np.array([0, 0.5, 0.5, 0])),
+        (4, 'kaiser', None, np.array([0, 4.6272e-01, 4.6272e-01, 0])),
+        (4, 'tukey', None, np.array([0, 0.5, 0.5, 0])),
+        (4, 'exponential', None, np.array([0, 0.26894142, 0.26894142, 0])),
+        (4, 'logarithmic', None, np.array([0, 0.63092975, 0.63092975, 0])),
+    ]
+)
+def test_window_shape(samples, shape, half, expected):
+    win = audmath.window(samples, shape=shape, half=half)
+    np.testing.assert_allclose(win, expected, rtol=1e-05)
+    assert np.issubdtype(win.dtype, np.floating)
+
+
+@pytest.mark.parametrize(
+    'shape, half, error, error_msg',
+    [
+        (
+            'unknown',
+            None,
+            ValueError,
+            (
+                "shape has to be one of the following: "
+                f"{(', ').join(audmath.core.api.WINDOW_SHAPES)},"
+                f"not 'unknown'."
+            ),
+        ),
+        (
+            'linear',
+            'center',
+            ValueError,
+            (
+                "half has to be 'left' or 'right' "
+                "not 'center'."
+            ),
+        ),
+    ],
+)
+def test_window_error(shape, half, error, error_msg):
+    with pytest.raises(error, match=error_msg):
+        audmath.window(3, shape=shape, half=half)

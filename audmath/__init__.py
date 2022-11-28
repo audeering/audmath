@@ -1,9 +1,9 @@
 from audmath.core.api import (
     db,
-    fadein,
     inverse_db,
     inverse_normal_distribution,
     rms,
+    window,
 )
 
 # Discourage from audmath import *
