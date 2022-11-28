@@ -107,6 +107,9 @@ def window(
     The shape of the window
     is selected via ``shape``
     The following figure shows all available shapes.
+    For the Kaiser window
+    we use :math:`\beta = 14`
+    and set its first sample to 0.
 
     .. plot::
 
