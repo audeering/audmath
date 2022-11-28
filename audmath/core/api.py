@@ -91,13 +91,13 @@ def fadein(
     samples: int,
     shape: str = 'tukey',
     level: float = -120.,
-    lower_limit: float = -120.,
+    bottom: typing.Union[int, float] = -120,
 ) -> np.ndarray:
     r"""Fade-in half-window.
 
     A fade-in is a gradual increase in amplitude
     of a signal.
-    If ``level`` <= ``lower_limit``
+    If ``level`` <= ``bottom``
     the fadein will start from 0,
     otherwise from the provided level.
 
@@ -139,7 +139,7 @@ def fadein(
         samples: length of fade-in half-window
         shape: shape of fade-in half-window
         level: start level in decibel of fade-in
-        lower_limit: minimum level in decibel
+        bottom: minimum level in decibel
             above which the half-window
             will not start at a value of 0
 
@@ -186,7 +186,7 @@ def fadein(
         x = np.arange(samples + 1)
         win = np.log10(x + 1) / np.log10(samples + 1)
         win = win[:samples]
-    offset = inverse_db(level, lower_limit=lower_limit)
+    offset = inverse_db(level, bottom=bottom)
     win = win * (1 - offset) + offset
     return win
 
