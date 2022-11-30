@@ -91,12 +91,11 @@ def window(
     samples: int,
     shape: str = 'tukey',
     half: str = None,
-    offset: typing.Union[int, float] = 0,
 ) -> np.ndarray:
     r"""Return a window.
 
     The window will start from
-    and/or end at :math:`\text{offset} \in [0, 1[`.
+    and/or end at 0.
     If at least 3 samples are requested
     and the number of samples is odd,
     the windows maximum value will always be 1.
@@ -143,7 +142,6 @@ def window(
             if ``left`` or ``right``
             return left or right window
             inlcuding center
-        offset: start and end value of window
 
     Returns:
         window
@@ -151,15 +149,12 @@ def window(
     Raises:
         ValueError: if ``shape`` is not supported
         ValueError: if ``half`` is not supported
-        ValueError: if not 0 <= ``offset`` < 1
 
     Example:
         >>> window(7)
         array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
         >>> window(6)
         array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
-        >>> window(6, offset=0.1)
-        array([0.1  , 0.325, 0.775, 0.775, 0.325, 0.1  ])
         >>> window(5, shape='linear', half='left')
         array([0.  , 0.25, 0.5 , 0.75, 1.  ])
 
@@ -178,14 +173,8 @@ def window(
             "half has to be 'left' or 'right' "
             f"not '{half}'."
         )
-    if offset < 0 or offset >= 1:
-        raise ValueError(
-            "offset needs to be smaller than 1 "
-            "and greater than 0 "
-            f"not {offset}."
-        )
 
-    def left(samples, shape, offset):
+    def left(samples, shape):
         if samples < 2:
             win = np.arange(samples)
         elif shape == 'linear':
@@ -212,23 +201,23 @@ def window(
         elif shape == 'logarithmic':
             x = np.arange(samples)
             win = np.log10(x + 1) / np.log10(samples)
-        return win * (1. - offset) + offset
+        return win.astype(np.float64)
 
     if half is None:
         # For odd (1, 3, 5, ...) number of samples
         # we include 1 as window maximum.
         # For even numbers we exclude 1 as window maximum
         if samples % 2 != 0:
-            left_win = left(int(np.ceil(samples / 2)), shape, offset)
+            left_win = left(int(np.ceil(samples / 2)), shape)
             right_win = np.flip(left_win)[1:]
         else:
-            left_win = left(int(samples / 2) + 1, shape, offset)[:-1]
+            left_win = left(int(samples / 2) + 1, shape)[:-1]
             right_win = np.flip(left_win)
         win = np.concatenate([left_win, right_win])
     elif half == 'left':
-        win = left(samples, shape, offset)
+        win = left(samples, shape)
     elif half == 'right':
-        win = np.flip(left(samples, shape, offset))
+        win = np.flip(left(samples, shape))
 
     return win
 
