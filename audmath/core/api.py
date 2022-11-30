@@ -91,15 +91,12 @@ def window(
     samples: int,
     shape: str = 'tukey',
     half: str = None,
-    level: typing.Union[int, float] = -120,
-    bottom: typing.Union[int, float] = -120,
+    offset: typing.Union[int, float] = 0,
 ) -> np.ndarray:
     r"""Return a window.
 
-    If ``level`` <= ``bottom``
-    the window will start from 0
-    and end at 0,
-    otherwise from the provided level.
+    The window will start from
+    and/or end at :math:`\text{offset} \in [0, 1[`.
     If at least 3 samples are requested
     and the number of samples is odd,
     the windows maximum value will always be 1.
@@ -157,15 +154,16 @@ def window(
         window
 
     Raises:
-        ValueError: if requested ``shape`` is not supported
-        ValueError: if requested ``half`` is not supported
+        ValueError: if ``shape`` is not supported
+        ValueError: if ``half`` is not supported
+        ValueError: if not 0 <= ``offset`` < 1
 
     Example:
         >>> window(7)
         array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
         >>> window(6)
         array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
-        >>> window(6, level=-20)
+        >>> window(6, offset=0.1)
         array([0.1  , 0.325, 0.775, 0.775, 0.325, 0.1  ])
         >>> window(5, shape='linear', half='left')
         array([0.  , 0.25, 0.5 , 0.75, 1.  ])
@@ -185,8 +183,14 @@ def window(
             "half has to be 'left' or 'right' "
             f"not '{half}'."
         )
+    if offset < 0 or offset >= 1:
+        raise ValueError(
+            "offset needs to be smaller than 1 "
+            "and greater than 0 "
+            f"not {offset}."
+        )
 
-    def left(samples, shape, level, bottom):
+    def left(samples, shape, offset):
         if samples < 2:
             win = np.arange(samples)
         elif shape == 'linear':
@@ -213,24 +217,23 @@ def window(
         elif shape == 'logarithmic':
             x = np.arange(samples)
             win = np.log10(x + 1) / np.log10(samples)
-        offset = inverse_db(level, bottom=bottom)
-        return win * (1 - offset) + offset
+        return win * (1. - offset) + offset
 
     if half is None:
         # For odd (1, 3, 5, ...) number of samples
         # we include 1 as window maximum.
         # For even numbers we exclude 1 as window maximum
         if samples % 2 != 0:
-            left_win = left(int(np.ceil(samples / 2)), shape, level, bottom)
+            left_win = left(int(np.ceil(samples / 2)), shape, offset)
             right_win = np.flip(left_win)[1:]
         else:
-            left_win = left(int(samples / 2) + 1, shape, level, bottom)[:-1]
+            left_win = left(int(samples / 2) + 1, shape, offset)[:-1]
             right_win = np.flip(left_win)
         win = np.concatenate([left_win, right_win])
     elif half == 'left':
-        win = left(samples, shape, level, bottom)
+        win = left(samples, shape, offset)
     elif half == 'right':
-        win = np.flip(left(samples, shape, level, bottom))
+        win = np.flip(left(samples, shape, offset))
 
     return win
 

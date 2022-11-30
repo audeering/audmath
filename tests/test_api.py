@@ -266,32 +266,32 @@ def test_rms(x, axis, keepdims, expected):
     ],
 )
 @pytest.mark.parametrize(
-    'samples, level, half, expected',
+    'samples, offset, half, expected',
     [
-        (-1, -120, 'left', np.array([])),
-        (0, -120, 'left', np.array([])),
-        (1, -120, 'left', np.array([0])),
-        (2, -120, 'left', np.array([0, 1])),
-        (1, -20, 'left', np.array([0.1])),
-        (2, -20, 'left', np.array([0.1, 1])),
-        (-1, -120, 'right', np.array([])),
-        (0, -120, 'right', np.array([])),
-        (1, -120, 'right', np.array([0])),
-        (2, -120, 'right', np.array([1, 0])),
-        (1, -20, 'right', np.array([0.1])),
-        (2, -20, 'right', np.array([1, 0.1])),
-        (-1, -120, None, np.array([])),
-        (0, -120, None, np.array([])),
-        (1, -120, None, np.array([0])),
-        (2, -120, None, np.array([0, 0])),
-        (3, -120, None, np.array([0, 1, 0])),
-        (1, -20, None, np.array([0.1])),
-        (2, -20, None, np.array([0.1, 0.1])),
-        (3, -20, None, np.array([0.1, 1, 0.1])),
+        (-1, 0, 'left', np.array([])),
+        (0, 0, 'left', np.array([])),
+        (1, 0, 'left', np.array([0])),
+        (2, 0, 'left', np.array([0, 1])),
+        (1, 0.1, 'left', np.array([0.1])),
+        (2, 0.1, 'left', np.array([0.1, 1])),
+        (-1, 0, 'right', np.array([])),
+        (0, 0, 'right', np.array([])),
+        (1, 0, 'right', np.array([0])),
+        (2, 0, 'right', np.array([1, 0])),
+        (1, 0.1, 'right', np.array([0.1])),
+        (2, 0.1, 'right', np.array([1, 0.1])),
+        (-1, 0, None, np.array([])),
+        (0, 0, None, np.array([])),
+        (1, 0, None, np.array([0])),
+        (2, 0, None, np.array([0, 0])),
+        (3, 0, None, np.array([0, 1, 0])),
+        (1, 0.1, None, np.array([0.1])),
+        (2, 0.1, None, np.array([0.1, 0.1])),
+        (3, 0.1, None, np.array([0.1, 1, 0.1])),
     ]
 )
-def test_window_level(shape, samples, level, half, expected):
-    win = audmath.window(samples, shape=shape, half=half, level=level)
+def test_window_level(shape, samples, offset, half, expected):
+    win = audmath.window(samples, shape=shape, half=half, offset=offset)
     np.testing.assert_allclose(win, expected)
     assert np.issubdtype(win.dtype, np.floating)
 
@@ -328,11 +328,12 @@ def test_window_shape(samples, shape, half, expected):
 
 
 @pytest.mark.parametrize(
-    'shape, half, error, error_msg',
+    'shape, half, offset, error, error_msg',
     [
         (
             'unknown',
             None,
+            0,
             ValueError,
             (
                 "shape has to be one of the following: "
@@ -343,14 +344,37 @@ def test_window_shape(samples, shape, half, expected):
         (
             'linear',
             'center',
+            0,
             ValueError,
             (
                 "half has to be 'left' or 'right' "
                 "not 'center'."
             ),
         ),
+        (
+            'linear',
+            None,
+            -0.1,
+            ValueError,
+            (
+                "offset needs to be smaller than 1 "
+                "and greater than 0 "
+                "not -0.1."
+            ),
+        ),
+        (
+            'linear',
+            None,
+            1,
+            ValueError,
+            (
+                "offset needs to be smaller than 1 "
+                "and greater than 0 "
+                "not 1."
+            ),
+        ),
     ],
 )
-def test_window_error(shape, half, error, error_msg):
+def test_window_error(shape, half, offset, error, error_msg):
     with pytest.raises(error, match=error_msg):
-        audmath.window(3, shape=shape, half=half)
+        audmath.window(3, shape=shape, half=half, offset=offset)
