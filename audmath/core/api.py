@@ -143,12 +143,7 @@ def window(
             if ``left`` or ``right``
             return left or right window
             inlcuding center
-        level: start and end level in decibel of window
-        bottom: minimum level in decibel.
-            If ``level`` <= ``bottom``
-            the window
-            will start and end
-            at a value of 0
+        offset: start and end value of window
 
     Returns:
         window
