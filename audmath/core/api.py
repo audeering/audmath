@@ -141,7 +141,7 @@ def window(
         half: if ``None`` return whole window,
             if ``'left'`` or ``'right'``
             return left or right half-window.
-            Opposite to the full window
+            Other than the whole window
             the half-windows
             will always contain 1
             as maximum value
