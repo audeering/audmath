@@ -140,8 +140,12 @@ def window(
         shape: shape of window
         half: if ``None`` return whole window,
             if ``left`` or ``right``
-            return left or right window
-            inlcuding center
+            return left or right half-window.
+            Opposite to the full window
+            the half-windows
+            will always contain 1
+            as maximum value
+            as long as ``samples`` > 1
 
     Returns:
         window
