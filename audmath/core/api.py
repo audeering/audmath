@@ -139,7 +139,7 @@ def window(
         samples: length of window
         shape: shape of window
         half: if ``None`` return whole window,
-            if ``left`` or ``right``
+            if ``'left'`` or ``'right'``
             return left or right half-window.
             Opposite to the full window
             the half-windows
