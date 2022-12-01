@@ -3,6 +3,7 @@ from audmath.core.api import (
     inverse_db,
     inverse_normal_distribution,
     rms,
+    window,
 )
 
 # Discourage from audmath import *

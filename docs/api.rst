@@ -26,3 +26,9 @@ rms
 ---
 
 .. autofunction:: rms
+
+
+window
+------
+
+.. autofunction:: window
