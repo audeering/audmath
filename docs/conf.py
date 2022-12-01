@@ -41,7 +41,7 @@ copybutton_prompt_is_regexp = True
 # https://github.com/sphinx-doc/sphinx/issues/6316
 toc_object_entries = False
 
-# Matplot directive settings
+# Matplot plot_directive settings
 plot_html_show_source_link = False
 plot_html_show_formats = False
 plot_formats = ['png']
