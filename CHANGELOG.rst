@@ -13,7 +13,7 @@ Version 1.1.0 (2022/12/02)
 * Added: ``audmath.rms()``
   to calculate root mean square of signal
 * Added: ``audmath.db()``
-  to convert value to decibel
+  to convert from amplitude to decibel
 * Added: ``audmath.invert_db()``
   to convert from decibel to amplitude
 * Added: ``audmath.window()``
