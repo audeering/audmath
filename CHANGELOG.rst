@@ -15,7 +15,7 @@ Version 1.1.0 (2022/12/02)
 * Added: ``audmath.db()``
   to convert value to decibel
 * Added: ``audmath.invert_db()``
-  to convert value from decibel
+  to convert from decibel to amplitude
 * Added: ``audmath.window()``
   to provide different kind
   of (half-)windows 
