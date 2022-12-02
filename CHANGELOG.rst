@@ -7,6 +7,21 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.1.0 (2022/12/02)
+--------------------------
+
+* Added: ``audmath.rms()``
+  to calculate root mean square of signal
+* Added: ``audmath.db()``
+  to convert from amplitude to decibel
+* Added: ``audmath.invert_db()``
+  to convert from decibel to amplitude
+* Added: ``audmath.window()``
+  to provide different kind
+  of (half-)windows 
+* Added: support for Python 3.10
+
+
 Version 1.0.0 (2022/01/03)
 --------------------------
 
