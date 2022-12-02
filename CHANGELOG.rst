@@ -16,6 +16,9 @@ Version 1.1.0 (2022/12/02)
   to convert value to decibel
 * Added: ``audmath.invert_db()``
   to convert value from decibel
+* Added: ``audmath.window()``
+  to provide different kind
+  of (half-)windows 
 * Added: support for Python 3.10
 
 
