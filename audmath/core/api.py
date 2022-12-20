@@ -49,7 +49,7 @@ def db(
     Returns:
         input value(s) in dB
 
-    Example:
+    Examples:
         >>> db(1)
         0.0
         >>> db(0)
@@ -154,7 +154,7 @@ def window(
         ValueError: if ``shape`` is not supported
         ValueError: if ``half`` is not supported
 
-    Example:
+    Examples:
         >>> window(7)
         array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
         >>> window(6)
@@ -261,7 +261,7 @@ def inverse_db(
     Returns:
         input signal
 
-    Example:
+    Examples:
         >>> inverse_db(0)
         1.0
         >>> inverse_db(-120)
@@ -348,7 +348,7 @@ def inverse_normal_distribution(
     Returns:
         inverted input
 
-    Example:
+    Examples:
         >>> inverse_normal_distribution([0.05, 0.4, 0.6, 0.95])
         array([-1.64485363, -0.2533471 , 0.2533471 , 1.64485363])
 
@@ -520,7 +520,7 @@ def rms(
     Returns:
         root mean square of input signal
 
-    Example:
+    Examples:
         >>> rms([])
         0.0
         >>> rms([0, 1])
