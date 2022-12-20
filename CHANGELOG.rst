@@ -7,6 +7,14 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.1.1 (2022/12/20)
+--------------------------
+
+* Added: support for Python 3.11
+* Changed: split API documentation into sub-pages
+  for each function
+
+
 Version 1.1.0 (2022/12/02)
 --------------------------
 
