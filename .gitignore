@@ -4,3 +4,4 @@ __pycache__/
 .coverage
 coverage.xml
 .eggs/
+docs/api/
