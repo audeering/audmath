@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                v1.1.0
+                v1.1.1
               </div>
             
           
@@ -97,7 +97,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">audmath</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/audmath.html">audmath</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../genindex.html">Index</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
@@ -159,7 +159,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="db"><a class="viewcode-back" href="../../../api.html#audmath.db">[docs]</a><span class="k">def</span> <span class="nf">db</span><span class="p">(</span>
+<div class="viewcode-block" id="db"><a class="viewcode-back" href="../../../api/audmath.db.html#audmath.db">[docs]</a><span class="k">def</span> <span class="nf">db</span><span class="p">(</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">bottom</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span>
@@ -192,7 +192,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        input value(s) in dB</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; db(1)</span>
 <span class="sd">        0.0</span>
 <span class="sd">        &gt;&gt;&gt; db(0)</span>
@@ -230,7 +230,7 @@
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="window"><a class="viewcode-back" href="../../../api.html#audmath.window">[docs]</a><span class="k">def</span> <span class="nf">window</span><span class="p">(</span>
+<div class="viewcode-block" id="window"><a class="viewcode-back" href="../../../api/audmath.window.html#audmath.window">[docs]</a><span class="k">def</span> <span class="nf">window</span><span class="p">(</span>
     <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;tukey&#39;</span><span class="p">,</span>
     <span class="n">half</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -297,7 +297,7 @@
 <span class="sd">        ValueError: if ``shape`` is not supported</span>
 <span class="sd">        ValueError: if ``half`` is not supported</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; window(7)</span>
 <span class="sd">        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])</span>
 <span class="sd">        &gt;&gt;&gt; window(6)</span>
@@ -369,7 +369,7 @@
     <span class="k">return</span> <span class="n">win</span></div>
 
 
-<div class="viewcode-block" id="inverse_db"><a class="viewcode-back" href="../../../api.html#audmath.inverse_db">[docs]</a><span class="k">def</span> <span class="nf">inverse_db</span><span class="p">(</span>
+<div class="viewcode-block" id="inverse_db"><a class="viewcode-back" href="../../../api/audmath.inverse_db.html#audmath.inverse_db">[docs]</a><span class="k">def</span> <span class="nf">inverse_db</span><span class="p">(</span>
         <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">bottom</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span>
@@ -404,7 +404,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        input signal</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; inverse_db(0)</span>
 <span class="sd">        1.0</span>
 <span class="sd">        &gt;&gt;&gt; inverse_db(-120)</span>
@@ -438,7 +438,7 @@
     <span class="k">return</span> <span class="n">y</span></div>
 
 
-<div class="viewcode-block" id="inverse_normal_distribution"><a class="viewcode-back" href="../../../api.html#audmath.inverse_normal_distribution">[docs]</a><span class="k">def</span> <span class="nf">inverse_normal_distribution</span><span class="p">(</span>
+<div class="viewcode-block" id="inverse_normal_distribution"><a class="viewcode-back" href="../../../api/audmath.inverse_normal_distribution.html#audmath.inverse_normal_distribution">[docs]</a><span class="k">def</span> <span class="nf">inverse_normal_distribution</span><span class="p">(</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inverse normal distribution.</span>
@@ -491,7 +491,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        inverted input</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; inverse_normal_distribution([0.05, 0.4, 0.6, 0.95])</span>
 <span class="sd">        array([-1.64485363, -0.2533471 , 0.2533471 , 1.64485363])</span>
 
@@ -626,7 +626,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rms"><a class="viewcode-back" href="../../../api.html#audmath.rms">[docs]</a><span class="k">def</span> <span class="nf">rms</span><span class="p">(</span>
+<div class="viewcode-block" id="rms"><a class="viewcode-back" href="../../../api/audmath.rms.html#audmath.rms">[docs]</a><span class="k">def</span> <span class="nf">rms</span><span class="p">(</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">axis</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -663,7 +663,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        root mean square of input signal</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; rms([])</span>
 <span class="sd">        0.0</span>
 <span class="sd">        &gt;&gt;&gt; rms([0, 1])</span>
@@ -695,7 +695,7 @@
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/02 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/20 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>

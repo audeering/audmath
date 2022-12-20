@@ -16,7 +16,7 @@
     :caption: API Documentation
     :hidden:
 
-    api
+    api/audmath
     genindex
 
 .. toctree::

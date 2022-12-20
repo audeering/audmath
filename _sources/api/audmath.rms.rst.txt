@@ -1,0 +1,6 @@
+﻿rms\(\)
+=======
+
+.. currentmodule:: audmath
+
+.. autofunction:: audmath.rms

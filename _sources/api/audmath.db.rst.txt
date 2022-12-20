@@ -1,0 +1,6 @@
+﻿db\(\)
+======
+
+.. currentmodule:: audmath
+
+.. autofunction:: audmath.db
