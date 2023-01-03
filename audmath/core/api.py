@@ -1,6 +1,5 @@
 import collections
 import typing
-import warnings
 
 import numpy as np
 
