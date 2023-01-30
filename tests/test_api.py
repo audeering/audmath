@@ -261,6 +261,8 @@ second = np.timedelta64(1, 's')
 millisecond = np.timedelta64(1, 'ms')
 microsecond = np.timedelta64(1, 'us')
 nanosecond = np.timedelta64(1, 'ns')
+
+
 @pytest.mark.parametrize(
     'time, sampling_rate, expected',
     [
@@ -312,7 +314,7 @@ nanosecond = np.timedelta64(1, 'ns')
         # microsecond
         ('1us', None, microsecond / second),
         ('1μs', None, microsecond / second),
-        ('1microseconds', None, microsecond/ second),
+        ('1microseconds', None, microsecond / second),
         ('1microsecond', None, microsecond / second),
         ('1micros', None, microsecond / second),
         ('1micro', None, microsecond / second),
