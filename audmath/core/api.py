@@ -416,10 +416,10 @@ def time_in_seconds(
         time: if time value is a float or integer
             it is treated as seconds.
             If provided as a string with unit,
-            e.g. '2ms',
+            e.g. ``'2ms'``,
             it will be converted to seconds.
             If provided as string without unit,
-            e.g. '2000',
+            e.g. ``'2000'``,
             it is treated as samples
             and will be converted base on ``sampling_rate``
             to seconds
