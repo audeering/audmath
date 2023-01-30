@@ -339,7 +339,7 @@ def test_time_in_seconds(time, sampling_rate, expected):
             '2abc',
             None,
             ValueError,
-            "The provided unit 'abc' is not know.",
+            "The provided unit 'abc' is not known.",
         ),
         (
             '1000',

@@ -562,7 +562,7 @@ def time_in_seconds(
             # string with unit
             if unit not in unit_mapping:
                 raise ValueError(
-                    f"The provided unit '{unit}' is not know."
+                    f"The provided unit '{unit}' is not known."
                 )
             unit = unit_mapping[unit]
             # time in nanoseconds
