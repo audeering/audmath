@@ -86,145 +86,6 @@ def db(
     return x
 
 
-def window(
-    samples: int,
-    shape: str = 'tukey',
-    half: str = None,
-) -> np.ndarray:
-    r"""Return a window.
-
-    The window will start from
-    and/or end at 0.
-    If at least 3 samples are requested
-    and the number of samples is odd,
-    the windows maximum value will always be 1.
-
-    The shape of the window
-    is selected via ``shape``
-    The following figure shows all available shapes.
-    For the Kaiser window
-    we use :math:`\beta = 14`
-    and set its first sample to 0.
-
-    .. plot::
-
-        import audmath
-        import matplotlib.pyplot as plt
-        import matplotlib.ticker as mtick
-        import numpy as np
-        import seaborn as sns
-
-        for shape in audmath.core.api.WINDOW_SHAPES:
-            win = audmath.window(101, shape=shape)
-            plt.plot(win, label=shape)
-        plt.ylabel('Magnitude')
-        plt.xlabel('Window Length')
-        plt.grid(alpha=0.4)
-        ax = plt.gca()
-        ax.xaxis.set_major_formatter(mtick.PercentFormatter())
-        ax.tick_params(axis=u'both', which=u'both',length=0)
-        plt.xlim([-1.2, 100.3])
-        plt.ylim([-0.02, 1])
-        sns.despine(left=True, bottom=True)
-        # Put a legend to the top right of the current axis
-        plt.legend()
-        ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
-        # Adjsut image size to contain outside legend
-        fig = plt.gcf()
-        fig.set_size_inches(6.4, 3.84)
-        plt.tight_layout()
-
-    Args:
-        samples: length of window
-        shape: shape of window
-        half: if ``None`` return whole window,
-            if ``'left'`` or ``'right'``
-            return left or right half-window.
-            Other than the whole window
-            the half-windows
-            will always contain 1
-            as maximum value
-            as long as ``samples`` > 1
-
-    Returns:
-        window
-
-    Raises:
-        ValueError: if ``shape`` is not supported
-        ValueError: if ``half`` is not supported
-
-    Examples:
-        >>> window(7)
-        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
-        >>> window(6)
-        array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
-        >>> window(5, shape='linear', half='left')
-        array([0.  , 0.25, 0.5 , 0.75, 1.  ])
-
-    """
-    if shape not in WINDOW_SHAPES:
-        raise ValueError(
-            "shape has to be one of the following: "
-            f"{(', ').join(WINDOW_SHAPES)},"
-            f"not '{shape}'."
-        )
-    if (
-            half is not None
-            and half not in ['left', 'right']
-    ):
-        raise ValueError(
-            "half has to be 'left' or 'right' "
-            f"not '{half}'."
-        )
-
-    def left(samples, shape):
-        if samples < 2:
-            win = np.arange(samples)
-        elif shape == 'linear':
-            win = np.arange(samples) / (samples - 1)
-        elif shape == 'kaiser':
-            # Kaiser windows as approximation of DPSS window
-            # as often used for tapering windows
-            win = np.kaiser(2 * (samples - 1), beta=14)[:(samples - 1)]
-            # Ensure first entry is 0
-            win[0] = 0
-            # Add 1 at the end
-            win = np.concatenate([win, np.array([1])])
-        elif shape == 'tukey':
-            # Tukey window,
-            # which is also often used as tapering window
-            # 1/2 * (1 - cos(2pi n / (4N alpha)))
-            x = np.arange(samples)
-            alpha = 0.5
-            width = 4 * (samples - 1) * alpha
-            win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
-        elif shape == 'exponential':
-            x = np.arange(samples)
-            win = (np.exp(x) - 1) / (np.exp(samples - 1) - 1)
-        elif shape == 'logarithmic':
-            x = np.arange(samples)
-            win = np.log10(x + 1) / np.log10(samples)
-        return win.astype(np.float64)
-
-    if half is None:
-        # For odd (1, 3, 5, ...) number of samples
-        # we include 1 as window maximum.
-        # For even numbers we exclude 1 as window maximum
-        if samples % 2 != 0:
-            left_win = left(int(np.ceil(samples / 2)), shape)
-            right_win = np.flip(left_win)[1:]
-        else:
-            left_win = left(int(samples / 2) + 1, shape)[:-1]
-            right_win = np.flip(left_win)
-        win = np.concatenate([left_win, right_win])
-    elif half == 'left':
-        win = left(samples, shape)
-    elif half == 'right':
-        win = np.flip(left(samples, shape))
-
-    return win
-
-
 def inverse_db(
         y: typing.Union[int, float, typing.Sequence, np.ndarray],
         *,
@@ -536,3 +397,142 @@ def rms(
     if x.size == 0:
         return np.float64(0.0)
     return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
+
+
+def window(
+    samples: int,
+    shape: str = 'tukey',
+    half: str = None,
+) -> np.ndarray:
+    r"""Return a window.
+
+    The window will start from
+    and/or end at 0.
+    If at least 3 samples are requested
+    and the number of samples is odd,
+    the windows maximum value will always be 1.
+
+    The shape of the window
+    is selected via ``shape``
+    The following figure shows all available shapes.
+    For the Kaiser window
+    we use :math:`\beta = 14`
+    and set its first sample to 0.
+
+    .. plot::
+
+        import audmath
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as mtick
+        import numpy as np
+        import seaborn as sns
+
+        for shape in audmath.core.api.WINDOW_SHAPES:
+            win = audmath.window(101, shape=shape)
+            plt.plot(win, label=shape)
+        plt.ylabel('Magnitude')
+        plt.xlabel('Window Length')
+        plt.grid(alpha=0.4)
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(mtick.PercentFormatter())
+        ax.tick_params(axis=u'both', which=u'both',length=0)
+        plt.xlim([-1.2, 100.3])
+        plt.ylim([-0.02, 1])
+        sns.despine(left=True, bottom=True)
+        # Put a legend to the top right of the current axis
+        plt.legend()
+        ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+        # Adjsut image size to contain outside legend
+        fig = plt.gcf()
+        fig.set_size_inches(6.4, 3.84)
+        plt.tight_layout()
+
+    Args:
+        samples: length of window
+        shape: shape of window
+        half: if ``None`` return whole window,
+            if ``'left'`` or ``'right'``
+            return left or right half-window.
+            Other than the whole window
+            the half-windows
+            will always contain 1
+            as maximum value
+            as long as ``samples`` > 1
+
+    Returns:
+        window
+
+    Raises:
+        ValueError: if ``shape`` is not supported
+        ValueError: if ``half`` is not supported
+
+    Examples:
+        >>> window(7)
+        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
+        >>> window(6)
+        array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
+        >>> window(5, shape='linear', half='left')
+        array([0.  , 0.25, 0.5 , 0.75, 1.  ])
+
+    """
+    if shape not in WINDOW_SHAPES:
+        raise ValueError(
+            "shape has to be one of the following: "
+            f"{(', ').join(WINDOW_SHAPES)},"
+            f"not '{shape}'."
+        )
+    if (
+            half is not None
+            and half not in ['left', 'right']
+    ):
+        raise ValueError(
+            "half has to be 'left' or 'right' "
+            f"not '{half}'."
+        )
+
+    def left(samples, shape):
+        if samples < 2:
+            win = np.arange(samples)
+        elif shape == 'linear':
+            win = np.arange(samples) / (samples - 1)
+        elif shape == 'kaiser':
+            # Kaiser windows as approximation of DPSS window
+            # as often used for tapering windows
+            win = np.kaiser(2 * (samples - 1), beta=14)[:(samples - 1)]
+            # Ensure first entry is 0
+            win[0] = 0
+            # Add 1 at the end
+            win = np.concatenate([win, np.array([1])])
+        elif shape == 'tukey':
+            # Tukey window,
+            # which is also often used as tapering window
+            # 1/2 * (1 - cos(2pi n / (4N alpha)))
+            x = np.arange(samples)
+            alpha = 0.5
+            width = 4 * (samples - 1) * alpha
+            win = 0.5 * (1 - np.cos(2 * np.pi * x / width))
+        elif shape == 'exponential':
+            x = np.arange(samples)
+            win = (np.exp(x) - 1) / (np.exp(samples - 1) - 1)
+        elif shape == 'logarithmic':
+            x = np.arange(samples)
+            win = np.log10(x + 1) / np.log10(samples)
+        return win.astype(np.float64)
+
+    if half is None:
+        # For odd (1, 3, 5, ...) number of samples
+        # we include 1 as window maximum.
+        # For even numbers we exclude 1 as window maximum
+        if samples % 2 != 0:
+            left_win = left(int(np.ceil(samples / 2)), shape)
+            right_win = np.flip(left_win)[1:]
+        else:
+            left_win = left(int(samples / 2) + 1, shape)[:-1]
+            right_win = np.flip(left_win)
+        win = np.concatenate([left_win, right_win])
+    elif half == 'left':
+        win = left(samples, shape)
+    elif half == 'right':
+        win = np.flip(left(samples, shape))
+
+    return win
