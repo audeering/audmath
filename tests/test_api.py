@@ -254,6 +254,54 @@ def test_rms(x, axis, keepdims, expected):
 
 
 @pytest.mark.parametrize(
+    'time, sampling_rate, expected',
+    [
+        (2, None, 2.0),
+        (2, 1000, 2.0),
+        (2.0, None, 2.0),
+        (2.0, 1000, 2.0),
+        ('2s', None, 2.0),
+        ('2s', 1000, 2.0),
+        ('2000ms', None, 2.0),
+        ('2000ms', None, 2.0),
+        ('2000', 1000, 2.0),
+        (np.timedelta64(2, 's'), None, 2.0),
+        (np.timedelta64(2, 's'), 1000, 2.0),
+        (np.timedelta64(2000, 'ms'), None, 2.0),
+        (np.timedelta64(2000, 'ms'), 1000, 2.0),
+    ]
+)
+def test_time_in_seconds(time, sampling_rate, expected):
+    assert audmath.time_in_seconds(time, sampling_rate) == expected
+
+
+@pytest.mark.parametrize(
+    'time, sampling_rate, error, error_msg',
+    [
+        (
+            '2milliseconds',
+            None,
+            TypeError,
+            'Invalid datetime unit "milliseconds" in metadata',
+        ),
+        (
+            '1000',
+            None,
+            ValueError,
+            (
+                "You have to provide 'sampling_rate' "
+                "when specifying the duration in samples "
+                "as you did with '1000'."
+            ),
+        ),
+    ]
+)
+def test_time_in_seconds_error(time, sampling_rate, error, error_msg):
+    with pytest.raises(error, match=error_msg):
+        audmath.time_in_seconds(time, sampling_rate)
+
+
+@pytest.mark.parametrize(
     'shape',
     [
         'linear',

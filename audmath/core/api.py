@@ -399,6 +399,82 @@ def rms(
     return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
 
 
+def time_in_seconds(
+        time: typing.Union[float, int, str, np.timedelta64],
+        sampling_rate: int = None,
+) -> np.floating:
+    r"""Time in seconds.
+
+    Converts the given time value to seconds.
+    A unit conform to `numpy's datetime units`_
+    can be provided
+    when ``time`` is given as a string.
+
+    .. _numpy's datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
+
+    Args:
+        time: if time value is a float or integer
+            it is treated as seconds.
+            If provided as a string with unit,
+            e.g. '2ms',
+            it will be converted to seconds.
+            If provided as string without unit,
+            e.g. '2000',
+            it is treated as samples
+            and will be converted base on ``sampling_rate``
+            to seconds
+        sampling_rate: sampling rate in Hz.
+            Has to be provided
+            if time is provided in samples
+
+    Returns:
+        time in seconds
+
+    Raises:
+        ValueError: if ``time`` is provided in samples
+            but ``sampling_rate`` is ``None``
+        TypeError: if invalid unit is provided
+
+    Examples:
+        >>> time_in_seconds(2)
+        2.0
+        >>> time_in_seconds(2.0)
+        2.0
+        >>> time_in_seconds('2ms')
+        0.002
+        >>> time_in_seconds('2000', 1000)
+        2.0
+        >>> time_in_seconds(np.timedelta64(2, 's'))
+        2.0
+
+    """  # noqa: E501
+    if isinstance(time, str):
+
+        # ensure we have a str and not numpy.str_
+        time = str(time)
+
+        value = int(''.join([t for t in time if t.isdigit()]))
+        unit = ''.join([t for t in time if not t.isdigit()])
+
+        if not unit:
+            # string without unit represents samples
+            if sampling_rate is None:
+                raise ValueError(
+                    "You have to provide 'sampling_rate' "
+                    "when specifying the duration in samples "
+                    f"as you did with '{time}'."
+                )
+            time = int(time) / sampling_rate
+        else:
+            # string with unit
+            time = np.timedelta64(value, unit) / np.timedelta64(1, 's')
+
+    elif isinstance(time, np.timedelta64):
+        time = time / np.timedelta64(1, 's')
+
+    return np.float64(time)
+
+
 def window(
         samples: int,
         shape: str = 'tukey',
