@@ -156,7 +156,7 @@ def inverse_db(
 
 
 def inverse_normal_distribution(
-    y: typing.Union[int, float, typing.Sequence, np.ndarray],
+        y: typing.Union[int, float, typing.Sequence, np.ndarray],
 ) -> typing.Union[np.floating, np.ndarray]:
     r"""Inverse normal distribution.
 
@@ -400,9 +400,9 @@ def rms(
 
 
 def window(
-    samples: int,
-    shape: str = 'tukey',
-    half: str = None,
+        samples: int,
+        shape: str = 'tukey',
+        half: str = None,
 ) -> np.ndarray:
     r"""Return a window.
 
