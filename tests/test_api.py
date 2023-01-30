@@ -253,14 +253,14 @@ def test_rms(x, axis, keepdims, expected):
         assert np.issubdtype(type(y), np.floating)
 
 
-week = np.timedelta64(24 * 7, 'h')
-day = np.timedelta64(24, 'h')
-hour = np.timedelta64(1, 'h')
-minute = np.timedelta64(1, 'm')
-second = np.timedelta64(1, 's')
-millisecond = np.timedelta64(1, 'ms')
-microsecond = np.timedelta64(1, 'us')
-nanosecond = np.timedelta64(1, 'ns')
+week = np.timedelta64(24 * 7, 'h') / np.timedelta64(1, 's')
+day = np.timedelta64(24, 'h') / np.timedelta64(1, 's')
+hour = np.timedelta64(1, 'h') / np.timedelta64(1, 's')
+minute = np.timedelta64(1, 'm') / np.timedelta64(1, 's')
+second = np.timedelta64(1, 's') / np.timedelta64(1, 's')
+millisecond = np.timedelta64(1, 'ms') / np.timedelta64(1, 's')
+microsecond = np.timedelta64(1, 'us') / np.timedelta64(1, 's')
+nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
 
 
 @pytest.mark.parametrize(
@@ -282,50 +282,50 @@ nanosecond = np.timedelta64(1, 'ns')
         (np.timedelta64(2000, 'ms'), None, 2.0),
         (np.timedelta64(2000, 'ms'), 1000, 2.0),
         # week
-        ('1W', None, week / second),
+        ('1W', None, week),
         # day
-        ('1D', None, day / second),
-        ('1days', None, day / second),
-        ('1day', None, day / second),
+        ('1D', None, day),
+        ('1days', None, day),
+        ('1day', None, day),
         # hour
-        ('1h', None, hour / second),
-        ('1hours', None, hour / second),
-        ('1hour', None, hour / second),
-        ('1hr', None, hour / second),
+        ('1h', None, hour),
+        ('1hours', None, hour),
+        ('1hour', None, hour),
+        ('1hr', None, hour),
         # minute
-        ('1m', None, minute / second),
-        ('1minutes', None, minute / second),
-        ('1minute', None, minute / second),
-        ('1min', None, minute / second),
-        ('1T', None, minute / second),
+        ('1m', None, minute),
+        ('1minutes', None, minute),
+        ('1minute', None, minute),
+        ('1min', None, minute),
+        ('1T', None, minute),
         # second
-        ('1s', None, second / second),
-        ('1seconds', None, second / second),
-        ('1second', None, second / second),
-        ('1sec', None, second / second),
-        ('1S', None, second / second),
+        ('1s', None, second),
+        ('1seconds', None, second),
+        ('1second', None, second),
+        ('1sec', None, second),
+        ('1S', None, second),
         # millisecond
-        ('1ms', None, millisecond / second),
-        ('1milliseconds', None, millisecond / second),
-        ('1millisecond', None, millisecond / second),
-        ('1millis', None, millisecond / second),
-        ('1milli', None, millisecond / second),
-        ('1L', None, millisecond / second),
+        ('1ms', None, millisecond),
+        ('1milliseconds', None, millisecond),
+        ('1millisecond', None, millisecond),
+        ('1millis', None, millisecond),
+        ('1milli', None, millisecond),
+        ('1L', None, millisecond),
         # microsecond
-        ('1us', None, microsecond / second),
-        ('1μs', None, microsecond / second),
-        ('1microseconds', None, microsecond / second),
-        ('1microsecond', None, microsecond / second),
-        ('1micros', None, microsecond / second),
-        ('1micro', None, microsecond / second),
-        ('1U', None, microsecond / second),
+        ('1us', None, microsecond),
+        ('1μs', None, microsecond),
+        ('1microseconds', None, microsecond),
+        ('1microsecond', None, microsecond),
+        ('1micros', None, microsecond),
+        ('1micro', None, microsecond),
+        ('1U', None, microsecond),
         # nanosecond
-        ('1ns', None, nanosecond / second),
-        ('1nanoseconds', None, nanosecond / second),
-        ('1nanosecond', None, nanosecond / second),
-        ('1nanos', None, nanosecond / second),
-        ('1nano', None, nanosecond / second),
-        ('1N', None, nanosecond / second),
+        ('1ns', None, nanosecond),
+        ('1nanoseconds', None, nanosecond),
+        ('1nanosecond', None, nanosecond),
+        ('1nanos', None, nanosecond),
+        ('1nano', None, nanosecond),
+        ('1N', None, nanosecond),
     ]
 )
 def test_time_in_seconds(time, sampling_rate, expected):
