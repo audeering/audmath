@@ -406,9 +406,24 @@ def time_in_seconds(
     r"""Time in seconds.
 
     Converts the given time value to seconds.
-    A unit conform to `numpy's datetime units`_
-    can be provided
+    A unit can be provided
     when ``time`` is given as a string.
+    As units the following values are possible.
+
+    .. table::
+
+        ==================================================== ===========
+        Unit                                                 Meaning
+        ==================================================== ===========
+        W                                                    week
+        D, days, day                                         day
+        h, hours, hour, hr                                   hour
+        m, minutes, minute, min, T                           minute
+        s, seconds, second, sec, S                           second
+        ms, milliseconds, millisecond, millis, milli, L      millisecond
+        us, μs, microseconds, microsecond, micros, micro, U  microsecond
+        ns, nanoseconds, nanoseconds, nanos, nano, N         nanosecond
+        ==================================================== ===========
 
     .. _numpy's datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
 
@@ -433,7 +448,7 @@ def time_in_seconds(
     Raises:
         ValueError: if ``time`` is provided in samples
             but ``sampling_rate`` is ``None``
-        TypeError: if invalid unit is provided
+        ValueError: if the provided unit is not supported
 
     Examples:
         >>> time_in_seconds(2)
@@ -442,19 +457,97 @@ def time_in_seconds(
         2.0
         >>> time_in_seconds('2ms')
         0.002
+        >>> time_in_seconds('ms')
+        0.001
         >>> time_in_seconds('2000', 1000)
         2.0
         >>> time_in_seconds(np.timedelta64(2, 's'))
         2.0
 
     """  # noqa: E501
+    # Dictionary with allowed unti entries
+    # and mapping from pandas.to_timedelta()
+    # to numpy.timedelta64, see
+    # https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
+    unit_mapping = {
+        # week
+        'W': 'W',
+        # day
+        'D': 'D',
+        'days': 'D',
+        'day': 'D',
+        # hour
+        'h': 'h',
+        'hours': 'h',
+        'hour': 'h',
+        'hr': 'h',
+        # minute
+        'm': 'm',
+        'minutes': 'm',
+        'minute': 'm',
+        'min': 'm',
+        'T': 'm',
+        # second
+        's': 's',
+        'seconds': 's',
+        'second': 's',
+        'sec': 's',
+        'S': 's',
+        # millisecond
+        'ms': 'ms',
+        'milliseconds': 'ms',
+        'millisecond': 'ms',
+        'millis': 'ms',
+        'milli': 'ms',
+        'L': 'ms',
+        # microsecond
+        'us': 'us',
+        'μs': 'us',
+        'microseconds': 'us',
+        'microsecond': 'us',
+        'micros': 'us',
+        'micro': 'us',
+        'U': 'us',
+        # nanosecond
+        'ns': 'ns',
+        'nanoseconds': 'ns',
+        'nanosecond': 'ns',
+        'nanos': 'ns',
+        'nano': 'ns',
+        'N': 'ns',
+    }
+
+    # numpy.timedelta64() accepts only integer as input values,
+    # so we need to convert all values
+    # to nanoseconds and integers first
+    def to_nanos(value, unit):
+        if unit == 'W':
+            value = value * 7 * 24 * 60 * 60 * 10 ** 9
+        elif unit == 'D':
+            value = value * 24 * 60 * 60 * 10 ** 9
+        elif unit == 'h':
+            value = value * 60 * 60 * 10 ** 9
+        elif unit == 'm':
+            value = value * 60 * 10 ** 9
+        elif unit == 's':
+            value = value * 10 ** 9
+        elif unit == 'ms':
+            value = value * 10 ** 6
+        elif unit == 'us':
+            value = value * 10 ** 3
+        return int(value)
+
     if isinstance(time, str):
 
         # ensure we have a str and not numpy.str_
         time = str(time)
 
-        value = int(''.join([t for t in time if t.isdigit()]))
-        unit = ''.join([t for t in time if not t.isdigit()])
+        value = ''.join([t for t in time if t.isdigit() or t == '.'])
+        if not value:
+            value = 1.0
+        else:
+            value = float(value)
+        unit = ''.join([t for t in time if not t.isdigit() and t != '.'])
 
         if not unit:
             # string without unit represents samples
@@ -467,7 +560,15 @@ def time_in_seconds(
             time = int(time) / sampling_rate
         else:
             # string with unit
-            time = np.timedelta64(value, unit) / np.timedelta64(1, 's')
+            if unit not in unit_mapping:
+                raise ValueError(
+                    f"The provided unit '{unit}' is not know."
+                )
+            unit = unit_mapping[unit]
+            # time in nanoseconds
+            time = np.timedelta64(to_nanos(value, unit), 'ns')
+            # time in seconds
+            time = time / np.timedelta64(1, 's')
 
     elif isinstance(time, np.timedelta64):
         time = time / np.timedelta64(1, 's')

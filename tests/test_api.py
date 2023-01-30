@@ -253,6 +253,14 @@ def test_rms(x, axis, keepdims, expected):
         assert np.issubdtype(type(y), np.floating)
 
 
+week = np.timedelta64(24 * 7, 'h')
+day = np.timedelta64(24, 'h')
+hour = np.timedelta64(1, 'h')
+minute = np.timedelta64(1, 'm')
+second = np.timedelta64(1, 's')
+millisecond = np.timedelta64(1, 'ms')
+microsecond = np.timedelta64(1, 'us')
+nanosecond = np.timedelta64(1, 'ns')
 @pytest.mark.parametrize(
     'time, sampling_rate, expected',
     [
@@ -260,15 +268,62 @@ def test_rms(x, axis, keepdims, expected):
         (2, 1000, 2.0),
         (2.0, None, 2.0),
         (2.0, 1000, 2.0),
+        ('s', None, 1.0),
+        ('s', 1000, 1.0),
         ('2s', None, 2.0),
         ('2s', 1000, 2.0),
         ('2000ms', None, 2.0),
-        ('2000ms', None, 2.0),
+        ('2000.0ms', None, 2.0),
         ('2000', 1000, 2.0),
         (np.timedelta64(2, 's'), None, 2.0),
         (np.timedelta64(2, 's'), 1000, 2.0),
         (np.timedelta64(2000, 'ms'), None, 2.0),
         (np.timedelta64(2000, 'ms'), 1000, 2.0),
+        # week
+        ('1W', None, week / second),
+        # day
+        ('1D', None, day / second),
+        ('1days', None, day / second),
+        ('1day', None, day / second),
+        # hour
+        ('1h', None, hour / second),
+        ('1hours', None, hour / second),
+        ('1hour', None, hour / second),
+        ('1hr', None, hour / second),
+        # minute
+        ('1m', None, minute / second),
+        ('1minutes', None, minute / second),
+        ('1minute', None, minute / second),
+        ('1min', None, minute / second),
+        ('1T', None, minute / second),
+        # second
+        ('1s', None, second / second),
+        ('1seconds', None, second / second),
+        ('1second', None, second / second),
+        ('1sec', None, second / second),
+        ('1S', None, second / second),
+        # millisecond
+        ('1ms', None, millisecond / second),
+        ('1milliseconds', None, millisecond / second),
+        ('1millisecond', None, millisecond / second),
+        ('1millis', None, millisecond / second),
+        ('1milli', None, millisecond / second),
+        ('1L', None, millisecond / second),
+        # microsecond
+        ('1us', None, microsecond / second),
+        ('1μs', None, microsecond / second),
+        ('1microseconds', None, microsecond/ second),
+        ('1microsecond', None, microsecond / second),
+        ('1micros', None, microsecond / second),
+        ('1micro', None, microsecond / second),
+        ('1U', None, microsecond / second),
+        # nanosecond
+        ('1ns', None, nanosecond / second),
+        ('1nanoseconds', None, nanosecond / second),
+        ('1nanosecond', None, nanosecond / second),
+        ('1nanos', None, nanosecond / second),
+        ('1nano', None, nanosecond / second),
+        ('1N', None, nanosecond / second),
     ]
 )
 def test_time_in_seconds(time, sampling_rate, expected):
@@ -279,10 +334,10 @@ def test_time_in_seconds(time, sampling_rate, expected):
     'time, sampling_rate, error, error_msg',
     [
         (
-            '2milliseconds',
+            '2abc',
             None,
-            TypeError,
-            'Invalid datetime unit "milliseconds" in metadata',
+            ValueError,
+            "The provided unit 'abc' is not know.",
         ),
         (
             '1000',
