@@ -421,7 +421,7 @@ def time_in_seconds(
             If provided as string without unit,
             e.g. ``'2000'``,
             it is treated as samples
-            and will be converted base on ``sampling_rate``
+            and will be converted with the help of ``sampling_rate``
             to seconds
         sampling_rate: sampling rate in Hz.
             Has to be provided
