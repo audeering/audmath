@@ -118,7 +118,7 @@ def duration_in_seconds(
         duration: if duration value is a float or integer
             it is treated as seconds.
             If provided as a string with unit,
-            e.g. ``'2ms'``,
+            e.g. ``'2ms'`` or ``'2 ms'``,
             it will be converted to seconds.
             If provided as string without unit,
             e.g. ``'2000'``,
