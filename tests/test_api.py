@@ -1,6 +1,7 @@
 import re
 
 import numpy as np
+import pandas as pd
 import pytest
 import scipy.special
 import scipy.stats
@@ -290,6 +291,10 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         (np.timedelta64(2, 's'), 1000, 2.0),
         (np.timedelta64(2000, 'ms'), None, 2.0),
         (np.timedelta64(2000, 'ms'), 1000, 2.0),
+        (pd.to_timedelta(2, 's'), None, 2.0),
+        (pd.to_timedelta(2, 's'), 1000, 2.0),
+        (pd.to_timedelta(2000, 'ms'), None, 2.0),
+        (pd.to_timedelta(2000, 'ms'), 1000, 2.0),
         # week
         ('1W', None, week),
         # day

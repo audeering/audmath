@@ -124,7 +124,10 @@ def duration_in_seconds(
             e.g. ``'2000'``,
             it is treated as samples
             and will be converted with the help of ``sampling_rate``
-            to seconds
+            to seconds.
+            ``duration`` can also be provided
+            as :class:`numpy.timedelta64`
+            or :class:`pandas.Timedelta` objects
         sampling_rate: sampling rate in Hz.
             Has to be provided
             if duration is provided in samples
@@ -286,6 +289,11 @@ def duration_in_seconds(
 
     elif isinstance(duration, np.timedelta64):
         duration = duration / np.timedelta64(1, 's')
+
+    # support for pandas.Timedelta
+    # without dependency to pandas
+    elif duration.__class__.__name__ == 'Timedelta':
+        duration = duration.total_seconds()
 
     return np.float64(duration)
 
