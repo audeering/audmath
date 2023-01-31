@@ -159,6 +159,8 @@ def duration_in_seconds(
         2.0
         >>> duration_in_seconds(np.timedelta64(2, 's'))
         2.0
+        >>> duration_in_seconds(pd.to_timedelta(2, 's'))
+        2.0
 
     """  # noqa: E501
     # Dictionary with allowed unit entries
