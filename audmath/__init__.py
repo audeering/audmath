@@ -3,7 +3,7 @@ from audmath.core.api import (
     inverse_db,
     inverse_normal_distribution,
     rms,
-    time_in_seconds,
+    duration_in_seconds,
     window,
 )
 

@@ -328,8 +328,8 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         ('1N', None, nanosecond),
     ]
 )
-def test_time_in_seconds(time, sampling_rate, expected):
-    assert audmath.time_in_seconds(time, sampling_rate) == expected
+def test_duration_in_seconds(time, sampling_rate, expected):
+    assert audmath.duration_in_seconds(time, sampling_rate) == expected
 
 
 @pytest.mark.parametrize(
@@ -353,9 +353,9 @@ def test_time_in_seconds(time, sampling_rate, expected):
         ),
     ]
 )
-def test_time_in_seconds_error(time, sampling_rate, error, error_msg):
+def test_duration_in_seconds_error(time, sampling_rate, error, error_msg):
     with pytest.raises(error, match=error_msg):
-        audmath.time_in_seconds(time, sampling_rate)
+        audmath.duration_in_seconds(time, sampling_rate)
 
 
 @pytest.mark.parametrize(
