@@ -152,7 +152,7 @@ def duration_in_seconds(
         2.0
 
     """  # noqa: E501
-    # Dictionary with allowed unti entries
+    # Dictionary with allowed unit entries
     # and mapping from pandas.to_timedelta()
     # to numpy.timedelta64, see
     # https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
