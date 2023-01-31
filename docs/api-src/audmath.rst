@@ -8,8 +8,8 @@ audmath
     :nosignatures:
 
     db
+    duration_in_seconds
     inverse_db
     inverse_normal_distribution
     rms
-    duration_in_seconds
     window
