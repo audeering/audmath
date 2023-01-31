@@ -87,14 +87,14 @@ def db(
 
 
 def duration_in_seconds(
-        time: typing.Union[float, int, str, np.timedelta64],
+        duration: typing.Union[float, int, str, np.timedelta64],
         sampling_rate: int = None,
 ) -> np.floating:
-    r"""Time in seconds.
+    r"""Duration in seconds.
 
-    Converts the given time value to seconds.
+    Converts the given duration value to seconds.
     A unit can be provided
-    when ``time`` is given as a string.
+    when ``duration`` is given as a string.
     As units the following values are possible.
 
     .. table::
@@ -115,7 +115,7 @@ def duration_in_seconds(
     .. _numpy's datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
 
     Args:
-        time: if time value is a float or integer
+        duration: if duration value is a float or integer
             it is treated as seconds.
             If provided as a string with unit,
             e.g. ``'2ms'``,
@@ -127,13 +127,13 @@ def duration_in_seconds(
             to seconds
         sampling_rate: sampling rate in Hz.
             Has to be provided
-            if time is provided in samples
+            if duration is provided in samples
 
     Returns:
         time in seconds
 
     Raises:
-        ValueError: if ``time`` is provided in samples
+        ValueError: if ``duration`` is provided in samples
             but ``sampling_rate`` is ``None``
         ValueError: if the provided unit is not supported
 
@@ -224,17 +224,27 @@ def duration_in_seconds(
             value = value * 10 ** 3
         return int(value)
 
-    if isinstance(time, str):
+    if isinstance(duration, str):
 
         # ensure we have a str and not numpy.str_
-        time = str(time)
+        duration = str(duration)
 
-        value = ''.join([t for t in time if t.isdigit() or t == '.'])
+        value = ''.join(
+            [
+                char for char in duration
+                if char.isdigit() or char == '.'
+            ]
+        )
         if not value:
             value = 1.0
         else:
             value = float(value)
-        unit = ''.join([t for t in time if not t.isdigit() and t != '.'])
+        unit = ''.join(
+            [
+                char for char in duration
+                if not char.isdigit() and char != '.'
+            ]
+        )
 
         if not unit:
             # string without unit represents samples
@@ -242,9 +252,9 @@ def duration_in_seconds(
                 raise ValueError(
                     "You have to provide 'sampling_rate' "
                     "when specifying the duration in samples "
-                    f"as you did with '{time}'."
+                    f"as you did with '{duration}'."
                 )
-            time = int(time) / sampling_rate
+            duration = int(duration) / sampling_rate
         else:
             # string with unit
             if unit not in unit_mapping:
@@ -252,15 +262,15 @@ def duration_in_seconds(
                     f"The provided unit '{unit}' is not known."
                 )
             unit = unit_mapping[unit]
-            # time in nanoseconds
-            time = np.timedelta64(to_nanos(value, unit), 'ns')
-            # time in seconds
-            time = time / np.timedelta64(1, 's')
+            # duration in nanoseconds
+            duration = np.timedelta64(to_nanos(value, unit), 'ns')
+            # duration in seconds
+            duration = duration / np.timedelta64(1, 's')
 
-    elif isinstance(time, np.timedelta64):
-        time = time / np.timedelta64(1, 's')
+    elif isinstance(duration, np.timedelta64):
+        duration = duration / np.timedelta64(1, 's')
 
-    return np.float64(time)
+    return np.float64(duration)
 
 
 def inverse_db(
