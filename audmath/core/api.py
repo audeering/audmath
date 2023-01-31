@@ -136,6 +136,10 @@ def duration_in_seconds(
         ValueError: if ``duration`` is provided in samples
             but ``sampling_rate`` is ``None``
         ValueError: if the provided unit is not supported
+        ValueError: if ``duration`` is a string
+            and contains more than one space character ``' '``
+        ValueError: if ``duration`` is a string
+            and its value part cannot be converted to a string
 
     Examples:
         >>> duration_in_seconds(2)

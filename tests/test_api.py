@@ -357,6 +357,18 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             "The provided unit 'abc' is not known.",
         ),
         (
+            '2a bc',
+            None,
+            ValueError,
+            "could not convert string to float: '2a'",
+        ),
+        (
+            '2.0a bc',
+            None,
+            ValueError,
+            "could not convert string to float: '2.0a'",
+        ),
+        (
             ' 2',
             None,
             ValueError,
