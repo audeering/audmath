@@ -144,6 +144,8 @@ def duration_in_seconds(
         2.0
         >>> duration_in_seconds('2ms')
         0.002
+        >>> duration_in_seconds('2 ms')
+        0.002
         >>> duration_in_seconds('ms')
         0.001
         >>> duration_in_seconds('2000', 1000)
@@ -229,22 +231,33 @@ def duration_in_seconds(
         # ensure we have a str and not numpy.str_
         duration = str(duration)
 
-        value = ''.join(
-            [
-                char for char in duration
-                if char.isdigit() or char == '.'
-            ]
-        )
+        spaces = duration.count(' ')
+        if spaces > 1:
+            raise ValueError(
+                "You are supposed to only include a space (' ') "
+                "between the value and the unit. "
+                f"Your string '{duration}' contains {spaces}."
+            )
+        elif spaces == 1:
+            value, unit = duration.split(' ')
+        else:
+            value = ''.join(
+                [
+                    char for char in duration
+                    if char.isdigit() or char == '.'
+                ]
+            )
+            unit = ''.join(
+                [
+                    char for char in duration
+                    if not char.isdigit() and char != '.'
+                ]
+            )
+
         if not value:
             value = 1.0
         else:
             value = float(value)
-        unit = ''.join(
-            [
-                char for char in duration
-                if not char.isdigit() and char != '.'
-            ]
-        )
 
         if not unit:
             # string without unit represents samples
