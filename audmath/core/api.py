@@ -249,7 +249,7 @@ def duration_in_seconds(
         ):
             raise ValueError(
                 f"Your given duration '{duration}' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             )
 
         if not value:

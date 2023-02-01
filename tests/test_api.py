@@ -373,7 +373,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '2a bc' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             )
         ),
         (
@@ -382,7 +382,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '2.0a bc' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -421,7 +421,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration ' ' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -430,7 +430,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '  ' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -439,7 +439,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '1 0 ms' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -448,7 +448,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '10 m s' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -457,7 +457,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '1 0 m s' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
         (
@@ -466,7 +466,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ValueError,
             (
                 "Your given duration '2.m5s' "
-                "is not conform to the 'value' 'unit' pattern."
+                "is not conform to the <value><unit> pattern."
             ),
         ),
     ]
