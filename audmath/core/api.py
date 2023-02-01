@@ -141,7 +141,7 @@ def duration_in_seconds(
             but ``sampling_rate`` is ``None``
         ValueError: if the provided unit is not supported
         ValueError: if the provided value cannot be converted to a float
-        ValueError if ``duration`` is a string
+        ValueError: if ``duration`` is a string
             that does not match a valid value unit pattern
 
     Examples:
