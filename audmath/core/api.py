@@ -265,7 +265,7 @@ def duration_in_seconds(
                     "when specifying the duration in samples "
                     f"as you did with '{duration}'."
                 )
-            duration = int(float(duration)) / sampling_rate
+            duration = float(duration) / sampling_rate
         else:
             # string with unit
             if unit not in unit_mapping:
