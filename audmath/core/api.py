@@ -133,7 +133,7 @@ def duration_in_seconds(
             if duration is provided in samples
 
     Returns:
-        time in seconds
+        duration in seconds
 
     Raises:
         ValueError: if ``duration`` is provided in samples
