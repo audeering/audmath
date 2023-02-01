@@ -414,7 +414,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "You are supposed to only include a space (' ') "
+                "You must only include one space (' ') "
                 "between the value and the unit. "
                 "Your string '1 0 ms' contains 2."
             ),
@@ -424,7 +424,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "You are supposed to only include a space (' ') "
+                "You must only include one space (' ') "
                 "between the value and the unit. "
                 "Your string '10 m s' contains 2."
             ),
@@ -434,7 +434,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "You are supposed to only include a space (' ') "
+                "You must only include one space (' ') "
                 "between the value and the unit. "
                 "Your string '1 0 m s' contains 3."
             ),
