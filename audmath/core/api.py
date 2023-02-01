@@ -1,5 +1,6 @@
 import collections
 import typing
+import re
 
 import numpy as np
 
@@ -257,18 +258,13 @@ def duration_in_seconds(
         elif spaces == 1:
             value, unit = duration.split(' ')
         else:
-            value = ''.join(
-                [
-                    char for char in duration
-                    if char.isdigit() or char == '.'
-                ]
-            )
-            unit = ''.join(
-                [
-                    char for char in duration
-                    if not char.isdigit() and char != '.'
-                ]
-            )
+            match = re.match('^([0-9]*[.]?[0-9]*)([a-zA-Zμ]*)$', duration)
+            if match is None:
+                raise ValueError(
+                    f"Your given duration '{duration}' "
+                    "is not conform to the 'value' 'unit' pattern."
+                )
+            value, unit = match.groups()
 
         if not value:
             value = 1.0

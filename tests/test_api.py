@@ -439,6 +439,15 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
                 "Your string '1 0 m s' contains 3."
             ),
         ),
+        (
+            '2.m5s',
+            None,
+            ValueError,
+            (
+                "Your given duration '2.m5s' "
+                "is not conform to the 'value' 'unit' pattern."
+            ),
+        ),
     ]
 )
 def test_duration_in_seconds_error(duration, sampling_rate, error, error_msg):
