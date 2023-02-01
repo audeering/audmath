@@ -141,6 +141,7 @@ def duration_in_seconds(
         ValueError: if the provided unit is not supported
         ValueError: if ``duration`` is a string
             and contains more than one space character ``' '``
+            or is empty
         ValueError: if ``duration`` is a string
             and its value part cannot be converted to a string
 
@@ -238,7 +239,13 @@ def duration_in_seconds(
     if isinstance(duration, str):
 
         # ensure we have a str and not numpy.str_
-        duration = str(duration)
+        duration = str(duration).strip()
+
+        if not duration:
+            raise ValueError(
+                "'duration' is not allowed to be empty, "
+                "or contain only spaces."
+            )
 
         spaces = duration.count(' ')
         if spaces > 1:

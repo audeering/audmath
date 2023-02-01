@@ -279,6 +279,10 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         (' s', 1000, 1.0),
         ('2s', None, 2.0),
         ('2s', 1000, 2.0),
+        ('2s ', None, 2.0),
+        ('2s ', 1000, 2.0),
+        (' 2s', None, 2.0),
+        (' 2s', 1000, 2.0),
         ('2 s', None, 2.0),
         ('2 s', 1000, 2.0),
         ('2000ms', None, 2.0),
@@ -374,12 +378,6 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             "could not convert string to float: '2.0a'",
         ),
         (
-            ' 2',
-            None,
-            ValueError,
-            "The provided unit '2' is not known.",
-        ),
-        (
             '1000',
             None,
             ValueError,
@@ -390,14 +388,26 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ),
         ),
         (
-            ' ',
+            ' 2',
             None,
             ValueError,
             (
                 "You have to provide 'sampling_rate' "
                 "when specifying the duration in samples "
-                "as you did with ' '."
+                "as you did with '2'."
             ),
+        ),
+        (
+            ' ',
+            None,
+            ValueError,
+            "'duration' is not allowed to be empty, or contain only spaces."
+        ),
+        (
+            '  ',
+            None,
+            ValueError,
+            "'duration' is not allowed to be empty, or contain only spaces."
         ),
         (
             '1 0 ms',
@@ -427,16 +437,6 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
                 "You are supposed to only include a space (' ') "
                 "between the value and the unit. "
                 "Your string '1 0 m s' contains 3."
-            ),
-        ),
-        (
-            '  ',
-            None,
-            ValueError,
-            (
-                "You are supposed to only include a space (' ') "
-                "between the value and the unit. "
-                "Your string '  ' contains 2."
             ),
         ),
     ]
