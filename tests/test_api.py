@@ -293,6 +293,8 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         ('2000.0 ms', None, 2.0),
         ('2000', 1000, 2.0),
         ('2000 ', 1000, 2.0),
+        ('2000.0', 1000, 2.0),
+        ('2000.1', 1000, 2.0),
         (np.timedelta64(2, 's'), None, 2.0),
         (np.timedelta64(2, 's'), 1000, 2.0),
         (np.timedelta64(2000, 'ms'), None, 2.0),
@@ -393,6 +395,16 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
                 "You have to provide 'sampling_rate' "
                 "when specifying the duration in samples "
                 "as you did with '1000'."
+            ),
+        ),
+        (
+            '1000.5',
+            None,
+            ValueError,
+            (
+                "You have to provide 'sampling_rate' "
+                "when specifying the duration in samples "
+                "as you did with '1000.5'."
             ),
         ),
         (
