@@ -36,6 +36,7 @@ extensions = [
 ]
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'python': ('https://docs.python.org/3/', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/', None),
 }
@@ -70,6 +71,7 @@ html_title = title
 
 
 # Copy API (sub-)module RST files to docs/api/ folder ---------------------
+audeer.rmdir('api')
 audeer.mkdir('api')
 api_src_files = audeer.list_file_names('api-src')
 api_dst_files = [

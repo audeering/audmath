@@ -1,11 +1,13 @@
 import collections
 import typing
+import re
 
 import numpy as np
 
 from audmath.core.utils import polyval
 
 
+VALUE_UNBIT_PATTERN = re.compile('^ *([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*) *$')
 WINDOW_SHAPES = [
     'tukey',
     'kaiser',
@@ -84,6 +86,205 @@ def db(
     x[~mask] = 20 * np.log10(x[~mask])
 
     return x
+
+
+def duration_in_seconds(
+        duration: typing.Union[float, int, str, np.timedelta64],
+        sampling_rate: typing.Union[float, int] = None,
+) -> np.floating:
+    r"""Duration in seconds.
+
+    Converts the given duration value to seconds.
+    A unit can be provided
+    when ``duration`` is given as a string.
+    As units the following values are possible.
+
+    .. table::
+
+        ==================================================== ===========
+        Unit                                                 Meaning
+        ==================================================== ===========
+        W                                                    week
+        D, days, day                                         day
+        h, hours, hour, hr                                   hour
+        m, minutes, minute, min, T                           minute
+        s, seconds, second, sec, S                           second
+        ms, milliseconds, millisecond, millis, milli, L      millisecond
+        us, μs, microseconds, microsecond, micros, micro, U  microsecond
+        ns, nanoseconds, nanoseconds, nanos, nano, N         nanosecond
+        ==================================================== ===========
+
+    .. _numpy's datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
+
+    Args:
+        duration: if ``duration`` is
+            a float,
+            integer
+            or string without unit
+            it is treated as seconds
+            or if ``sampling_rate`` is provided
+            as samples.
+            If ``duration`` is provided as a string with unit,
+            e.g. ``'2ms'`` or ``'2 ms'``,
+            or as a :class:`numpy.timedelta64`
+            or :class:`pandas.Timedelta` object
+            it will be converted to seconds
+            and ``sampling_rate`` is always ignored
+        sampling_rate: sampling rate in Hz.
+            Is ignored
+            if duration is provided with a unit
+
+    Returns:
+        duration in seconds
+
+    Raises:
+        ValueError: if the provided unit is not supported
+        ValueError: if ``duration`` is a string
+            that does not match a valid '<value><unit>' pattern
+
+    Examples:
+        >>> duration_in_seconds(2)
+        2.0
+        >>> duration_in_seconds(2.0)
+        2.0
+        >>> duration_in_seconds('2')
+        2.0
+        >>> duration_in_seconds('2ms')
+        0.002
+        >>> duration_in_seconds('2 ms')
+        0.002
+        >>> duration_in_seconds('ms')
+        0.001
+        >>> duration_in_seconds(2000, sampling_rate=1000)
+        2.0
+        >>> duration_in_seconds(np.timedelta64(2, 's'))
+        2.0
+        >>> duration_in_seconds(pd.to_timedelta(2, 's'))
+        2.0
+
+    """  # noqa: E501
+    # Dictionary with allowed unit entries
+    # and mapping from pandas.to_timedelta()
+    # to numpy.timedelta64, see
+    # https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
+    unit_mapping = {
+        # week
+        'W': 'W',
+        # day
+        'D': 'D',
+        'days': 'D',
+        'day': 'D',
+        # hour
+        'h': 'h',
+        'hours': 'h',
+        'hour': 'h',
+        'hr': 'h',
+        # minute
+        'm': 'm',
+        'minutes': 'm',
+        'minute': 'm',
+        'min': 'm',
+        'T': 'm',
+        # second
+        's': 's',
+        'seconds': 's',
+        'second': 's',
+        'sec': 's',
+        'S': 's',
+        # millisecond
+        'ms': 'ms',
+        'milliseconds': 'ms',
+        'millisecond': 'ms',
+        'millis': 'ms',
+        'milli': 'ms',
+        'L': 'ms',
+        # microsecond
+        'us': 'us',
+        'μs': 'us',
+        'microseconds': 'us',
+        'microsecond': 'us',
+        'micros': 'us',
+        'micro': 'us',
+        'U': 'us',
+        # nanosecond
+        'ns': 'ns',
+        'nanoseconds': 'ns',
+        'nanosecond': 'ns',
+        'nanos': 'ns',
+        'nano': 'ns',
+        'N': 'ns',
+    }
+
+    # numpy.timedelta64() accepts only integer as input values,
+    # so we need to convert all values
+    # to nanoseconds and integers first
+    def to_nanos(value, unit):
+        if unit == 'W':
+            value = value * 7 * 24 * 60 * 60 * 10 ** 9
+        elif unit == 'D':
+            value = value * 24 * 60 * 60 * 10 ** 9
+        elif unit == 'h':
+            value = value * 60 * 60 * 10 ** 9
+        elif unit == 'm':
+            value = value * 60 * 10 ** 9
+        elif unit == 's':
+            value = value * 10 ** 9
+        elif unit == 'ms':
+            value = value * 10 ** 6
+        elif unit == 'us':
+            value = value * 10 ** 3
+        return int(value)
+
+    if isinstance(duration, str):
+
+        # ensure we have a str and not numpy.str_
+        duration = str(duration)
+
+        match = re.match(VALUE_UNBIT_PATTERN, duration)
+        if match is not None:
+            value, unit = match.groups()
+        if (
+                match is None
+                or (not value and not unit)
+        ):
+            raise ValueError(
+                f"Your given duration '{duration}' "
+                "is not conform to the <value><unit> pattern."
+            )
+
+        if not value:
+            value = 1.0
+        else:
+            value = float(value)
+
+        if not unit:
+            if sampling_rate is None:
+                duration = value
+            else:
+                duration = value / sampling_rate
+        else:
+            if unit not in unit_mapping:
+                raise ValueError(
+                    f"The provided unit '{unit}' is not known."
+                )
+            unit = unit_mapping[unit]
+            # duration in nanoseconds
+            duration = np.timedelta64(to_nanos(value, unit), 'ns')
+            # duration in seconds
+            duration = duration / np.timedelta64(1, 's')
+
+    elif isinstance(duration, np.timedelta64):
+        duration = duration / np.timedelta64(1, 's')
+
+    # support for pandas.Timedelta
+    # without dependency to pandas
+    elif duration.__class__.__name__ == 'Timedelta':
+        duration = duration.total_seconds()
+
+    elif sampling_rate is not None:
+        duration = duration / sampling_rate
+
+    return np.float64(duration)
 
 
 def inverse_db(
