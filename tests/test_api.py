@@ -285,6 +285,8 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         (' 2s', 1000, 2.0),
         ('2 s', None, 2.0),
         ('2 s', 1000, 2.0),
+        ('2  s', None, 2.0),
+        ('2  s', 1000, 2.0),
         ('2000ms', None, 2.0),
         ('2000.0ms', None, 2.0),
         ('2000 ms', None, 2.0),
