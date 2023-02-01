@@ -4,4 +4,4 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def add_pd(doctest_namespace):
-    doctest_namespace["pd"] = pd
+    doctest_namespace['pd'] = pd
