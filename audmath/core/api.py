@@ -117,22 +117,22 @@ def duration_in_seconds(
     .. _numpy's datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units
 
     Args:
-        duration: if duration value is a float or integer
-            it is treated as seconds.
-            If provided as a string with unit,
-            e.g. ``'2ms'`` or ``'2 ms'``,
-            it will be converted to seconds.
-            If provided as string without unit,
-            e.g. ``'2'``,
-            it is treated as seconds,
+        duration: if ``duration`` is
+            a float,
+            integer
+            or string without unit
+            it is treated as seconds
             or if ``sampling_rate`` is provided
             as samples.
-            ``duration`` can also be provided
-            as :class:`numpy.timedelta64`
-            or :class:`pandas.Timedelta` objects
+            If ``duration`` is provided as a string with unit,
+            e.g. ``'2ms'`` or ``'2 ms'``,
+            or as a :class:`numpy.timedelta64`
+            or :class:`pandas.Timedelta` object
+            it will be converted to seconds
+            and ``sampling_rate`` is always ignored
         sampling_rate: sampling rate in Hz.
-            Has to be provided
-            if duration is provided in samples
+            Is ignored
+            if duration is provided with a unit
 
     Returns:
         duration in seconds
@@ -155,7 +155,7 @@ def duration_in_seconds(
         0.002
         >>> duration_in_seconds('ms')
         0.001
-        >>> duration_in_seconds('2000', 1000)
+        >>> duration_in_seconds(2000, sampling_rate=1000)
         2.0
         >>> duration_in_seconds(np.timedelta64(2, 's'))
         2.0
@@ -261,7 +261,7 @@ def duration_in_seconds(
             if sampling_rate is None:
                 duration = value
             else:
-                duration = float(duration) / sampling_rate
+                duration = value / sampling_rate
         else:
             if unit not in unit_mapping:
                 raise ValueError(
@@ -280,6 +280,9 @@ def duration_in_seconds(
     # without dependency to pandas
     elif duration.__class__.__name__ == 'Timedelta':
         duration = duration.total_seconds()
+
+    elif sampling_rate is not None:
+        duration = duration / sampling_rate
 
     return np.float64(duration)
 
