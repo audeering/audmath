@@ -243,7 +243,7 @@ def duration_in_seconds(
         spaces = duration.count(' ')
         if spaces > 1:
             raise ValueError(
-                "You are supposed to only include a space (' ') "
+                "You must only include one space (' ') "
                 "between the value and the unit. "
                 f"Your string '{duration}' contains {spaces}."
             )
