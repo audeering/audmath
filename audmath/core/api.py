@@ -7,7 +7,7 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
-VALUE_UNBIT_PATTERN = re.compile('^([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*)$')
+VALUE_UNBIT_PATTERN = re.compile('^ *([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*) *$')
 WINDOW_SHAPES = [
     'tukey',
     'kaiser',
@@ -238,7 +238,7 @@ def duration_in_seconds(
     if isinstance(duration, str):
 
         # ensure we have a str and not numpy.str_
-        duration = str(duration).strip()
+        duration = str(duration)
 
         match = re.match(VALUE_UNBIT_PATTERN, duration)
         if match is not None:

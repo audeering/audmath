@@ -402,7 +402,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             (
                 "You have to provide 'sampling_rate' "
                 "when specifying the duration in samples "
-                "as you did with '2'."
+                "as you did with ' 2'."
             ),
         ),
         (
@@ -412,7 +412,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             (
                 "You have to provide 'sampling_rate' "
                 "when specifying the duration in samples "
-                "as you did with '2'."
+                "as you did with '2 '."
             ),
         ),
         (
@@ -420,7 +420,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "Your given duration '' "
+                "Your given duration ' ' "
                 "is not conform to the 'value' 'unit' pattern."
             ),
         ),
@@ -429,7 +429,7 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "Your given duration '' "
+                "Your given duration '  ' "
                 "is not conform to the 'value' 'unit' pattern."
             ),
         ),
