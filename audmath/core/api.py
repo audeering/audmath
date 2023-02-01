@@ -7,7 +7,7 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
-VALUE_UNBIT_PATTERN = re.compile('^([0-9]*[.]?[0-9]*)([a-zA-Zμ]*)$')
+VALUE_UNBIT_PATTERN = re.compile('^([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*)$')
 WINDOW_SHAPES = [
     'tukey',
     'kaiser',
@@ -141,7 +141,6 @@ def duration_in_seconds(
         ValueError: if ``duration`` is provided in samples
             but ``sampling_rate`` is ``None``
         ValueError: if the provided unit is not supported
-        ValueError: if the provided value cannot be converted to a float
         ValueError: if ``duration`` is a string
             that does not match a valid value unit pattern
 
@@ -241,29 +240,17 @@ def duration_in_seconds(
         # ensure we have a str and not numpy.str_
         duration = str(duration).strip()
 
-        if not duration:
-            raise ValueError(
-                "'duration' is not allowed to be empty, "
-                "or contain only spaces."
-            )
-
-        spaces = duration.count(' ')
-        if spaces > 1:
-            raise ValueError(
-                "You must only include one space (' ') "
-                "between the value and the unit. "
-                f"Your string '{duration}' contains {spaces}."
-            )
-        elif spaces == 1:
-            value, unit = duration.split(' ')
-        else:
-            match = re.match(VALUE_UNBIT_PATTERN, duration)
-            if match is None:
-                raise ValueError(
-                    f"Your given duration '{duration}' "
-                    "is not conform to the 'value' 'unit' pattern."
-                )
+        match = re.match(VALUE_UNBIT_PATTERN, duration)
+        if match is not None:
             value, unit = match.groups()
+        if (
+                match is None
+                or (not value and not unit)
+        ):
+            raise ValueError(
+                f"Your given duration '{duration}' "
+                "is not conform to the 'value' 'unit' pattern."
+            )
 
         if not value:
             value = 1.0

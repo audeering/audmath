@@ -369,13 +369,19 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             '2a bc',
             None,
             ValueError,
-            "could not convert string to float: '2a'",
+            (
+                "Your given duration '2a bc' "
+                "is not conform to the 'value' 'unit' pattern."
+            )
         ),
         (
             '2.0a bc',
             None,
             ValueError,
-            "could not convert string to float: '2.0a'",
+            (
+                "Your given duration '2.0a bc' "
+                "is not conform to the 'value' 'unit' pattern."
+            ),
         ),
         (
             '1000',
@@ -398,25 +404,40 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             ),
         ),
         (
+            '2 ',
+            None,
+            ValueError,
+            (
+                "You have to provide 'sampling_rate' "
+                "when specifying the duration in samples "
+                "as you did with '2'."
+            ),
+        ),
+        (
             ' ',
             None,
             ValueError,
-            "'duration' is not allowed to be empty, or contain only spaces."
+            (
+                "Your given duration '' "
+                "is not conform to the 'value' 'unit' pattern."
+            ),
         ),
         (
             '  ',
             None,
             ValueError,
-            "'duration' is not allowed to be empty, or contain only spaces."
+            (
+                "Your given duration '' "
+                "is not conform to the 'value' 'unit' pattern."
+            ),
         ),
         (
             '1 0 ms',
             None,
             ValueError,
             (
-                "You must only include one space (' ') "
-                "between the value and the unit. "
-                "Your string '1 0 ms' contains 2."
+                "Your given duration '1 0 ms' "
+                "is not conform to the 'value' 'unit' pattern."
             ),
         ),
         (
@@ -424,9 +445,8 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "You must only include one space (' ') "
-                "between the value and the unit. "
-                "Your string '10 m s' contains 2."
+                "Your given duration '10 m s' "
+                "is not conform to the 'value' 'unit' pattern."
             ),
         ),
         (
@@ -434,9 +454,8 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             None,
             ValueError,
             (
-                "You must only include one space (' ') "
-                "between the value and the unit. "
-                "Your string '1 0 m s' contains 3."
+                "Your given duration '1 0 m s' "
+                "is not conform to the 'value' 'unit' pattern."
             ),
         ),
         (
