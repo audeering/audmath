@@ -291,10 +291,15 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         ('2000.0ms', None, 2.0),
         ('2000 ms', None, 2.0),
         ('2000.0 ms', None, 2.0),
+        ('2000', None, 2000.0),
         ('2000', 1000, 2.0),
+        ('2000 ', None, 2000.0),
         ('2000 ', 1000, 2.0),
+        ('2000.0', None, 2000.0),
         ('2000.0', 1000, 2.0),
+        ('2000.1', None, 2000.1),
         ('2000.1', 1000, 2.0000999999999998),
+        ('0.5', None, 0.5),
         ('0.5', 2, 0.25),
         ('3', 1.5, 2.0),
         (np.timedelta64(2, 's'), None, 2.0),
@@ -387,46 +392,6 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             (
                 "Your given duration '2.0a bc' "
                 "is not conform to the <value><unit> pattern."
-            ),
-        ),
-        (
-            '1000',
-            None,
-            ValueError,
-            (
-                "You have to provide 'sampling_rate' "
-                "when specifying the duration in samples "
-                "as you did with '1000'."
-            ),
-        ),
-        (
-            '1000.5',
-            None,
-            ValueError,
-            (
-                "You have to provide 'sampling_rate' "
-                "when specifying the duration in samples "
-                "as you did with '1000.5'."
-            ),
-        ),
-        (
-            ' 2',
-            None,
-            ValueError,
-            (
-                "You have to provide 'sampling_rate' "
-                "when specifying the duration in samples "
-                "as you did with ' 2'."
-            ),
-        ),
-        (
-            '2 ',
-            None,
-            ValueError,
-            (
-                "You have to provide 'sampling_rate' "
-                "when specifying the duration in samples "
-                "as you did with '2 '."
             ),
         ),
         (

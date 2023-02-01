@@ -123,10 +123,10 @@ def duration_in_seconds(
             e.g. ``'2ms'`` or ``'2 ms'``,
             it will be converted to seconds.
             If provided as string without unit,
-            e.g. ``'2000'``,
-            it is treated as samples
-            and will be converted with the help of ``sampling_rate``
-            to seconds.
+            e.g. ``'2'``,
+            it is treated as seconds,
+            or if ``sampling_rate`` is provided
+            as samples.
             ``duration`` can also be provided
             as :class:`numpy.timedelta64`
             or :class:`pandas.Timedelta` objects
@@ -138,8 +138,6 @@ def duration_in_seconds(
         duration in seconds
 
     Raises:
-        ValueError: if ``duration`` is provided in samples
-            but ``sampling_rate`` is ``None``
         ValueError: if the provided unit is not supported
         ValueError: if ``duration`` is a string
             that does not match a valid value unit pattern
@@ -148,6 +146,8 @@ def duration_in_seconds(
         >>> duration_in_seconds(2)
         2.0
         >>> duration_in_seconds(2.0)
+        2.0
+        >>> duration_in_seconds('2')
         2.0
         >>> duration_in_seconds('2ms')
         0.002
@@ -258,16 +258,11 @@ def duration_in_seconds(
             value = float(value)
 
         if not unit:
-            # string without unit represents samples
             if sampling_rate is None:
-                raise ValueError(
-                    "You have to provide 'sampling_rate' "
-                    "when specifying the duration in samples "
-                    f"as you did with '{duration}'."
-                )
-            duration = float(duration) / sampling_rate
+                duration = value
+            else:
+                duration = float(duration) / sampling_rate
         else:
-            # string with unit
             if unit not in unit_mapping:
                 raise ValueError(
                     f"The provided unit '{unit}' is not known."
