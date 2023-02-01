@@ -90,7 +90,7 @@ def db(
 
 def duration_in_seconds(
         duration: typing.Union[float, int, str, np.timedelta64],
-        sampling_rate: int = None,
+        sampling_rate: typing.Union[float, int] = None,
 ) -> np.floating:
     r"""Duration in seconds.
 
