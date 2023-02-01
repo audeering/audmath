@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                v1.1.1
+                v1.2.0
               </div>
             
           
@@ -143,13 +143,14 @@
   <h1>Source code for audmath.core.api</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">audmath.core.utils</span> <span class="kn">import</span> <span class="n">polyval</span>
 
 
+<span class="n">VALUE_UNBIT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^ *([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*) *$&#39;</span><span class="p">)</span>
 <span class="n">WINDOW_SHAPES</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;tukey&#39;</span><span class="p">,</span>
     <span class="s1">&#39;kaiser&#39;</span><span class="p">,</span>
@@ -164,7 +165,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">bottom</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert value to decibels.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert value to decibels.</span>
 
 <span class="sd">    The decibel of a value :math:`x \in \R`</span>
 <span class="sd">    is given by</span>
@@ -230,143 +231,203 @@
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="window"><a class="viewcode-back" href="../../../api/audmath.window.html#audmath.window">[docs]</a><span class="k">def</span> <span class="nf">window</span><span class="p">(</span>
-    <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;tukey&#39;</span><span class="p">,</span>
-    <span class="n">half</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a window.</span>
+<div class="viewcode-block" id="duration_in_seconds"><a class="viewcode-back" href="../../../api/audmath.duration_in_seconds.html#audmath.duration_in_seconds">[docs]</a><span class="k">def</span> <span class="nf">duration_in_seconds</span><span class="p">(</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">],</span>
+        <span class="n">sampling_rate</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Duration in seconds.</span>
 
-<span class="sd">    The window will start from</span>
-<span class="sd">    and/or end at 0.</span>
-<span class="sd">    If at least 3 samples are requested</span>
-<span class="sd">    and the number of samples is odd,</span>
-<span class="sd">    the windows maximum value will always be 1.</span>
+<span class="sd">    Converts the given duration value to seconds.</span>
+<span class="sd">    A unit can be provided</span>
+<span class="sd">    when ``duration`` is given as a string.</span>
+<span class="sd">    As units the following values are possible.</span>
 
-<span class="sd">    The shape of the window</span>
-<span class="sd">    is selected via ``shape``</span>
-<span class="sd">    The following figure shows all available shapes.</span>
-<span class="sd">    For the Kaiser window</span>
-<span class="sd">    we use :math:`\beta = 14`</span>
-<span class="sd">    and set its first sample to 0.</span>
+<span class="sd">    .. table::</span>
 
-<span class="sd">    .. plot::</span>
+<span class="sd">        ==================================================== ===========</span>
+<span class="sd">        Unit                                                 Meaning</span>
+<span class="sd">        ==================================================== ===========</span>
+<span class="sd">        W                                                    week</span>
+<span class="sd">        D, days, day                                         day</span>
+<span class="sd">        h, hours, hour, hr                                   hour</span>
+<span class="sd">        m, minutes, minute, min, T                           minute</span>
+<span class="sd">        s, seconds, second, sec, S                           second</span>
+<span class="sd">        ms, milliseconds, millisecond, millis, milli, L      millisecond</span>
+<span class="sd">        us, μs, microseconds, microsecond, micros, micro, U  microsecond</span>
+<span class="sd">        ns, nanoseconds, nanoseconds, nanos, nano, N         nanosecond</span>
+<span class="sd">        ==================================================== ===========</span>
 
-<span class="sd">        import audmath</span>
-<span class="sd">        import matplotlib.pyplot as plt</span>
-<span class="sd">        import matplotlib.ticker as mtick</span>
-<span class="sd">        import numpy as np</span>
-<span class="sd">        import seaborn as sns</span>
-
-<span class="sd">        for shape in audmath.core.api.WINDOW_SHAPES:</span>
-<span class="sd">            win = audmath.window(101, shape=shape)</span>
-<span class="sd">            plt.plot(win, label=shape)</span>
-<span class="sd">        plt.ylabel(&#39;Magnitude&#39;)</span>
-<span class="sd">        plt.xlabel(&#39;Window Length&#39;)</span>
-<span class="sd">        plt.grid(alpha=0.4)</span>
-<span class="sd">        ax = plt.gca()</span>
-<span class="sd">        ax.xaxis.set_major_formatter(mtick.PercentFormatter())</span>
-<span class="sd">        ax.tick_params(axis=u&#39;both&#39;, which=u&#39;both&#39;,length=0)</span>
-<span class="sd">        plt.xlim([-1.2, 100.3])</span>
-<span class="sd">        plt.ylim([-0.02, 1])</span>
-<span class="sd">        sns.despine(left=True, bottom=True)</span>
-<span class="sd">        # Put a legend to the top right of the current axis</span>
-<span class="sd">        plt.legend()</span>
-<span class="sd">        ax.legend(loc=&#39;upper left&#39;, bbox_to_anchor=(1, 1))</span>
-<span class="sd">        # Adjsut image size to contain outside legend</span>
-<span class="sd">        fig = plt.gcf()</span>
-<span class="sd">        fig.set_size_inches(6.4, 3.84)</span>
-<span class="sd">        plt.tight_layout()</span>
+<span class="sd">    .. _numpy&#39;s datetime units: https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        samples: length of window</span>
-<span class="sd">        shape: shape of window</span>
-<span class="sd">        half: if ``None`` return whole window,</span>
-<span class="sd">            if ``&#39;left&#39;`` or ``&#39;right&#39;``</span>
-<span class="sd">            return left or right half-window.</span>
-<span class="sd">            Other than the whole window</span>
-<span class="sd">            the half-windows</span>
-<span class="sd">            will always contain 1</span>
-<span class="sd">            as maximum value</span>
-<span class="sd">            as long as ``samples`` &gt; 1</span>
+<span class="sd">        duration: if ``duration`` is</span>
+<span class="sd">            a float,</span>
+<span class="sd">            integer</span>
+<span class="sd">            or string without unit</span>
+<span class="sd">            it is treated as seconds</span>
+<span class="sd">            or if ``sampling_rate`` is provided</span>
+<span class="sd">            as samples.</span>
+<span class="sd">            If ``duration`` is provided as a string with unit,</span>
+<span class="sd">            e.g. ``&#39;2ms&#39;`` or ``&#39;2 ms&#39;``,</span>
+<span class="sd">            or as a :class:`numpy.timedelta64`</span>
+<span class="sd">            or :class:`pandas.Timedelta` object</span>
+<span class="sd">            it will be converted to seconds</span>
+<span class="sd">            and ``sampling_rate`` is always ignored</span>
+<span class="sd">        sampling_rate: sampling rate in Hz.</span>
+<span class="sd">            Is ignored</span>
+<span class="sd">            if duration is provided with a unit</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        window</span>
+<span class="sd">        duration in seconds</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: if ``shape`` is not supported</span>
-<span class="sd">        ValueError: if ``half`` is not supported</span>
+<span class="sd">        ValueError: if the provided unit is not supported</span>
+<span class="sd">        ValueError: if ``duration`` is a string</span>
+<span class="sd">            that does not match a valid &#39;&lt;value&gt;&lt;unit&gt;&#39; pattern</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; window(7)</span>
-<span class="sd">        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])</span>
-<span class="sd">        &gt;&gt;&gt; window(6)</span>
-<span class="sd">        array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])</span>
-<span class="sd">        &gt;&gt;&gt; window(5, shape=&#39;linear&#39;, half=&#39;left&#39;)</span>
-<span class="sd">        array([0.  , 0.25, 0.5 , 0.75, 1.  ])</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(2)</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(2.0)</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(&#39;2&#39;)</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(&#39;2ms&#39;)</span>
+<span class="sd">        0.002</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(&#39;2 ms&#39;)</span>
+<span class="sd">        0.002</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(&#39;ms&#39;)</span>
+<span class="sd">        0.001</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(2000, sampling_rate=1000)</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(np.timedelta64(2, &#39;s&#39;))</span>
+<span class="sd">        2.0</span>
+<span class="sd">        &gt;&gt;&gt; duration_in_seconds(pd.to_timedelta(2, &#39;s&#39;))</span>
+<span class="sd">        2.0</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">shape</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">WINDOW_SHAPES</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;shape has to be one of the following: &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WINDOW_SHAPES</span><span class="p">)</span><span class="si">}</span><span class="s2">,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span>
-            <span class="n">half</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="n">half</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
-    <span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;half has to be &#39;left&#39; or &#39;right&#39; &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">half</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-        <span class="p">)</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+    <span class="c1"># Dictionary with allowed unit entries</span>
+    <span class="c1"># and mapping from pandas.to_timedelta()</span>
+    <span class="c1"># to numpy.timedelta64, see</span>
+    <span class="c1"># https://numpy.org/doc/stable/reference/arrays.datetime.html#datetime-units</span>
+    <span class="n">unit_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># week</span>
+        <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="s1">&#39;W&#39;</span><span class="p">,</span>
+        <span class="c1"># day</span>
+        <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;days&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+        <span class="c1"># hour</span>
+        <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hours&#39;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hour&#39;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hr&#39;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="c1"># minute</span>
+        <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;minutes&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;minute&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+        <span class="c1"># second</span>
+        <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;seconds&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sec&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+        <span class="c1"># millisecond</span>
+        <span class="s1">&#39;ms&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;milliseconds&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;millisecond&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;millis&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;milli&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+        <span class="c1"># microsecond</span>
+        <span class="s1">&#39;us&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;μs&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;microseconds&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;microsecond&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;micros&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;micro&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;U&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span>
+        <span class="c1"># nanosecond</span>
+        <span class="s1">&#39;ns&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nanoseconds&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nanosecond&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nanos&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nano&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="s1">&#39;ns&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;kaiser&#39;</span><span class="p">:</span>
-            <span class="c1"># Kaiser windows as approximation of DPSS window</span>
-            <span class="c1"># as often used for tapering windows</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kaiser</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">beta</span><span class="o">=</span><span class="mi">14</span><span class="p">)[:(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
-            <span class="c1"># Ensure first entry is 0</span>
-            <span class="n">win</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Add 1 at the end</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">win</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])])</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
-            <span class="c1"># Tukey window,</span>
-            <span class="c1"># which is also often used as tapering window</span>
-            <span class="c1"># 1/2 * (1 - cos(2pi n / (4N alpha)))</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
-            <span class="n">width</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span> <span class="n">width</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;exponential&#39;</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;logarithmic&#39;</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">win</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="c1"># numpy.timedelta64() accepts only integer as input values,</span>
+    <span class="c1"># so we need to convert all values</span>
+    <span class="c1"># to nanoseconds and integers first</span>
+    <span class="k">def</span> <span class="nf">to_nanos</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;W&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;ms&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">6</span>
+        <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;us&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">3</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">half</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># For odd (1, 3, 5, ...) number of samples</span>
-        <span class="c1"># we include 1 as window maximum.</span>
-        <span class="c1"># For even numbers we exclude 1 as window maximum</span>
-        <span class="k">if</span> <span class="n">samples</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">left_win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">samples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">shape</span><span class="p">)</span>
-            <span class="n">right_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left_win</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="c1"># ensure we have a str and not numpy.str_</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">VALUE_UNBIT_PATTERN</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">unit</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Your given duration &#39;</span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                <span class="s2">&quot;is not conform to the &lt;value&gt;&lt;unit&gt; pattern.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">left_win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">samples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">right_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left_win</span><span class="p">)</span>
-        <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left_win</span><span class="p">,</span> <span class="n">right_win</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">half</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span><span class="p">:</span>
-        <span class="n">win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">half</span> <span class="o">==</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span>
-        <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">win</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">unit</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sampling_rate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="n">sampling_rate</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unit_mapping</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The provided unit &#39;</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">&#39; is not known.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="n">unit_mapping</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+            <span class="c1"># duration in nanoseconds</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="n">to_nanos</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">),</span> <span class="s1">&#39;ns&#39;</span><span class="p">)</span>
+            <span class="c1"># duration in seconds</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">):</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+
+    <span class="c1"># support for pandas.Timedelta</span>
+    <span class="c1"># without dependency to pandas</span>
+    <span class="k">elif</span> <span class="n">duration</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;Timedelta&#39;</span><span class="p">:</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">sampling_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">sampling_rate</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="inverse_db"><a class="viewcode-back" href="../../../api/audmath.inverse_db.html#audmath.inverse_db">[docs]</a><span class="k">def</span> <span class="nf">inverse_db</span><span class="p">(</span>
@@ -374,7 +435,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">bottom</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">120</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert decibels to amplitude value.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert decibels to amplitude value.</span>
 
 <span class="sd">    The inverse of a value :math:`y \in \R`</span>
 <span class="sd">    provided in decibel</span>
@@ -439,9 +500,9 @@
 
 
 <div class="viewcode-block" id="inverse_normal_distribution"><a class="viewcode-back" href="../../../api/audmath.inverse_normal_distribution.html#audmath.inverse_normal_distribution">[docs]</a><span class="k">def</span> <span class="nf">inverse_normal_distribution</span><span class="p">(</span>
-    <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inverse normal distribution.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inverse normal distribution.</span>
 
 <span class="sd">    Returns the argument :math:`x`</span>
 <span class="sd">    for which the area under the Gaussian probability density function</span>
@@ -632,7 +693,7 @@
         <span class="n">axis</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">keepdims</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Root mean square.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Root mean square.</span>
 
 <span class="sd">    The root mean square</span>
 <span class="sd">    for a signal of length :math:`N`</span>
@@ -680,6 +741,145 @@
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="window"><a class="viewcode-back" href="../../../api/audmath.window.html#audmath.window">[docs]</a><span class="k">def</span> <span class="nf">window</span><span class="p">(</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;tukey&#39;</span><span class="p">,</span>
+        <span class="n">half</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a window.</span>
+
+<span class="sd">    The window will start from</span>
+<span class="sd">    and/or end at 0.</span>
+<span class="sd">    If at least 3 samples are requested</span>
+<span class="sd">    and the number of samples is odd,</span>
+<span class="sd">    the windows maximum value will always be 1.</span>
+
+<span class="sd">    The shape of the window</span>
+<span class="sd">    is selected via ``shape``</span>
+<span class="sd">    The following figure shows all available shapes.</span>
+<span class="sd">    For the Kaiser window</span>
+<span class="sd">    we use :math:`\beta = 14`</span>
+<span class="sd">    and set its first sample to 0.</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        import audmath</span>
+<span class="sd">        import matplotlib.pyplot as plt</span>
+<span class="sd">        import matplotlib.ticker as mtick</span>
+<span class="sd">        import numpy as np</span>
+<span class="sd">        import seaborn as sns</span>
+
+<span class="sd">        for shape in audmath.core.api.WINDOW_SHAPES:</span>
+<span class="sd">            win = audmath.window(101, shape=shape)</span>
+<span class="sd">            plt.plot(win, label=shape)</span>
+<span class="sd">        plt.ylabel(&#39;Magnitude&#39;)</span>
+<span class="sd">        plt.xlabel(&#39;Window Length&#39;)</span>
+<span class="sd">        plt.grid(alpha=0.4)</span>
+<span class="sd">        ax = plt.gca()</span>
+<span class="sd">        ax.xaxis.set_major_formatter(mtick.PercentFormatter())</span>
+<span class="sd">        ax.tick_params(axis=u&#39;both&#39;, which=u&#39;both&#39;,length=0)</span>
+<span class="sd">        plt.xlim([-1.2, 100.3])</span>
+<span class="sd">        plt.ylim([-0.02, 1])</span>
+<span class="sd">        sns.despine(left=True, bottom=True)</span>
+<span class="sd">        # Put a legend to the top right of the current axis</span>
+<span class="sd">        plt.legend()</span>
+<span class="sd">        ax.legend(loc=&#39;upper left&#39;, bbox_to_anchor=(1, 1))</span>
+<span class="sd">        # Adjsut image size to contain outside legend</span>
+<span class="sd">        fig = plt.gcf()</span>
+<span class="sd">        fig.set_size_inches(6.4, 3.84)</span>
+<span class="sd">        plt.tight_layout()</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        samples: length of window</span>
+<span class="sd">        shape: shape of window</span>
+<span class="sd">        half: if ``None`` return whole window,</span>
+<span class="sd">            if ``&#39;left&#39;`` or ``&#39;right&#39;``</span>
+<span class="sd">            return left or right half-window.</span>
+<span class="sd">            Other than the whole window</span>
+<span class="sd">            the half-windows</span>
+<span class="sd">            will always contain 1</span>
+<span class="sd">            as maximum value</span>
+<span class="sd">            as long as ``samples`` &gt; 1</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        window</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: if ``shape`` is not supported</span>
+<span class="sd">        ValueError: if ``half`` is not supported</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; window(7)</span>
+<span class="sd">        array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])</span>
+<span class="sd">        &gt;&gt;&gt; window(6)</span>
+<span class="sd">        array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])</span>
+<span class="sd">        &gt;&gt;&gt; window(5, shape=&#39;linear&#39;, half=&#39;left&#39;)</span>
+<span class="sd">        array([0.  , 0.25, 0.5 , 0.75, 1.  ])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">shape</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">WINDOW_SHAPES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;shape has to be one of the following: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WINDOW_SHAPES</span><span class="p">)</span><span class="si">}</span><span class="s2">,&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+            <span class="n">half</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">half</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;half has to be &#39;left&#39; or &#39;right&#39; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">half</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;kaiser&#39;</span><span class="p">:</span>
+            <span class="c1"># Kaiser windows as approximation of DPSS window</span>
+            <span class="c1"># as often used for tapering windows</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kaiser</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">beta</span><span class="o">=</span><span class="mi">14</span><span class="p">)[:(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="c1"># Ensure first entry is 0</span>
+            <span class="n">win</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Add 1 at the end</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">win</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])])</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
+            <span class="c1"># Tukey window,</span>
+            <span class="c1"># which is also often used as tapering window</span>
+            <span class="c1"># 1/2 * (1 - cos(2pi n / (4N alpha)))</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span> <span class="n">width</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;exponential&#39;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="s1">&#39;logarithmic&#39;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">win</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">half</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># For odd (1, 3, 5, ...) number of samples</span>
+        <span class="c1"># we include 1 as window maximum.</span>
+        <span class="c1"># For even numbers we exclude 1 as window maximum</span>
+        <span class="k">if</span> <span class="n">samples</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">left_win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">samples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">shape</span><span class="p">)</span>
+            <span class="n">right_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left_win</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">left_win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">samples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">right_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left_win</span><span class="p">)</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left_win</span><span class="p">,</span> <span class="n">right_win</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">half</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="n">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">half</span> <span class="o">==</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">win</span></div>
 </pre></div>
 
            </div>
@@ -695,7 +895,7 @@
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/20 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
@@ -735,9 +935,6 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
-        <script src="../../../_static/katex.min.js"></script>
-        <script src="../../../_static/auto-render.min.js"></script>
-        <script src="../../../_static/katex_autorenderer.js"></script>
     
 
   

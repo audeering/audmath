@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>duration_in_seconds() &mdash; audmath Documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/audeering.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="inverse_db()" href="audmath.inverse_db.html" />
+    <link rel="prev" title="db()" href="audmath.db.html" />
+    
+  
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          <a href="../index.html">
+          
+            <img src="../_static/images/audeering.png" class="logo" alt="audEERING"/>
+          
+          
+            <span> audmath</span>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="audmath.html">audmath</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="audmath.db.html">db()</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">duration_in_seconds()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.inverse_db.html">inverse_db()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.inverse_normal_distribution.html">inverse_normal_distribution()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.rms.html">rms()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.window.html">window()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">audmath</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="audmath.html">audmath</a> &raquo;</li>
+      <li>duration_in_seconds()</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/audeering/audmath/" class="fa fa-github"> GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="duration-in-seconds">
+<h1>duration_in_seconds()<a class="headerlink" href="#duration-in-seconds" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="audmath.duration_in_seconds">
+<span class="sig-prename descclassname"><span class="pre">audmath.</span></span><span class="sig-name descname"><span class="pre">duration_in_seconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/audmath/core/api.html#duration_in_seconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#audmath.duration_in_seconds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duration in seconds.</p>
+<p>Converts the given duration value to seconds.
+A unit can be provided
+when <code class="docutils literal notranslate"><span class="pre">duration</span></code> is given as a string.
+As units the following values are possible.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 83%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>W</p></td>
+<td><p>week</p></td>
+</tr>
+<tr class="row-odd"><td><p>D, days, day</p></td>
+<td><p>day</p></td>
+</tr>
+<tr class="row-even"><td><p>h, hours, hour, hr</p></td>
+<td><p>hour</p></td>
+</tr>
+<tr class="row-odd"><td><p>m, minutes, minute, min, T</p></td>
+<td><p>minute</p></td>
+</tr>
+<tr class="row-even"><td><p>s, seconds, second, sec, S</p></td>
+<td><p>second</p></td>
+</tr>
+<tr class="row-odd"><td><p>ms, milliseconds, millisecond, millis, milli, L</p></td>
+<td><p>millisecond</p></td>
+</tr>
+<tr class="row-even"><td><p>us, μs, microseconds, microsecond, micros, micro, U</p></td>
+<td><p>microsecond</p></td>
+</tr>
+<tr class="row-odd"><td><p>ns, nanoseconds, nanoseconds, nanos, nano, N</p></td>
+<td><p>nanosecond</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta64</span></code></a>]) – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is
+a float,
+integer
+or string without unit
+it is treated as seconds
+or if <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code> is provided
+as samples.
+If <code class="docutils literal notranslate"><span class="pre">duration</span></code> is provided as a string with unit,
+e.g. <code class="docutils literal notranslate"><span class="pre">'2ms'</span></code> or <code class="docutils literal notranslate"><span class="pre">'2</span> <span class="pre">ms'</span></code>,
+or as a <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.timedelta64</span></code></a>
+or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html#pandas.Timedelta" title="(in pandas v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Timedelta</span></code></a> object
+it will be converted to seconds
+and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code> is always ignored</p></li>
+<li><p><strong>sampling_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – sampling rate in Hz.
+Is ignored
+if duration is provided with a unit</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.floating" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">floating</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>duration in seconds</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – if the provided unit is not supported</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is a string
+    that does not match a valid ‘&lt;value&gt;&lt;unit&gt;’ pattern</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="s1">&#39;2ms&#39;</span><span class="p">)</span>
+<span class="go">0.002</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="s1">&#39;2 ms&#39;</span><span class="p">)</span>
+<span class="go">0.002</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="s1">&#39;ms&#39;</span><span class="p">)</span>
+<span class="go">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">sampling_rate</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+<span class="go">2.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="audmath.inverse_db.html" class="btn btn-neutral float-right" title="inverse_db()" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="audmath.db.html" class="btn btn-neutral float-left" title="db()" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div>
+    <p>
+        
+        
+        
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+        
+    </p>
+  </div>
+
+  <div role="contentinfo">
+    <p>
+        
+      &copy; audEERING GmbH
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿duration\_in\_seconds\(\)
+=========================
+
+.. currentmodule:: audmath
+
+.. autofunction:: audmath.duration_in_seconds

@@ -30,12 +30,12 @@
   <link rel="stylesheet" href="../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="inverse_normal_distribution()" href="audmath.inverse_normal_distribution.html" />
-    <link rel="prev" title="db()" href="audmath.db.html" />
+    <link rel="prev" title="duration_in_seconds()" href="audmath.duration_in_seconds.html" />
     
   
 
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v1.1.1
+                v1.2.0
               </div>
             
           
@@ -101,6 +101,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="audmath.html">audmath</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="audmath.db.html">db()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.duration_in_seconds.html">duration_in_seconds()</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">inverse_db()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.inverse_normal_distribution.html">inverse_normal_distribution()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.rms.html">rms()</a></li>
@@ -156,17 +157,16 @@
 <dt class="sig sig-object py" id="audmath.inverse_db">
 <span class="sig-prename descclassname"><span class="pre">audmath.</span></span><span class="sig-name descname"><span class="pre">inverse_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-120</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/audmath/core/api.html#inverse_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#audmath.inverse_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert decibels to amplitude value.</p>
-<p>The inverse of a value <span class="math">\(y \in \R\)</span>
+<p>The inverse of a value <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>∈</mo><mi mathvariant="double-struck">R</mi></mrow><annotation encoding="application/x-tex">y \in \R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord mathbb">R</span></span></span></span></span>
 provided in decibel
 is given by</p>
 <div class="math">
-\[\text{inverse\_db}(y) = \begin{cases}
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>inverse_db</mtext><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.36em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn><msup><mn>0</mn><mfrac><mi>y</mi><mn>20</mn></mfrac></msup><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mtext>if </mtext><mi>y</mi><mo>&gt;</mo><mtext>bottom</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn><mo separator="true">,</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mtext>else</mtext></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">\text{inverse\_db}(y) = \begin{cases}
     10^\frac{y}{20},
-        & \text{if } y > \text{bottom} \\
+        &amp; \text{if } y &gt; \text{bottom} \\
     0,
-        & \text{else}
-\end{cases}\]</div>
-<p>where <span class="math">\(\text{bottom}\)</span> is provided
+        &amp; \text{else}
+\end{cases}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.06em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">inverse_db</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.902em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7699em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">20</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.4624em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span><span class="mpunct">,</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord">0</span><span class="mpunct">,</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">bottom</span></span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">else</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div><p>where <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>bottom</mtext></mrow><annotation encoding="application/x-tex">\text{bottom}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">bottom</span></span></span></span></span></span> is provided
 by the argument of same name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,7 +213,7 @@ only for input values of <code class="docutils literal notranslate"><span class=
         <a href="audmath.inverse_normal_distribution.html" class="btn btn-neutral float-right" title="inverse_normal_distribution()" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="audmath.db.html" class="btn btn-neutral float-left" title="db()" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="audmath.duration_in_seconds.html" class="btn btn-neutral float-left" title="duration_in_seconds()" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -225,7 +225,7 @@ only for input values of <code class="docutils literal notranslate"><span class=
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/20 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
@@ -265,9 +265,6 @@ only for input values of <code class="docutils literal notranslate"><span class=
         <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
-        <script src="../_static/katex.min.js"></script>
-        <script src="../_static/auto-render.min.js"></script>
-        <script src="../_static/katex_autorenderer.js"></script>
     
 
   

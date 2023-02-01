@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v1.1.1
+                v1.2.0
               </div>
             
           
@@ -101,6 +101,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="audmath.html">audmath</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="audmath.db.html">db()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.duration_in_seconds.html">duration_in_seconds()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.inverse_db.html">inverse_db()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.inverse_normal_distribution.html">inverse_normal_distribution()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.rms.html">rms()</a></li>
@@ -165,7 +166,7 @@ the windows maximum value will always be 1.</p>
 is selected via <code class="docutils literal notranslate"><span class="pre">shape</span></code>
 The following figure shows all available shapes.
 For the Kaiser window
-we use <span class="math">\(\beta = 14\)</span>
+we use <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>14</mn></mrow><annotation encoding="application/x-tex">\beta = 14</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">14</span></span></span></span></span>
 and set its first sample to 0.</p>
 <div class="figure align-default">
 <img alt="../_images/audmath-window-1.png" class="plot-directive" src="../_images/audmath-window-1.png" />
@@ -234,7 +235,7 @@ as long as <code class="docutils literal notranslate"><span class="pre">samples<
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/20 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
@@ -274,9 +275,6 @@ as long as <code class="docutils literal notranslate"><span class="pre">samples<
         <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
-        <script src="../_static/katex.min.js"></script>
-        <script src="../_static/auto-render.min.js"></script>
-        <script src="../_static/katex_autorenderer.js"></script>
     
 
   

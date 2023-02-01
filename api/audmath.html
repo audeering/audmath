@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v1.1.1
+                v1.2.0
               </div>
             
           
@@ -101,6 +101,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">audmath</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="audmath.db.html">db()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audmath.duration_in_seconds.html">duration_in_seconds()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.inverse_db.html">inverse_db()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.inverse_normal_distribution.html">inverse_normal_distribution()</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audmath.rms.html">rms()</a></li>
@@ -160,16 +161,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="audmath.db.html#audmath.db" title="audmath.db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></a></p></td>
 <td><p>Convert value to decibels.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="audmath.inverse_db.html#audmath.inverse_db" title="audmath.inverse_db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_db</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="audmath.duration_in_seconds.html#audmath.duration_in_seconds" title="audmath.duration_in_seconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration_in_seconds</span></code></a></p></td>
+<td><p>Duration in seconds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="audmath.inverse_db.html#audmath.inverse_db" title="audmath.inverse_db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_db</span></code></a></p></td>
 <td><p>Convert decibels to amplitude value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="audmath.inverse_normal_distribution.html#audmath.inverse_normal_distribution" title="audmath.inverse_normal_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_normal_distribution</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="audmath.inverse_normal_distribution.html#audmath.inverse_normal_distribution" title="audmath.inverse_normal_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_normal_distribution</span></code></a></p></td>
 <td><p>Inverse normal distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="audmath.rms.html#audmath.rms" title="audmath.rms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rms</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="audmath.rms.html#audmath.rms" title="audmath.rms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rms</span></code></a></p></td>
 <td><p>Root mean square.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="audmath.window.html#audmath.window" title="audmath.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="audmath.window.html#audmath.window" title="audmath.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></a></p></td>
 <td><p>Return a window.</p></td>
 </tr>
 </tbody>
@@ -199,7 +203,7 @@
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2022/12/20 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
@@ -239,9 +243,6 @@
         <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
-        <script src="../_static/katex.min.js"></script>
-        <script src="../_static/auto-render.min.js"></script>
-        <script src="../_static/katex_autorenderer.js"></script>
     
 
   
