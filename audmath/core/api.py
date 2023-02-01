@@ -140,7 +140,7 @@ def duration_in_seconds(
     Raises:
         ValueError: if the provided unit is not supported
         ValueError: if ``duration`` is a string
-            that does not match a valid value unit pattern
+            that does not match a valid '<value><unit>' pattern
 
     Examples:
         >>> duration_in_seconds(2)
