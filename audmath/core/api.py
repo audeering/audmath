@@ -9,16 +9,11 @@ from audmath.core.utils import polyval
 
 VALUE_UNIT_PATTERN = re.compile(
     '^ *'  # space
-    '('  # 1st group: sign
-    '[\\-\\+]?'
-    ')'
-    '('  # 2nd group: value/none/inf
-    '[0-9]*[.]?[0-9]*'
-    '|[nN][oO][nN][eE]'
-    '|[iI][nN][fF]'
+    '('  # 1st group: value
+    '[\\-\\+]?[0-9]*[.]?[0-9]*'
     ')'
     ' *'  # space
-    '('  # 3rd group: unit
+    '('  # 2nd group: unit
     '[a-zA-Zμ]*'
     ')'
     ' *$'  # space
@@ -254,28 +249,22 @@ def duration_in_seconds(
             value = value * 10 ** 3
         return int(value)
 
-    def nan_or_inf(duration):
+    if isinstance(duration, str):
+
+        # none/-inf/inf duration
         if duration == '' or duration == 'none':
             return np.NaN
         elif duration.lower() == '-inf':
             return -np.inf
-        elif duration.lower() == 'inf':
+        elif duration.lower() == 'inf' or duration.lower() == '+inf':
             return np.inf
-        else:
-            return None
-
-    if isinstance(duration, str):
-
-        # none/-inf/inf duration
-        if nan_or_inf(duration) is not None:
-            return nan_or_inf(duration)
 
         # ensure we have a str and not numpy.str_
         duration = str(duration)
 
         match = re.match(VALUE_UNIT_PATTERN, duration)
         if match is not None:
-            sign, value, unit = match.groups()
+            value, unit = match.groups()
         if (
                 match is None
                 or (not value and not unit)
@@ -285,15 +274,12 @@ def duration_in_seconds(
                 "is not conform to the <value><unit> pattern."
             )
 
-        if not value:
+        if not value or value == '+':
             value = 1.0
+        elif value == '-':
+            value = -1.0
         else:
-            if nan_or_inf(value) is not None:
-                return nan_or_inf(value)
-            else:
-                value = float(value)
-                if sign == '-':
-                    value *= -1
+            value = float(value)
 
         if not unit:
             if sampling_rate is None:
