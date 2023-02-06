@@ -269,6 +269,36 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
 @pytest.mark.parametrize(
     'duration, sampling_rate, expected',
     [
+        (None, None, np.NaN),
+        (None, 1000, np.NaN),
+        ('', None, np.NaN),
+        ('', 1000, np.NaN),
+        (np.NaN, None, np.NaN),
+        (np.NaN, 1000, np.NaN),
+        (pd.NaT, None, np.NaN),
+        (pd.NaT, 1000, np.NaN),
+        (np.timedelta64('NaT', 's'), None, np.NaN),
+        (np.timedelta64('NaT', 's'), 1000, np.NaN),
+        (pd.to_timedelta(np.NaN, 's'), None, np.NaN),
+        (pd.to_timedelta(np.NaN, 's'), 1000, np.NaN),
+        (pd.to_timedelta(pd.NaT, 's'), None, np.NaN),
+        (pd.to_timedelta(pd.NaT, 's'), 1000, np.NaN),
+        ('inf', None, np.inf),
+        ('inf', 1000, np.inf),
+        ('Inf', None, np.inf),
+        ('Inf', 1000, np.inf),
+        (np.inf, None, np.inf),
+        (np.inf, 1000, np.inf),
+        (np.Inf, None, np.inf),
+        (np.Inf, 1000, np.inf),
+        ('-inf', None, -np.inf),
+        ('-inf', 1000, -np.inf),
+        ('-Inf', None, -np.inf),
+        ('-Inf', 1000, -np.inf),
+        (-np.inf, None, -np.inf),
+        (-np.inf, 1000, -np.inf),
+        (-np.Inf, None, -np.inf),
+        (-np.Inf, 1000, -np.inf),
         (2, None, 2.0),
         (2, 1000, 0.002),
         (2.0, None, 2.0),
@@ -362,7 +392,11 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
     ]
 )
 def test_duration_in_seconds(duration, sampling_rate, expected):
-    assert audmath.duration_in_seconds(duration, sampling_rate) == expected
+    duration_in_seconds = audmath.duration_in_seconds(duration, sampling_rate)
+    if np.isnan(expected):
+        assert np.isnan(duration_in_seconds)
+    else:
+        assert duration_in_seconds == expected
 
 
 @pytest.mark.parametrize(

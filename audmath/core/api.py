@@ -161,6 +161,10 @@ def duration_in_seconds(
         2.0
         >>> duration_in_seconds(pd.to_timedelta(2, 's'))
         2.0
+        >>> duration_in_seconds('Inf')
+        inf
+        >>> duration_in_seconds(None)
+        nan
 
     """  # noqa: E501
     # Dictionary with allowed unit entries
@@ -237,6 +241,16 @@ def duration_in_seconds(
 
     if isinstance(duration, str):
 
+        # none duraton
+        if duration == '':
+            return np.NaN
+
+        # -inf/inf durations
+        if duration.lower() == '-inf':
+            return -np.inf
+        if duration.lower() == 'inf':
+            return np.inf
+
         # ensure we have a str and not numpy.str_
         duration = str(duration)
 
@@ -280,6 +294,14 @@ def duration_in_seconds(
     # without dependency to pandas
     elif duration.__class__.__name__ == 'Timedelta':
         duration = duration.total_seconds()
+
+    # handle nan/none durations
+    elif (
+            duration is None
+            or duration.__class__.__name__ == 'NaTType'
+            or np.isnan(duration)
+    ):
+        return np.NaN
 
     elif sampling_rate is not None:
         duration = duration / sampling_rate
