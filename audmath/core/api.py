@@ -7,7 +7,22 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
-VALUE_UNBIT_PATTERN = re.compile('^ *([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*) *$')
+VALUE_UNIT_PATTERN = re.compile(
+    '^ *'  # space
+    '('  # 1st group: sign
+    '[\\-\\+]?'
+    ')'
+    '('  # 2nd group: value/none/inf
+    '[0-9]*[.]?[0-9]*'
+    '|[nN][oO][nN][eE]'
+    '|[iI][nN][fF]'
+    ')'
+    ' *'  # space
+    '('  # 3rd group: unit
+    '[a-zA-Zμ]*'
+    ')'
+    ' *$'  # space
+)
 WINDOW_SHAPES = [
     'tukey',
     'kaiser',
@@ -239,24 +254,28 @@ def duration_in_seconds(
             value = value * 10 ** 3
         return int(value)
 
+    def nan_or_inf(duration):
+        if duration == '' or duration == 'none':
+            return np.NaN
+        elif duration.lower() == '-inf':
+            return -np.inf
+        elif duration.lower() == 'inf':
+            return np.inf
+        else:
+            return None
+
     if isinstance(duration, str):
 
-        # none duraton
-        if duration == '':
-            return np.NaN
-
-        # -inf/inf durations
-        if duration.lower() == '-inf':
-            return -np.inf
-        if duration.lower() == 'inf':
-            return np.inf
+        # none/-inf/inf duration
+        if nan_or_inf(duration) is not None:
+            return nan_or_inf(duration)
 
         # ensure we have a str and not numpy.str_
         duration = str(duration)
 
-        match = re.match(VALUE_UNBIT_PATTERN, duration)
+        match = re.match(VALUE_UNIT_PATTERN, duration)
         if match is not None:
-            value, unit = match.groups()
+            sign, value, unit = match.groups()
         if (
                 match is None
                 or (not value and not unit)
@@ -269,7 +288,12 @@ def duration_in_seconds(
         if not value:
             value = 1.0
         else:
-            value = float(value)
+            if nan_or_inf(value) is not None:
+                return nan_or_inf(value)
+            else:
+                value = float(value)
+                if sign == '-':
+                    value *= -1
 
         if not unit:
             if sampling_rate is None:
