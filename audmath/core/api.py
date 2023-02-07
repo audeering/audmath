@@ -99,7 +99,9 @@ def db(
 
 
 def duration_in_seconds(
-        duration: typing.Union[float, int, str, np.timedelta64],
+        duration: typing.Optional[
+            typing.Union[float, int, str, np.timedelta64]
+        ],
         sampling_rate: typing.Union[float, int] = None,
 ) -> np.floating:
     r"""Duration in seconds.
@@ -139,7 +141,22 @@ def duration_in_seconds(
             or as a :class:`numpy.timedelta64`
             or :class:`pandas.Timedelta` object
             it will be converted to seconds
-            and ``sampling_rate`` is always ignored
+            and ``sampling_rate`` is always ignored.
+            If duration is
+            ``None``,
+            :class:`numpy.NaN`,
+            :class:`pandas.NaT`,
+            ``'None'``,
+            ``'NaN'``,
+            ``'NaT'``,
+            or any other lower/mixed case version of those strings
+            :class:`numpy.NaN` is returned.
+            If duration is
+            :class:`numpy.Inf`,
+            ``'Inf'``
+            or any other lower/mixed case version of that string
+            :class:`numpy.Inf` is returned,
+            and ``-``:class:`numpy.Inf` for the negative case
         sampling_rate: sampling rate in Hz.
             Is ignored
             if duration is provided with a unit
