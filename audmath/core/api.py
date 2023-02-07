@@ -145,6 +145,7 @@ def duration_in_seconds(
             If duration is
             ``None``,
             :obj:`numpy.nan`,
+            :obj:`pandas.NA`,
             :obj:`pandas.NaT`,
             ``''``,
             ``'None'``,
@@ -327,6 +328,7 @@ def duration_in_seconds(
     elif (
             duration is None
             or duration.__class__.__name__ == 'NaTType'
+            or duration.__class__.__name__ == 'NAType'
             or np.isnan(duration)
     ):
         return np.NaN
