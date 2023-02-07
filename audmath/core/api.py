@@ -146,6 +146,7 @@ def duration_in_seconds(
             ``None``,
             :obj:`numpy.nan`,
             :obj:`pandas.NaT`,
+            ``''``,
             ``'None'``,
             ``'NaN'``,
             ``'NaT'``,
