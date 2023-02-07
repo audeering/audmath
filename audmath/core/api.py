@@ -7,7 +7,17 @@ import numpy as np
 from audmath.core.utils import polyval
 
 
-VALUE_UNBIT_PATTERN = re.compile('^ *([0-9]*[.]?[0-9]*) *([a-zA-Zμ]*) *$')
+VALUE_UNIT_PATTERN = re.compile(
+    '^ *'  # space
+    '('  # 1st group: value
+    '[\\-\\+]?[0-9]*[.]?[0-9]*'
+    ')'
+    ' *'  # space
+    '('  # 2nd group: unit
+    '[a-zA-Zμ]*'
+    ')'
+    ' *$'  # space
+)
 WINDOW_SHAPES = [
     'tukey',
     'kaiser',
@@ -89,7 +99,9 @@ def db(
 
 
 def duration_in_seconds(
-        duration: typing.Union[float, int, str, np.timedelta64],
+        duration: typing.Optional[
+            typing.Union[float, int, str, np.timedelta64]
+        ],
         sampling_rate: typing.Union[float, int] = None,
 ) -> np.floating:
     r"""Duration in seconds.
@@ -129,7 +141,24 @@ def duration_in_seconds(
             or as a :class:`numpy.timedelta64`
             or :class:`pandas.Timedelta` object
             it will be converted to seconds
-            and ``sampling_rate`` is always ignored
+            and ``sampling_rate`` is always ignored.
+            If duration is
+            ``None``,
+            :obj:`numpy.nan`,
+            :obj:`pandas.NA`,
+            :obj:`pandas.NaT`,
+            ``''``,
+            ``'None'``,
+            ``'NaN'``,
+            ``'NaT'``,
+            or any other lower/mixed case version of those strings
+            :obj:`numpy.nan` is returned.
+            If duration is
+            :obj:`numpy.inf`,
+            ``'Inf'``
+            or any other lower/mixed case version of that string
+            :obj:`numpy.inf` is returned,
+            and ``-``:obj:`numpy.inf` for the negative case
         sampling_rate: sampling rate in Hz.
             Is ignored
             if duration is provided with a unit
@@ -161,6 +190,10 @@ def duration_in_seconds(
         2.0
         >>> duration_in_seconds(pd.to_timedelta(2, 's'))
         2.0
+        >>> duration_in_seconds('Inf')
+        inf
+        >>> duration_in_seconds(None)
+        nan
 
     """  # noqa: E501
     # Dictionary with allowed unit entries
@@ -237,10 +270,18 @@ def duration_in_seconds(
 
     if isinstance(duration, str):
 
+        # none/-inf/inf duration
+        if duration.lower() in ['', 'none', 'nan', 'nat']:
+            return np.NaN
+        elif duration.lower() == '-inf':
+            return -np.inf
+        elif duration.lower() == 'inf' or duration.lower() == '+inf':
+            return np.inf
+
         # ensure we have a str and not numpy.str_
         duration = str(duration)
 
-        match = re.match(VALUE_UNBIT_PATTERN, duration)
+        match = re.match(VALUE_UNIT_PATTERN, duration)
         if match is not None:
             value, unit = match.groups()
         if (
@@ -252,8 +293,10 @@ def duration_in_seconds(
                 "is not conform to the <value><unit> pattern."
             )
 
-        if not value:
+        if not value or value == '+':
             value = 1.0
+        elif value == '-':
+            value = -1.0
         else:
             value = float(value)
 
@@ -280,6 +323,15 @@ def duration_in_seconds(
     # without dependency to pandas
     elif duration.__class__.__name__ == 'Timedelta':
         duration = duration.total_seconds()
+
+    # handle nan/none durations
+    elif (
+            duration is None
+            or duration.__class__.__name__ == 'NaTType'
+            or duration.__class__.__name__ == 'NAType'
+            or np.isnan(duration)
+    ):
+        return np.NaN
 
     elif sampling_rate is not None:
         duration = duration / sampling_rate
