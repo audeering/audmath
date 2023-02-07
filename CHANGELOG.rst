@@ -21,7 +21,7 @@ Version 1.2.1 (2022/02/07)
   ``pd.NaT``
   to represent ``NaN``
   in ``audmath.duration_in_seconds()``
-* Added: support for ``'Inf'``, ``'-Inf'``
+* Added: support for ``'Inf'``, ``'-Inf'``, ``np.inf``, ``-np.inf``
   to represent ``Inf``, ``-Inf``
   in ``audmath.duration_in_seconds()``
 * Fixed: sign support in string values
