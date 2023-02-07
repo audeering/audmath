@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v1.2.0
+                v1.2.1
               </div>
             
           
@@ -201,7 +201,7 @@ As units the following values are possible.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta64</span></code></a>]) – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta64</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is
 a float,
 integer
 or string without unit
@@ -213,7 +213,24 @@ e.g. <code class="docutils literal notranslate"><span class="pre">'2ms'</span></
 or as a <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.timedelta64</span></code></a>
 or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html#pandas.Timedelta" title="(in pandas v1.5.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Timedelta</span></code></a> object
 it will be converted to seconds
-and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code> is always ignored</p></li>
+and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code> is always ignored.
+If duration is
+<code class="docutils literal notranslate"><span class="pre">None</span></code>,
+<a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.nan</span></code></a>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NA</span></code>,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NaT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">''</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'None'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'NaN'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'NaT'</span></code>,
+or any other lower/mixed case version of those strings
+<a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.nan</span></code></a> is returned.
+If duration is
+<a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.inf" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.inf</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">'Inf'</span></code>
+or any other lower/mixed case version of that string
+<a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.inf" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.inf</span></code></a> is returned,
+and <code class="docutils literal notranslate"><span class="pre">-</span></code><a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.inf" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.inf</span></code></a> for the negative case</p></li>
 <li><p><strong>sampling_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – sampling rate in Hz.
 Is ignored
 if duration is provided with a unit</p></li>
@@ -252,6 +269,10 @@ if duration is provided with a unit</p></li>
 <span class="go">2.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
 <span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)</span>
+<span class="go">inf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duration_in_seconds</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -281,7 +302,7 @@ if duration is provided with a unit</p></li>
         
         
         
-          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/01 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> on 2023/02/07 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
