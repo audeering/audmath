@@ -7,6 +7,28 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.2.1 (2022/02/07)
+--------------------------
+
+* Added: support for
+  ``None``,
+  ``''``,
+  ``'None'``,
+  ``'NaN'``,
+  ``'NaT'``,
+  ``np.NaN``,
+  ``pd.NA``,
+  ``pd.NaT``
+  to represent ``NaN``
+  in ``audmath.duration_in_seconds()``
+* Added: support for ``'Inf'``, ``'-Inf'``, ``np.inf``, ``-np.inf``
+  to represent ``Inf``, ``-Inf``
+  in ``audmath.duration_in_seconds()``
+* Fixed: sign support in string values
+  (``'-1 ms'``, ``'+s'``)
+  in ``audmath.duration_in_seconds()``
+
+
 Version 1.2.0 (2022/02/01)
 --------------------------
 
