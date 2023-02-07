@@ -275,6 +275,8 @@ nanosecond = np.timedelta64(1, 'ns') / np.timedelta64(1, 's')
         ('', 1000, np.NaN),
         ('none', None, np.NaN),
         ('none', 1000, np.NaN),
+        ('None', None, np.NaN),
+        ('None', 1000, np.NaN),
         (np.NaN, None, np.NaN),
         (np.NaN, 1000, np.NaN),
         (pd.NaT, None, np.NaN),
