@@ -144,19 +144,19 @@ def duration_in_seconds(
             and ``sampling_rate`` is always ignored.
             If duration is
             ``None``,
-            :class:`numpy.NaN`,
-            :class:`pandas.NaT`,
+            :obj:`numpy.nan`,
+            :obj:`pandas.NaT`,
             ``'None'``,
             ``'NaN'``,
             ``'NaT'``,
             or any other lower/mixed case version of those strings
-            :class:`numpy.NaN` is returned.
+            :obj:`numpy.nan` is returned.
             If duration is
-            :class:`numpy.Inf`,
+            :obj:`numpy.inf`,
             ``'Inf'``
             or any other lower/mixed case version of that string
-            :class:`numpy.Inf` is returned,
-            and ``-``:class:`numpy.Inf` for the negative case
+            :obj:`numpy.inf` is returned,
+            and ``-``:obj:`numpy.inf` for the negative case
         sampling_rate: sampling rate in Hz.
             Is ignored
             if duration is provided with a unit
