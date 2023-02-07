@@ -252,7 +252,7 @@ def duration_in_seconds(
     if isinstance(duration, str):
 
         # none/-inf/inf duration
-        if duration == '' or duration.lower() == 'none':
+        if duration.lower() in ['', 'none', 'nan', 'nat']:
             return np.NaN
         elif duration.lower() == '-inf':
             return -np.inf
