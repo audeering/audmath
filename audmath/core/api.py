@@ -137,6 +137,16 @@ def distance(
     Raises:
         ValueError: if a non-supported ``metric`` is given
 
+    Examples:
+        >>> distance([1, 0], [0, 1])
+        1.0
+        >>> distance([1, 0], [0, 1], metric='euclidean')
+        1.4142135623730951
+        >>> distance([[1, 0], [0, 1]], [0, 1])
+        array([1., 0.])
+        >>> distance([[1, 0], [0, 1]], [[0, 1], [1, 0]])
+        array([[1., 0.], [0., 1.]])
+
     """
     if not isinstance(u, np.ndarray):
         u = np.array(u)
@@ -162,7 +172,11 @@ def distance(
             f"metric has to be 'cosine' or 'euclidean', not '{metric}'"
         )
 
-    return dist.squeeze()
+    dist = dist.squeeze()
+    if not dist.shape:
+        dist = float(dist)
+
+    return dist
 
 
 def duration_in_seconds(
