@@ -99,10 +99,10 @@ def db(
 
 
 def distance(
-    u: typing.Union[typing.List, typing.Tuple, np.ndarray],
-    v: typing.Union[typing.List, typing.Tuple, np.ndarray],
-    *,
-    metric: str = 'cosine',
+        u: typing.Union[typing.List, typing.Tuple, np.ndarray],
+        v: typing.Union[typing.List, typing.Tuple, np.ndarray],
+        *,
+        metric: str = 'cosine',
 ) -> typing.Union[float, np.ndarray]:
     r"""Pairwise distance between vectors.
 
