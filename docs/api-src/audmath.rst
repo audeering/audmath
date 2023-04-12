@@ -8,6 +8,7 @@ audmath
     :nosignatures:
 
     db
+    distance
     duration_in_seconds
     inverse_db
     inverse_normal_distribution

@@ -98,6 +98,73 @@ def db(
     return x
 
 
+def distance(
+    u: typing.Union[typing.List, typing.Tuple, np.ndarray],
+    v: typing.Union[typing.List, typing.Tuple, np.ndarray],
+    *,
+    metric: str = 'cosine',
+) -> typing.Union[float, np.ndarray]:
+    r"""Pairwise distance between vectors.
+
+    Let :math:`u` be an array of size :math:`(m, k)`
+    and :math:`v` be an array of size :math:`(n, k)`,
+    where :math:`n` and :math:`m`
+    refer to the number of available vectors
+    in each array,
+    and :math:`k` to the number of points
+    in each vector.
+    The pairwise distance is then returned
+    as an array of size :math:`(m, n)`.
+    In the case of :math:`n = 1, m = 1`
+    a single value is returned.
+
+    The cosine distance between two vectors
+    is given by
+    :math:`1 - \frac{u \cdot v}{\lVert u\rVert_2 \lVert v\rVert_2}`.
+    The euclidean distance between two vectors
+    is given by
+    :math:`\lVert u - v \rVert_2`.
+
+    Args:
+        u: array (vector / matrix)
+        v: array (vector / matrix)
+        metric: distance metric,
+            choose one of ``'euclidean'``, ``'cosine'``
+
+    Returns:
+        pairwise distance between vectors
+
+    Raises:
+        ValueError: if a non-supported ``metric`` is given
+
+    """
+    if not isinstance(u, np.ndarray):
+        u = np.array(u)
+    if not isinstance(v, np.ndarray):
+        v = np.array(v)
+    u = np.atleast_2d(u)
+    v = np.atleast_2d(v)
+    if metric == 'cosine':
+        u = u / np.linalg.norm(u, ord=2, keepdims=True, axis=-1)
+        v = v / np.linalg.norm(v, ord=2, keepdims=True, axis=-1)
+        dist = 1 - np.inner(u, v)
+    elif metric == 'euclidean':
+        # Calculate pairwise distance
+        # if one of the arrays has higher dimensions
+        # See https://sparrow.dev/pairwise-distance-in-numpy/
+        u = np.expand_dims(u, 1)
+        v = np.expand_dims(v, 0)
+        dist = np.linalg.norm(u - v, ord=2, axis=-1)
+        if dist.ndim > 1 and dist.shape[1] == 1:
+            dist = dist.T
+    else:
+        raise ValueError(
+            f"metric has to be 'cosine' or 'euclidean', not '{metric}'"
+        )
+
+    return dist.squeeze()
+
+
 def duration_in_seconds(
         duration: typing.Optional[
             typing.Union[float, int, str, np.timedelta64]
