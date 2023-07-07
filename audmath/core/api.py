@@ -652,6 +652,32 @@ def rms(
     return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
 
 
+def samples(
+        duration: float,
+        sampling_rate: int,
+) -> int:
+    r"""Duration in samples.
+
+    The duration is evenly rounded,
+    after converted to samples.
+
+    Args:
+        duration: duration in s
+        sampling_rate: sampling rate in Hz
+
+    Returns:
+        duration in number of samples
+
+    Examples:
+        >>> samples(0.5, 10)
+        5
+        >>> samples(0.55, 10)
+        6
+
+    """
+    return int(round(duration * sampling_rate))
+
+
 def window(
         samples: int,
         shape: str = 'tukey',
