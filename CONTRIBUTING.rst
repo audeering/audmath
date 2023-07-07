@@ -18,7 +18,7 @@ you should get the newest development version from Github_::
 
    git clone https://github.com/audeering/audmath/
    cd audmath
-   # Create virutal environment for this project
+   # Create virtual environment for this project
    # e.g.
    # virtualenv --python="python3"  $HOME/.envs/audmath
    # source $HOME/.envs/audmath/bin/activate

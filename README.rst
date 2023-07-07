@@ -18,14 +18,14 @@ Have a look at the installation_ and usage_ instructions as a starting point.
 .. |tests| image:: https://github.com/audeering/audmath/workflows/Test/badge.svg
     :target: https://github.com/audeering/audmath/actions?query=workflow%3ATest
     :alt: Test status
-.. |coverage| image:: https://codecov.io/gh/audeering/audmath/branch/master/graph/badge.svg?token=JFyZlt0Nqk
+.. |coverage| image:: https://codecov.io/gh/audeering/audmath/branch/main/graph/badge.svg?token=JFyZlt0Nqk
     :target: https://codecov.io/gh/audeering/audmath
     :alt: code coverage
 .. |docs| image:: https://img.shields.io/pypi/v/audmath?label=docs
     :target: https://audeering.github.io/audmath/
     :alt: audmath's documentation
 .. |license| image:: https://img.shields.io/badge/license-MIT-green.svg
-    :target: https://github.com/audeering/audmath/blob/master/LICENSE
+    :target: https://github.com/audeering/audmath/blob/main/LICENSE
     :alt: audmath's MIT license
 .. |python-versions| image:: https://img.shields.io/pypi/pyversions/audmath.svg
     :target: https://pypi.org/project/audmath/
