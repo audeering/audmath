@@ -1,12 +1,11 @@
-from audmath.core.api import (
-    db,
-    duration_in_seconds,
-    inverse_db,
-    inverse_normal_distribution,
-    rms,
-    samples,
-    window,
-)
+from audmath.core.api import db
+from audmath.core.api import duration_in_seconds
+from audmath.core.api import inverse_db
+from audmath.core.api import inverse_normal_distribution
+from audmath.core.api import rms
+from audmath.core.api import samples
+from audmath.core.api import window
+
 
 # Discourage from audmath import *
 __all__ = []

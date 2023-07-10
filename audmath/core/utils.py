@@ -15,12 +15,12 @@ def polyval(
         evaluated polynomial
 
     """
-    ans = 0
+    answer = 0
     power = len(coefs) - 1
     for coef in coefs:
         try:
-            ans += coef * x**power
+            answer += coef * x**power
         except OverflowError:  # pragma: nocover
             pass
         power -= 1
-    return ans
+    return answer

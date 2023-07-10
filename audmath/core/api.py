@@ -1,6 +1,6 @@
 import collections
-import typing
 import re
+import typing
 
 import numpy as np
 
@@ -489,19 +489,18 @@ def inverse_normal_distribution(
 
     switch_sign[non_valid] = 0
 
-    # Constants to avoid recalculation
-    ROOT_2PI = np.sqrt(2 * np.pi)
-    EXP_NEG2 = np.exp(-2)
+    # Pre-calculate to avoid recalculation
+    exp_neg2 = np.exp(-2)
 
     # Approximation for 0 <= |y - 0.5| <= 3/8
-    P0 = [
+    p0 = [
         -5.99633501014107895267E1,
         9.80010754185999661536E1,
         -5.66762857469070293439E1,
         1.39312609387279679503E1,
         -1.23916583867381258016E0,
     ]
-    Q0 = [
+    q0 = [
         1.0,
         1.95448858338141759834E0,
         4.67627912898881538453E0,
@@ -515,7 +514,7 @@ def inverse_normal_distribution(
 
     # Approximation for interval z = sqrt(-2 log y ) between 2 and 8,
     # i.e. y between exp(-2) = .135 and exp(-32) = 1.27e-14
-    P1 = [
+    p1 = [
         4.05544892305962419923E0,
         3.15251094599893866154E1,
         5.71628192246421288162E1,
@@ -527,7 +526,7 @@ def inverse_normal_distribution(
         -8.57456785154685413611E-4,
     ]
 
-    Q1 = [
+    q1 = [
         1.0,
         1.57799883256466749731E1,
         4.53907635128879210584E1,
@@ -541,7 +540,7 @@ def inverse_normal_distribution(
 
     # Approximation for interval z = sqrt(-2 log y ) between 8 and 64,
     # i.e. y between exp(-32) = 1.27e-14 and exp(-2048) = 3.67e-890
-    P2 = [
+    p2 = [
         3.23774891776946035970E0,
         6.91522889068984211695E0,
         3.93881025292474443415E0,
@@ -553,7 +552,7 @@ def inverse_normal_distribution(
         6.23974539184983293730E-9,
     ]
 
-    Q2 = [
+    q2 = [
         1.0,
         6.02427039364742014255E0,
         3.67983563856160859403E0,
@@ -565,18 +564,18 @@ def inverse_normal_distribution(
         6.79019408009981274425E-9,
     ]
 
-    idx1 = y > (1 - EXP_NEG2)  # y > 0.864...
+    idx1 = y > (1 - exp_neg2)  # y > 0.864...
     idx = np.where(non_valid, False, idx1)
     y[idx] = 1.0 - y[idx]
     switch_sign[idx] = 0
 
     # Case where we don't need high precision
-    idx2 = y > EXP_NEG2  # y > 0.135...
+    idx2 = y > exp_neg2  # y > 0.135...
     idx = np.where(non_valid, False, idx2)
     y[idx] = y[idx] - 0.5
     y2 = y[idx] ** 2
-    x[idx] = y[idx] + y[idx] * (y2 * polyval(y2, P0) / polyval(y2, Q0))
-    x[idx] = x[idx] * ROOT_2PI
+    x[idx] = y[idx] + y[idx] * (y2 * polyval(y2, p0) / polyval(y2, q0))
+    x[idx] = x[idx] * np.sqrt(2 * np.pi)
     switch_sign[idx] = 0
 
     idx3 = ~idx2
@@ -586,8 +585,8 @@ def inverse_normal_distribution(
     z = 1.0 / x[idx]
     x1 = np.where(
         x[idx] < 8.0,  # y > exp(-32) = 1.2664165549e-14
-        z * polyval(z, P1) / polyval(z, Q1),
-        z * polyval(z, P2) / polyval(z, Q2),
+        z * polyval(z, p1) / polyval(z, q1),
+        z * polyval(z, p2) / polyval(z, q2),
     )
     x[idx] = x0 - x1
 
