@@ -7,6 +7,13 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.3.0 (2023/07/10)
+--------------------------
+
+* Added: ``audmath.samples()``
+* Removed: support for Python 3.7
+
+
 Version 1.2.1 (2022/02/07)
 --------------------------
 
