@@ -675,7 +675,7 @@ def samples(
         6
 
     """
-    return int(round(duration * sampling_rate))
+    return round(duration * sampling_rate)
 
 
 def window(
