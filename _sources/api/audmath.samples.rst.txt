@@ -1,0 +1,6 @@
+﻿samples\(\)
+===========
+
+.. currentmodule:: audmath
+
+.. autofunction:: audmath.samples
