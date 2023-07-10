@@ -18,4 +18,5 @@ import audmath
 )
 def test_samples(duration, sampling_rate, expected):
     samples = audmath.samples(duration, sampling_rate)
+    assert type(samples) == int
     assert samples == expected
