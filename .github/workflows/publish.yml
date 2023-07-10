@@ -67,7 +67,7 @@ jobs:
         CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
         CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
         echo "Got changelog: $CHANGELOG"
-        run echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+        run echo "body=$CHANGELOG" >> $GITHUB_OUTPUT
 
     - name: Create release on Github
       id: create_release
@@ -77,4 +77,4 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         name: Release ${{ github.ref_name }}
-        body: ${{ env.changelog }}
+        body: ${{ steps.changelog.outputs.body }}
