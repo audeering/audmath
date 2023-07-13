@@ -42,6 +42,7 @@ intersphinx_mapping = {
 }
 linkcheck_ignore = [
     'https://gitlab.audeering.com',
+    'https://github.com/dougthor42/PyErf/blob/cf38a2c62556cbd4927c9b3f5523f39b6a492472/pyerf/pyerf.py#L183-L287',
 ]
 copybutton_prompt_text = r'>>> |\.\.\. |$ '
 copybutton_prompt_is_regexp = True
