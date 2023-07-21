@@ -150,7 +150,6 @@ section-order = [
     'audformat',
     'audiofile',
     'audinterface',
-    'audmath',
     'audmetric',
     'audobject',
     'audonnx',
