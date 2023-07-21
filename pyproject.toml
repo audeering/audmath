@@ -53,7 +53,7 @@ build-backend = 'setuptools.build_meta'
 # ----- codespell ---------------------------------------------------------
 [tool.codespell]
 builtin = 'clear,rare,informal,usage,names'
-skip = './audfoo.egg-info,./build,./misc,./docs/api,./docs/_templates,./docs/examples,./docs/pics'
+skip = './audmath.egg-info,./build,./misc,./docs/api,./docs/_templates,./docs/examples,./docs/pics'
 
 
 # ----- pytest ------------------------------------------------------------
@@ -150,7 +150,6 @@ section-order = [
     'audformat',
     'audiofile',
     'audinterface',
-    'audmath',
     'audmetric',
     'audobject',
     'audonnx',
