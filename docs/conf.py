@@ -1,12 +1,17 @@
 import os
 import shutil
 
+import toml
+
 import audeer
 
 
+config = toml.load(audeer.path('..', 'pyproject.toml'))
+
+
 # Project -----------------------------------------------------------------
-project = 'audmath'
-author = 'Hagen Wierstorf'
+project = config['project']['name']
+author = ', '.join(author['name'] for author in config['project']['authors'])
 version = audeer.git_repo_version()
 title = '{} Documentation'.format(project)
 
