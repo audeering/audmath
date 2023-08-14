@@ -677,6 +677,66 @@ def samples(
     return round(duration * sampling_rate)
 
 
+def similarity(
+        u: typing.Union[typing.Sequence, np.ndarray],
+        v: typing.Union[typing.Sequence, np.ndarray],
+) -> typing.Union[float, np.ndarray]:
+    r"""Cosine similarity between two arrays.
+
+    If the incoming arrays are of size
+    :math:`(1, k)` or :math:`(k,)`,
+    a single similarity value is returned.
+    If one of the arrays is of size
+    :math:`(n, k)` with :math:`n > 1`,
+    an array with similarities is returned.
+
+    The input arrays can also be provided as
+    :class:`pandas.DataFrame`
+    or :class:`pandas.Series`.
+
+    The cosine similarity is given by
+    :math:`\frac{u \cdot v}{\lVert u\rVert_2 \lVert v\rVert_2}`.
+
+    Args:
+        u: input array
+        v: input array
+
+    Returns:
+        pairwise similarity between arrays
+
+    Example:
+        >>> similarity([1, 0], [1, 0])
+        1.0
+        >>> similarity([1, 0], [0, 1])
+        0.0
+        >>> similarity([1, 0], [-1, 0])
+        -1.0
+        >>> similarity([1, 0], [[1, 0], [0, 1]])
+        array([1., 0.])
+
+    """
+    def to_numpy(x):
+        if not isinstance(u, np.ndarray):
+            try:
+                # pandas object
+                x = x.to_numpy()
+            except AttributeError:
+                # sequence
+                x = np.array(x)
+        return np.atleast_2d(x)
+
+    u = to_numpy(u)
+    v = to_numpy(v)
+
+    # Calculate (pairwise) cosine distance
+    u = u / np.linalg.norm(u, ord=2, keepdims=True, axis=-1)
+    v = v / np.linalg.norm(v, ord=2, keepdims=True, axis=-1)
+    dist = 1 - np.inner(u, v)
+    dist = dist.squeeze()
+
+    return np.ones(dist.shape) - dist
+
+
 def window(
         samples: int,
         shape: str = 'tukey',
