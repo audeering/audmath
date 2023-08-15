@@ -686,9 +686,14 @@ def similarity(
     If the incoming arrays are of size
     :math:`(1, k)` or :math:`(k,)`,
     a single similarity value is returned.
-    If one of the arrays is of size
-    :math:`(n, k)` with :math:`n > 1`,
-    an array with similarities is returned.
+    If the arrays are of size
+    :math:`(n, k)`
+    and :math:`(m, k)`
+    with :math:`n > 1`
+    or :math:`m > 1`,
+    an array of size
+    :math:`(n, m)`
+    with similarities is returned.
 
     The input arrays can also be provided as
     :class:`pandas.DataFrame`
@@ -702,7 +707,7 @@ def similarity(
         v: input array
 
     Returns:
-        pairwise similarity between arrays
+        similarity between arrays
 
     Example:
         >>> similarity([1, 0], [1, 0])
@@ -713,6 +718,12 @@ def similarity(
         -1.0
         >>> similarity([1, 0], [[1, 0], [0, 1]])
         array([1., 0.])
+        >>> similarity([[1, 0], [0, 1]], [[1, 0], [0, 1]])
+        array([[1., 0.],
+               [0., 1.]])
+        >>> similarity([[1, 0], [0, 1]], [[1, 0], [0, 1], [-1, 0]])
+        array([[ 1.,  0., -1.],
+               [ 0.,  1.,  0.]])
 
     """
     def to_numpy(x):
