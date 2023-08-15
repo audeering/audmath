@@ -13,4 +13,5 @@ audmath
     inverse_normal_distribution
     rms
     samples
+    similarity
     window
