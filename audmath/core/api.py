@@ -739,13 +739,15 @@ def similarity(
     u = to_numpy(u)
     v = to_numpy(v)
 
-    # Calculate (pairwise) cosine distance
     u = u / np.linalg.norm(u, ord=2, keepdims=True, axis=-1)
     v = v / np.linalg.norm(v, ord=2, keepdims=True, axis=-1)
-    dist = 1 - np.inner(u, v)
-    dist = dist.squeeze()
+    sim = np.inner(u, v).squeeze()
 
-    return np.ones(dist.shape) - dist
+    # Ensure single value is not returned as array
+    if not sim.shape:
+        sim = float(sim)
+
+    return sim
 
 
 def window(
