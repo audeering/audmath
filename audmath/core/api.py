@@ -680,7 +680,7 @@ def samples(
 def similarity(
         u: typing.Union[typing.Sequence, np.ndarray],
         v: typing.Union[typing.Sequence, np.ndarray],
-) -> typing.Union[float, np.ndarray]:
+) -> typing.Union[np.floating, np.ndarray]:
     r"""Cosine similarity between two arrays.
 
     If the incoming arrays are of size
@@ -745,7 +745,7 @@ def similarity(
 
     # Ensure single value is not returned as array
     if not sim.shape:
-        sim = float(sim)
+        sim = np.float64(sim)
 
     return sim
 
