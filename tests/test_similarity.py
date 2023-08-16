@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+import scipy.spatial
 
 import audmath
 
@@ -41,6 +42,14 @@ import audmath
                     [1 / np.sqrt(2), 1 / np.sqrt(2)],
                     [1 / np.sqrt(2), 1 / np.sqrt(2)],
                 ]
+            ),
+        ),
+        (
+            [0.23, 0.58],
+            [0.12, 0.36],
+            1 - scipy.spatial.distance.cosine(
+                [0.23, 0.58],
+                [0.12, 0.36],
             ),
         ),
     ]
