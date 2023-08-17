@@ -686,6 +686,11 @@ def similarity(
     If the incoming arrays are of size
     :math:`(k,)`,
     a single similarity value is returned.
+    If one of the incoming arrays is of size
+    :math:`(n, k)`,
+    an array of size
+    :math:`(n,)`
+    with similarities is returned.
     If the arrays are of size
     :math:`(n, k)`
     and :math:`(m, k)`
