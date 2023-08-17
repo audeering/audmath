@@ -684,13 +684,11 @@ def similarity(
     r"""Cosine similarity between two arrays.
 
     If the incoming arrays are of size
-    :math:`(1, k)` or :math:`(k,)`,
+    :math:`(k,)`,
     a single similarity value is returned.
     If the arrays are of size
     :math:`(n, k)`
     and :math:`(m, k)`
-    with :math:`n > 1`
-    or :math:`m > 1`,
     an array of size
     :math:`(n, m)`
     with similarities is returned.
@@ -716,36 +714,53 @@ def similarity(
         0.0
         >>> similarity([1, 0], [-1, 0])
         -1.0
+        >>> similarity([[1, 0]], [1, 0])
+        array([1.])
         >>> similarity([1, 0], [[1, 0], [0, 1]])
         array([1., 0.])
-        >>> similarity([[1, 0], [0, 1]], [[1, 0], [0, 1]])
-        array([[1., 0.],
-               [0., 1.]])
+        >>> similarity([[1, 0], [0, 1]], [[1, 0]])
+        array([[1.],
+               [0.]])
         >>> similarity([[1, 0], [0, 1]], [[1, 0], [0, 1], [-1, 0]])
         array([[ 1.,  0., -1.],
                [ 0.,  1.,  0.]])
 
     """
     def to_numpy(x):
-        if not isinstance(u, np.ndarray):
+        if not isinstance(x, np.ndarray):
             try:
                 # pandas object
                 x = x.to_numpy()
             except AttributeError:
                 # sequence
                 x = np.array(x)
-        return np.atleast_2d(x)
+        return x
 
     u = to_numpy(u)
     v = to_numpy(v)
 
+    # Infer output shape from input
+    output_shape = '[[..]]'
+    if u.ndim == 1 and v.ndim == 1:
+        output_shape = '..'
+    elif u.ndim == 1 or v.ndim == 1:
+        output_shape = '[..]'
+
+    u = np.atleast_2d(u)
+    v = np.atleast_2d(v)
+
     u = u / np.linalg.norm(u, ord=2, keepdims=True, axis=-1)
     v = v / np.linalg.norm(v, ord=2, keepdims=True, axis=-1)
-    sim = np.inner(u, v).squeeze()
+    sim = np.inner(u, v)  # always returns [[..]]
 
-    # Ensure single value is not returned as array
-    if not sim.shape:
-        sim = np.float64(sim)
+    # Convert to desired output shape
+    if output_shape == '..':
+        sim = np.float64(sim.squeeze())
+    elif output_shape == '[..]':
+        if sim.size == 1:
+            sim = sim[0]
+        else:
+            sim = sim.squeeze()
 
     return sim
 

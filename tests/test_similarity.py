@@ -30,6 +30,46 @@ import audmath
             -1.0,
         ),
         (
+            [[1, 0]],
+            [0, 1],
+            np.array([0]),
+        ),
+        (
+            [1, 0],
+            [[0, 1]],
+            np.array([0]),
+        ),
+        (
+            [[1, 0]],
+            [[0, 1]],
+            np.array([[0]]),
+        ),
+        (
+            [[1, 0], [0, 1]],
+            [0, 1],
+            np.array([0, 1]),
+        ),
+        (
+            [1, 0],
+            [[0, 1], [1, 0]],
+            np.array([0, 1]),
+        ),
+        (
+            [[1, 0], [0, 1]],
+            [[0, 1]],
+            np.array([[0], [1]]),
+        ),
+        (
+            [[1, 0]],
+            [[0, 1], [1, 0]],
+            np.array([[0, 1]]),
+        ),
+        (
+            [[1, 0], [0, 1]],
+            [[0, 1], [1, 0]],
+            np.array([[0, 1], [1, 0]]),
+        ),
+        (
             [[1, 0], [0, 1]],
             [[1, 0], [0, 1], [-1, 0]],
             np.array([[1, 0, -1], [0, 1, 0]]),
@@ -57,6 +97,8 @@ import audmath
 def test_similarity(u, v, expected):
     similarity = audmath.similarity(u, v)
     np.testing.assert_array_equal(similarity, expected)
+    if isinstance(expected, np.ndarray):
+        assert similarity.shape == expected.shape
 
 
 @pytest.mark.parametrize(
@@ -99,6 +141,8 @@ def test_distance_shapes(u, v, expected):
         for v in [v, np.array(v), to_pandas(v)]:
             similarity = audmath.similarity(u, v)
             np.testing.assert_array_equal(similarity, expected)
+            if isinstance(expected, np.ndarray):
+                assert similarity.shape == expected.shape
 
 
 def to_pandas(x):
