@@ -4,6 +4,7 @@ from audmath.core.api import inverse_db
 from audmath.core.api import inverse_normal_distribution
 from audmath.core.api import rms
 from audmath.core.api import samples
+from audmath.core.api import similarity
 from audmath.core.api import window
 
 

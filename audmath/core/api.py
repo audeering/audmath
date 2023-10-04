@@ -677,6 +677,99 @@ def samples(
     return round(duration * sampling_rate)
 
 
+def similarity(
+        u: typing.Union[typing.Sequence, np.ndarray],
+        v: typing.Union[typing.Sequence, np.ndarray],
+) -> typing.Union[np.floating, np.ndarray]:
+    r"""Cosine similarity between two arrays.
+
+    If the incoming arrays are of size
+    :math:`(k,)`,
+    a single similarity value is returned.
+    If one of the incoming arrays is of size
+    :math:`(n, k)`,
+    an array of size
+    :math:`(n,)`
+    with similarities is returned.
+    If the arrays are of size
+    :math:`(n, k)`
+    and :math:`(m, k)`
+    an array of size
+    :math:`(n, m)`
+    with similarities is returned.
+
+    The input arrays can also be provided as
+    :class:`pandas.DataFrame`
+    or :class:`pandas.Series`.
+
+    The cosine similarity is given by
+    :math:`\frac{u \cdot v}{\lVert u\rVert_2 \lVert v\rVert_2}`.
+
+    Args:
+        u: input array
+        v: input array
+
+    Returns:
+        similarity between arrays
+
+    Example:
+        >>> similarity([1, 0], [1, 0])
+        1.0
+        >>> similarity([1, 0], [0, 1])
+        0.0
+        >>> similarity([1, 0], [-1, 0])
+        -1.0
+        >>> similarity([[1, 0]], [1, 0])
+        array([1.])
+        >>> similarity([1, 0], [[1, 0], [0, 1]])
+        array([1., 0.])
+        >>> similarity([[1, 0], [0, 1]], [[1, 0]])
+        array([[1.],
+               [0.]])
+        >>> similarity([[1, 0], [0, 1]], [[1, 0], [0, 1], [-1, 0]])
+        array([[ 1.,  0., -1.],
+               [ 0.,  1.,  0.]])
+
+    """
+    def to_numpy(x):
+        if not isinstance(x, np.ndarray):
+            try:
+                # pandas object
+                x = x.to_numpy()
+            except AttributeError:
+                # sequence
+                x = np.array(x)
+        return x
+
+    u = to_numpy(u)
+    v = to_numpy(v)
+
+    # Infer output shape from input
+    output_shape = '[[..]]'
+    if u.ndim == 1 and v.ndim == 1:
+        output_shape = '..'
+    elif u.ndim == 1 or v.ndim == 1:
+        output_shape = '[..]'
+
+    u = np.atleast_2d(u)
+    v = np.atleast_2d(v)
+
+    u = u / np.linalg.norm(u, ord=2, keepdims=True, axis=-1)
+    v = v / np.linalg.norm(v, ord=2, keepdims=True, axis=-1)
+    sim = np.inner(u, v)  # always returns [[..]]
+
+    # Convert to desired output shape
+    if output_shape == '..':
+        sim = np.float64(sim.squeeze())
+    elif output_shape == '[..]':
+        if sim.size == 1:
+            sim = sim[0]
+        else:
+            sim = sim.squeeze()
+
+    return sim
+
+
 def window(
         samples: int,
         shape: str = 'tukey',
