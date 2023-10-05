@@ -1,0 +1,6 @@
+﻿similarity\(\)
+==============
+
+.. currentmodule:: audmath
+
+.. autofunction:: audmath.similarity
