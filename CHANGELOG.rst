@@ -7,6 +7,13 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.4.0 (2023/10/05)
+--------------------------
+
+* Added: ``audmath.similarity()``
+* Added: support for Python 3.12
+
+
 Version 1.3.0 (2023/07/10)
 --------------------------
 
