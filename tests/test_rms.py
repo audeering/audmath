@@ -85,14 +85,14 @@ import audmath
             0,
             False,
             3.0,
-            marks=pytest.mark.xfail(raises=np.AxisError),
+            marks=pytest.mark.xfail(raises=np.exceptions.AxisError),
         ),
         pytest.param(  # array with dim=0 has no axis
             3,
             0,
             True,
             3.0,
-            marks=pytest.mark.xfail(raises=np.AxisError),
+            marks=pytest.mark.xfail(raises=np.exceptions.AxisError),
         ),
     ],
 )

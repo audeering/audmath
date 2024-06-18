@@ -62,11 +62,11 @@ def db(
 
     Examples:
         >>> db(1)
-        0.0
+        np.float64(0.0)
         >>> db(0)
-        -120.0
+        np.float64(-120.0)
         >>> db(2)
-        6.020599913279624
+        np.float64(6.020599913279624)
         >>> db([0, 1])
         array([-120.,    0.])
 
@@ -171,23 +171,23 @@ def duration_in_seconds(
 
     Examples:
         >>> duration_in_seconds(2)
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds(2.0)
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds("2")
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds("2ms")
-        0.002
+        np.float64(0.002)
         >>> duration_in_seconds("2 ms")
-        0.002
+        np.float64(0.002)
         >>> duration_in_seconds("ms")
-        0.001
+        np.float64(0.001)
         >>> duration_in_seconds(2000, sampling_rate=1000)
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds(np.timedelta64(2, "s"))
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds(pd.to_timedelta(2, "s"))
-        2.0
+        np.float64(2.0)
         >>> duration_in_seconds("Inf")
         inf
         >>> duration_in_seconds(None)
@@ -368,16 +368,16 @@ def inverse_db(
 
     Examples:
         >>> inverse_db(0)
-        1.0
+        np.float64(1.0)
         >>> inverse_db(-120)
-        0.0
+        np.float64(0.0)
         >>> inverse_db(-3)
-        0.7079457843841379
+        np.float64(0.7079457843841379)
         >>> inverse_db([-120, 0])
         array([0., 1.])
 
     """
-    min_value = 0.0
+    min_value = np.float64(0.0)
     if bottom is None:
         bottom = -np.inf
 
@@ -477,7 +477,7 @@ def inverse_normal_distribution(
 
     # Return if no other values are left
     if non_valid.sum() == len(x):
-        return np.float64(x)
+        return x.astype(np.float64)
 
     switch_sign[non_valid] = 0
 
@@ -584,7 +584,7 @@ def inverse_normal_distribution(
 
     x = np.where(switch_sign == 1, -1 * x, x)
 
-    return np.float64(x)
+    return x.astype(np.float64)
 
 
 def rms(
@@ -626,11 +626,11 @@ def rms(
 
     Examples:
         >>> rms([])
-        0.0
+        np.float64(0.0)
         >>> rms([0, 1])
-        0.7071067811865476
+        np.float64(0.7071067811865476)
         >>> rms([[0, 1], [0, 1]])
-        0.7071067811865476
+        np.float64(0.7071067811865476)
         >>> rms([[0, 1], [0, 1]], keepdims=True)
         array([[0.70710678]])
         >>> rms([[0, 1], [0, 1]], axis=1)
@@ -706,11 +706,11 @@ def similarity(
 
     Example:
         >>> similarity([1, 0], [1, 0])
-        1.0
+        np.float64(1.0)
         >>> similarity([1, 0], [0, 1])
-        0.0
+        np.float64(0.0)
         >>> similarity([1, 0], [-1, 0])
-        -1.0
+        np.float64(-1.0)
         >>> similarity([[1, 0]], [1, 0])
         array([1.])
         >>> similarity([1, 0], [[1, 0], [0, 1]])
