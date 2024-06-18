@@ -5,32 +5,32 @@ import audmath
 
 
 @pytest.mark.parametrize(
-    'shape',
+    "shape",
     [
-        'linear',
-        'kaiser',
-        'tukey',
-        'exponential',
-        'logarithmic',
+        "linear",
+        "kaiser",
+        "tukey",
+        "exponential",
+        "logarithmic",
     ],
 )
 @pytest.mark.parametrize(
-    'samples, half, expected',
+    "samples, half, expected",
     [
-        (-1, 'left', np.array([])),
-        (0, 'left', np.array([])),
-        (1, 'left', np.array([0])),
-        (2, 'left', np.array([0, 1])),
-        (-1, 'right', np.array([])),
-        (0, 'right', np.array([])),
-        (1, 'right', np.array([0])),
-        (2, 'right', np.array([1, 0])),
+        (-1, "left", np.array([])),
+        (0, "left", np.array([])),
+        (1, "left", np.array([0])),
+        (2, "left", np.array([0, 1])),
+        (-1, "right", np.array([])),
+        (0, "right", np.array([])),
+        (1, "right", np.array([0])),
+        (2, "right", np.array([1, 0])),
         (-1, None, np.array([])),
         (0, None, np.array([])),
         (1, None, np.array([0])),
         (2, None, np.array([0, 0])),
         (3, None, np.array([0, 1, 0])),
-    ]
+    ],
 )
 def test_window_level(shape, samples, half, expected):
     win = audmath.window(samples, shape=shape, half=half)
@@ -39,29 +39,29 @@ def test_window_level(shape, samples, half, expected):
 
 
 @pytest.mark.parametrize(
-    'samples, shape, half, expected',
+    "samples, shape, half, expected",
     [
-        (3, 'linear', 'left', np.array([0, 0.5, 1])),
-        (3, 'kaiser', 'left', np.array([0, 4.6272e-01, 1])),
-        (3, 'tukey', 'left', np.array([0, 0.5, 1])),
-        (3, 'exponential', 'left', np.array([0, 0.26894142, 1])),
-        (3, 'logarithmic', 'left', np.array([0, 0.63092975, 1])),
-        (3, 'linear', 'right', np.array([1, 0.5, 0])),
-        (3, 'kaiser', 'right', np.array([1, 4.6272e-01, 0])),
-        (3, 'tukey', 'right', np.array([1, 0.5, 0])),
-        (3, 'exponential', 'right', np.array([1, 0.26894142, 0])),
-        (3, 'logarithmic', 'right', np.array([1, 0.63092975, 0])),
-        (5, 'linear', None, np.array([0, 0.5, 1, 0.5, 0])),
-        (5, 'kaiser', None, np.array([0, 4.6272e-01, 1, 4.6272e-01, 0])),
-        (5, 'tukey', None, np.array([0, 0.5, 1, 0.5, 0])),
-        (5, 'exponential', None, np.array([0, 0.26894142, 1, 0.26894142, 0])),
-        (5, 'logarithmic', None, np.array([0, 0.63092975, 1, 0.63092975, 0])),
-        (4, 'linear', None, np.array([0, 0.5, 0.5, 0])),
-        (4, 'kaiser', None, np.array([0, 4.6272e-01, 4.6272e-01, 0])),
-        (4, 'tukey', None, np.array([0, 0.5, 0.5, 0])),
-        (4, 'exponential', None, np.array([0, 0.26894142, 0.26894142, 0])),
-        (4, 'logarithmic', None, np.array([0, 0.63092975, 0.63092975, 0])),
-    ]
+        (3, "linear", "left", np.array([0, 0.5, 1])),
+        (3, "kaiser", "left", np.array([0, 4.6272e-01, 1])),
+        (3, "tukey", "left", np.array([0, 0.5, 1])),
+        (3, "exponential", "left", np.array([0, 0.26894142, 1])),
+        (3, "logarithmic", "left", np.array([0, 0.63092975, 1])),
+        (3, "linear", "right", np.array([1, 0.5, 0])),
+        (3, "kaiser", "right", np.array([1, 4.6272e-01, 0])),
+        (3, "tukey", "right", np.array([1, 0.5, 0])),
+        (3, "exponential", "right", np.array([1, 0.26894142, 0])),
+        (3, "logarithmic", "right", np.array([1, 0.63092975, 0])),
+        (5, "linear", None, np.array([0, 0.5, 1, 0.5, 0])),
+        (5, "kaiser", None, np.array([0, 4.6272e-01, 1, 4.6272e-01, 0])),
+        (5, "tukey", None, np.array([0, 0.5, 1, 0.5, 0])),
+        (5, "exponential", None, np.array([0, 0.26894142, 1, 0.26894142, 0])),
+        (5, "logarithmic", None, np.array([0, 0.63092975, 1, 0.63092975, 0])),
+        (4, "linear", None, np.array([0, 0.5, 0.5, 0])),
+        (4, "kaiser", None, np.array([0, 4.6272e-01, 4.6272e-01, 0])),
+        (4, "tukey", None, np.array([0, 0.5, 0.5, 0])),
+        (4, "exponential", None, np.array([0, 0.26894142, 0.26894142, 0])),
+        (4, "logarithmic", None, np.array([0, 0.63092975, 0.63092975, 0])),
+    ],
 )
 def test_window_shape(samples, shape, half, expected):
     win = audmath.window(samples, shape=shape, half=half)
@@ -70,10 +70,10 @@ def test_window_shape(samples, shape, half, expected):
 
 
 @pytest.mark.parametrize(
-    'shape, half, error, error_msg',
+    "shape, half, error, error_msg",
     [
         (
-            'unknown',
+            "unknown",
             None,
             ValueError,
             (
@@ -83,13 +83,10 @@ def test_window_shape(samples, shape, half, expected):
             ),
         ),
         (
-            'linear',
-            'center',
+            "linear",
+            "center",
             ValueError,
-            (
-                "half has to be 'left' or 'right' "
-                "not 'center'."
-            ),
+            ("half has to be 'left' or 'right' " "not 'center'."),
         ),
     ],
 )

@@ -7,7 +7,7 @@ import audmath
 
 
 @pytest.mark.parametrize(
-    'u, v, expected',
+    "u, v, expected",
     [
         (
             [1],
@@ -87,12 +87,13 @@ import audmath
         (
             [0.23, 0.58],
             [0.12, 0.36],
-            1 - scipy.spatial.distance.cosine(
+            1
+            - scipy.spatial.distance.cosine(
                 [0.23, 0.58],
                 [0.12, 0.36],
             ),
         ),
-    ]
+    ],
 )
 def test_similarity(u, v, expected):
     similarity = audmath.similarity(u, v)
@@ -102,7 +103,7 @@ def test_similarity(u, v, expected):
 
 
 @pytest.mark.parametrize(
-    'u, v, expected',
+    "u, v, expected",
     [
         (
             [1],
@@ -148,7 +149,7 @@ def test_distance_shapes(u, v, expected):
 def to_pandas(x):
     x = np.array(x)
     if x.ndim < 2:
-        x_pandas = pd.Series(x, name='0')
+        x_pandas = pd.Series(x, name="0")
     else:
         x_pandas = pd.DataFrame(
             data=x,

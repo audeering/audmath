@@ -7,13 +7,13 @@ import audmath
 
 
 @pytest.mark.parametrize(
-    'y, expected_x',
+    "y, expected_x",
     [
-        (0, -np.Inf),
-        (1, np.Inf),
-        ([0, 1], np.array([-np.Inf, np.Inf])),
-        (np.array([0, 1]), np.array([-np.Inf, np.Inf])),
-    ]
+        (0, -np.inf),
+        (1, np.inf),
+        ([0, 1], np.array([-np.inf, np.inf])),
+        (np.array([0, 1]), np.array([-np.inf, np.inf])),
+    ],
 )
 def test_inverse_normal_distribution(y, expected_x):
     x = audmath.inverse_normal_distribution(y)
@@ -25,7 +25,7 @@ def test_inverse_normal_distribution(y, expected_x):
 
 
 @pytest.mark.parametrize(
-    'y',
+    "y",
     [
         0,
         np.exp(-32),
@@ -36,7 +36,7 @@ def test_inverse_normal_distribution(y, expected_x):
         -1,
         10,
         np.linspace(0, 1, 50),
-    ]
+    ],
 )
 def test_inverse_normal_distribution_scipy(y):
     x = audmath.inverse_normal_distribution(y)
