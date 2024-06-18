@@ -2,8 +2,8 @@ import typing
 
 
 def polyval(
-        x: float,
-        coefs: typing.Sequence,
+    x: float,
+    coefs: typing.Sequence,
 ) -> float:
     r"""Evaluation of polynomial.
 

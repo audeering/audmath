@@ -9,8 +9,8 @@ import audmath
 np.random.seed(0)
 
 
-print('\nExecution time for inverse normal distribution\n')
-print('Samples   scipy audmath')
+print("\nExecution time for inverse normal distribution\n")
+print("Samples   scipy audmath")
 for samples in [
     10000,
     100000,
@@ -31,4 +31,4 @@ for samples in [
     end = time.process_time()
     time_scipy = end - start
 
-    print(f'{samples: 9.0f} {time_scipy:.2f}s {time_audmath:.2f}s')
+    print(f"{samples: 9.0f} {time_scipy:.2f}s {time_audmath:.2f}s")
