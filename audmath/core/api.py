@@ -73,7 +73,7 @@ def db(
     """
     if bottom is None:
         min_value = 0
-        bottom = -np.Inf
+        bottom = -np.inf
     else:
         bottom = np.float64(bottom)
         min_value = 10 ** (bottom / 20)
@@ -269,7 +269,7 @@ def duration_in_seconds(
     if isinstance(duration, str):
         # none/-inf/inf duration
         if duration.lower() in ["", "none", "nan", "nat"]:
-            return np.NaN
+            return np.nan
         elif duration.lower() == "-inf":
             return -np.inf
         elif duration.lower() == "inf" or duration.lower() == "+inf":
@@ -323,7 +323,7 @@ def duration_in_seconds(
         or duration.__class__.__name__ == "NAType"
         or np.isnan(duration)
     ):
-        return np.NaN
+        return np.nan
 
     elif sampling_rate is not None:
         duration = duration / sampling_rate
@@ -379,7 +379,7 @@ def inverse_db(
     """
     min_value = 0.0
     if bottom is None:
-        bottom = -np.Inf
+        bottom = -np.inf
 
     if not isinstance(y, (collections.abc.Sequence, np.ndarray)):
         if y <= bottom:
@@ -466,13 +466,13 @@ def inverse_normal_distribution(
 
     # Handle edge cases
     idx1 = y == 0
-    x[idx1] = -np.Inf
+    x[idx1] = -np.inf
     idx2 = y == 1
-    x[idx2] = np.Inf
+    x[idx2] = np.inf
     idx3 = y < 0
-    x[idx3] = np.NaN
+    x[idx3] = np.nan
     idx4 = y > 1
-    x[idx4] = np.NaN
+    x[idx4] = np.nan
     non_valid = np.array([any(i) for i in zip(idx1, idx2, idx3, idx4)])
 
     # Return if no other values are left
