@@ -81,8 +81,7 @@ audeer.rmdir("api")
 audeer.mkdir("api")
 api_src_files = audeer.list_file_names("api-src")
 api_dst_files = [
-    audeer.path("api", os.path.basename(src_file))
-    for src_file in api_src_files
+    audeer.path("api", os.path.basename(src_file)) for src_file in api_src_files
 ]
 for src_file, dst_file in zip(api_src_files, api_dst_files):
     shutil.copyfile(src_file, dst_file)

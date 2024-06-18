@@ -174,21 +174,21 @@ def duration_in_seconds(
         2.0
         >>> duration_in_seconds(2.0)
         2.0
-        >>> duration_in_seconds('2')
+        >>> duration_in_seconds("2")
         2.0
-        >>> duration_in_seconds('2ms')
+        >>> duration_in_seconds("2ms")
         0.002
-        >>> duration_in_seconds('2 ms')
+        >>> duration_in_seconds("2 ms")
         0.002
-        >>> duration_in_seconds('ms')
+        >>> duration_in_seconds("ms")
         0.001
         >>> duration_in_seconds(2000, sampling_rate=1000)
         2.0
-        >>> duration_in_seconds(np.timedelta64(2, 's'))
+        >>> duration_in_seconds(np.timedelta64(2, "s"))
         2.0
-        >>> duration_in_seconds(pd.to_timedelta(2, 's'))
+        >>> duration_in_seconds(pd.to_timedelta(2, "s"))
         2.0
-        >>> duration_in_seconds('Inf')
+        >>> duration_in_seconds("Inf")
         inf
         >>> duration_in_seconds(None)
         nan
@@ -835,7 +835,7 @@ def window(
         array([0.  , 0.25, 0.75, 1.  , 0.75, 0.25, 0.  ])
         >>> window(6)
         array([0.  , 0.25, 0.75, 0.75, 0.25, 0.  ])
-        >>> window(5, shape='linear', half='left')
+        >>> window(5, shape="linear", half="left")
         array([0.  , 0.25, 0.5 , 0.75, 1.  ])
 
     """
