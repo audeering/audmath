@@ -806,7 +806,7 @@ def window(
         # Put a legend to the top right of the current axis
         plt.legend()
         ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
-        # Adjsut image size to contain outside legend
+        # Adjust image size to contain outside legend
         fig = plt.gcf()
         fig.set_size_inches(6.4, 3.84)
         plt.tight_layout()
