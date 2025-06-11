@@ -1,6 +1,0 @@
-numpy >=2.0.0  # docstring outputs changed
-pandas
-pytest
-pytest-cov
-pytest-doctestplus
-scipy
