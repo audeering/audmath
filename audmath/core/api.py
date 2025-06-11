@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import collections
 import re
-import typing
+from collections.abc import Sequence
 
 import numpy as np
 
@@ -28,10 +30,10 @@ WINDOW_SHAPES = [
 
 
 def db(
-    x: typing.Union[int, float, typing.Sequence, np.ndarray],
+    x: int | float | Sequence | np.ndarray,
     *,
-    bottom: typing.Union[int, float] = -120,
-) -> typing.Union[np.floating, np.ndarray]:
+    bottom: int | float = -120,
+) -> np.floating | np.ndarray:
     r"""Convert value to decibels.
 
     The decibel of a value :math:`x \in \R`
@@ -78,7 +80,7 @@ def db(
         bottom = np.float64(bottom)
         min_value = 10 ** (bottom / 20)
 
-    if not isinstance(x, (collections.abc.Sequence, np.ndarray)):
+    if not isinstance(x, (Sequence, np.ndarray)):
         if x <= min_value:
             return bottom
         else:
@@ -99,8 +101,8 @@ def db(
 
 
 def duration_in_seconds(
-    duration: typing.Optional[typing.Union[float, int, str, np.timedelta64]],
-    sampling_rate: typing.Union[float, int] = None,
+    duration: float | int | str | np.timedelta64 | None,
+    sampling_rate: float | int | None = None,
 ) -> np.floating:
     r"""Duration in seconds.
 
@@ -332,10 +334,10 @@ def duration_in_seconds(
 
 
 def inverse_db(
-    y: typing.Union[int, float, typing.Sequence, np.ndarray],
+    y: int | float | Sequence | np.ndarray,
     *,
-    bottom: typing.Union[int, float] = -120,
-) -> typing.Union[np.floating, np.ndarray]:
+    bottom: int | float = -120,
+) -> np.floating | np.ndarray:
     r"""Convert decibels to amplitude value.
 
     The inverse of a value :math:`y \in \R`
@@ -381,7 +383,7 @@ def inverse_db(
     if bottom is None:
         bottom = -np.inf
 
-    if not isinstance(y, (collections.abc.Sequence, np.ndarray)):
+    if not isinstance(y, (Sequence, np.ndarray)):
         if y <= bottom:
             return min_value
         else:
@@ -401,8 +403,8 @@ def inverse_db(
 
 
 def inverse_normal_distribution(
-    y: typing.Union[int, float, typing.Sequence, np.ndarray],
-) -> typing.Union[np.floating, np.ndarray]:
+    y: int | float | Sequence | np.ndarray,
+) -> np.floating | np.ndarray:
     r"""Inverse normal distribution.
 
     Returns the argument :math:`x`
@@ -588,11 +590,11 @@ def inverse_normal_distribution(
 
 
 def rms(
-    x: typing.Union[int, float, typing.Sequence, np.ndarray],
+    x: int | float | Sequence | np.ndarray,
     *,
-    axis: typing.Union[int, typing.Tuple[int]] = None,
+    axis: int | tuple[int] | None = None,
     keepdims: bool = False,
-) -> typing.Union[np.floating, np.ndarray]:
+) -> np.floating | np.ndarray:
     r"""Root mean square.
 
     The root mean square
@@ -670,9 +672,9 @@ def samples(
 
 
 def similarity(
-    u: typing.Union[typing.Sequence, np.ndarray],
-    v: typing.Union[typing.Sequence, np.ndarray],
-) -> typing.Union[np.floating, np.ndarray]:
+    u: Sequence | np.ndarray,
+    v: Sequence | np.ndarray,
+) -> np.floating | np.ndarray:
     r"""Cosine similarity between two arrays.
 
     If the incoming arrays are of size
@@ -766,7 +768,7 @@ def similarity(
 def window(
     samples: int,
     shape: str = "tukey",
-    half: str = None,
+    half: str | None = None,
 ) -> np.ndarray:
     r"""Return a window.
 
