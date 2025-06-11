@@ -39,6 +39,26 @@ repository = 'https://github.com/audeering/audmath/'
 documentation = 'https://audeering.github.io/audmath/'
 
 
+# ===== Dependency groups =================================================
+[dependency-groups]
+dev = [
+    'audeer',
+    'numpy >=2.0.0',  # docstring outputs changed
+    'pandas',
+    'pytest',
+    'pytest-cov',
+    'pytest-doctestplus',
+    'scipy',
+    'seaborn',
+    'sphinx >=3.0.0',
+    'sphinx-audeering-theme >=1.1.2', 
+    'sphinx_autodoc_typehints',
+    'sphinx-copybutton',
+    'sphinxcontrib-katex >=0.9.3',
+    'toml',
+]
+
+
 # ===== BUILD-SYSTEM ======================================================
 #
 # Requirements for building the Python package
