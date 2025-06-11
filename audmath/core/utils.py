@@ -1,9 +1,11 @@
-import typing
+from __future__ import annotations
+
+from collections.abc import Sequence
 
 
 def polyval(
     x: float,
-    coefs: typing.Sequence,
+    coefs: Sequence,
 ) -> float:
     r"""Evaluation of polynomial.
 
