@@ -7,7 +7,8 @@ authors = [
 ]
 description = 'Math function implemented using numpy'
 readme = 'README.rst'
-license = {file = 'LICENSE'}
+license = 'MIT'
+license-files = ['LICENSE']
 keywords = [
     'Python',
     'tools',
