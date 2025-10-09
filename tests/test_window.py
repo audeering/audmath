@@ -86,7 +86,7 @@ def test_window_shape(samples, shape, half, expected):
             "linear",
             "center",
             ValueError,
-            ("half has to be 'left' or 'right' " "not 'center'."),
+            ("half has to be 'left' or 'right' not 'center'."),
         ),
     ],
 )
