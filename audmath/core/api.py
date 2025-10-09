@@ -845,7 +845,7 @@ def window(
             f"not '{shape}'."
         )
     if half is not None and half not in ["left", "right"]:
-        raise ValueError("half has to be 'left' or 'right' " f"not '{half}'.")
+        raise ValueError(f"half has to be 'left' or 'right' not '{half}'.")
 
     def left(samples, shape):
         if samples < 2:

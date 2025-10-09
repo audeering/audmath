@@ -287,16 +287,13 @@ def test_duration_in_seconds(duration, sampling_rate, expected):
             " ",
             None,
             ValueError,
-            ("Your given duration ' ' " "is not conform to the <value><unit> pattern."),
+            ("Your given duration ' ' is not conform to the <value><unit> pattern."),
         ),
         (
             "  ",
             None,
             ValueError,
-            (
-                "Your given duration '  ' "
-                "is not conform to the <value><unit> pattern."
-            ),
+            ("Your given duration '  ' is not conform to the <value><unit> pattern."),
         ),
         (
             "1 0 ms",
