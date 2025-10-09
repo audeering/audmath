@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                v1.4.2
+                v1.4.3
               </div>
             
           
@@ -141,9 +141,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for audmath.core.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -990,7 +988,7 @@
             <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">half</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">half</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;half has to be &#39;left&#39; or &#39;right&#39; &quot;</span> <span class="sa">f</span><span class="s2">&quot;not &#39;</span><span class="si">{</span><span class="n">half</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;half has to be &#39;left&#39; or &#39;right&#39; not &#39;</span><span class="si">{</span><span class="n">half</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">left</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -1053,7 +1051,7 @@
         
         
         
-          Built with <a href="https://www.sphinx-doc.org">Sphinx</a> on 2025/06/11 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org">Sphinx</a> on 2025/10/09 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>

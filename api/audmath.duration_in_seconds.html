@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../_static/css/audeering.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v1.4.2
+                v1.4.3
               </div>
             
           
@@ -203,7 +203,7 @@ As units the following values are possible.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/types.html#types.UnionType" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionType</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta64</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/types.html#types.UnionType" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionType</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta64</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is
 a float,
 integer
 or string without unit
@@ -213,14 +213,14 @@ as samples.
 If <code class="docutils literal notranslate"><span class="pre">duration</span></code> is provided as a string with unit,
 e.g. <code class="docutils literal notranslate"><span class="pre">'2ms'</span></code> or <code class="docutils literal notranslate"><span class="pre">'2</span> <span class="pre">ms'</span></code>,
 or as a <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.timedelta64" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.timedelta64</span></code></a>
-or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html#pandas.Timedelta" title="(in pandas v2.3.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Timedelta</span></code></a> object
+or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Timedelta.html#pandas.Timedelta" title="(in pandas v2.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Timedelta</span></code></a> object
 it will be converted to seconds
 and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code> is always ignored.
 If duration is
 <code class="docutils literal notranslate"><span class="pre">None</span></code>,
 <a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="(in NumPy v2.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.nan</span></code></a>,
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.NA.html#pandas.NA" title="(in pandas v2.3.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NA</span></code></a>,
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.NaT.html#pandas.NaT" title="(in pandas v2.3.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NaT</span></code></a>,
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.NA.html#pandas.NA" title="(in pandas v2.3.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NA</span></code></a>,
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.NaT.html#pandas.NaT" title="(in pandas v2.3.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.NaT</span></code></a>,
 <code class="docutils literal notranslate"><span class="pre">''</span></code>,
 <code class="docutils literal notranslate"><span class="pre">'None'</span></code>,
 <code class="docutils literal notranslate"><span class="pre">'NaN'</span></code>,
@@ -233,7 +233,7 @@ If duration is
 or any other lower/mixed case version of that string
 <a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.inf" title="(in NumPy v2.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.inf</span></code></a> is returned,
 and <code class="docutils literal notranslate"><span class="pre">-</span></code><a class="reference external" href="https://numpy.org/doc/stable/reference/constants.html#numpy.inf" title="(in NumPy v2.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.inf</span></code></a> for the negative case</p></li>
-<li><p><strong>sampling_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – sampling rate in Hz.
+<li><p><strong>sampling_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/types.html#types.UnionType" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionType</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – sampling rate in Hz.
 Is ignored
 if duration is provided with a unit</p></li>
 </ul>
@@ -246,8 +246,8 @@ if duration is provided with a unit</p></li>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – if the provided unit is not supported</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is a string
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if the provided unit is not supported</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if <code class="docutils literal notranslate"><span class="pre">duration</span></code> is a string
     that does not match a valid ‘&lt;value&gt;&lt;unit&gt;’ pattern</p></li>
 </ul>
 </dd>
@@ -304,7 +304,7 @@ if duration is provided with a unit</p></li>
         
         
         
-          Built with <a href="https://www.sphinx-doc.org">Sphinx</a> on 2025/06/11 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
+          Built with <a href="https://www.sphinx-doc.org">Sphinx</a> on 2025/10/09 using the <a href="https://github.com/audeering/sphinx-audeering-theme/">audEERING theme</a>
         
     </p>
   </div>
