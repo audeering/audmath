@@ -7,6 +7,12 @@ The format is based on `Keep a Changelog`_,
 and this project adheres to `Semantic Versioning`_.
 
 
+Version 1.4.4 (2025/10/13)
+--------------------------
+
+* Fixed: add ``requires-python = '>=3.10'`` to ``pyproject.toml``
+
+
 Version 1.4.3 (2025/10/09)
 --------------------------
 
