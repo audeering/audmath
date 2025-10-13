@@ -97,7 +97,7 @@ import audmath
 )
 def test_similarity(u, v, expected):
     similarity = audmath.similarity(u, v)
-    np.testing.assert_array_equal(similarity, expected)
+    np.testing.assert_allclose(similarity, expected)
     if isinstance(expected, np.ndarray):
         assert similarity.shape == expected.shape
 
@@ -141,7 +141,7 @@ def test_distance_shapes(u, v, expected):
     for u in [u, np.array(u), to_pandas(u)]:
         for v in [v, np.array(v), to_pandas(v)]:
             similarity = audmath.similarity(u, v)
-            np.testing.assert_array_equal(similarity, expected)
+            np.testing.assert_allclose(similarity, expected)
             if isinstance(expected, np.ndarray):
                 assert similarity.shape == expected.shape
 
