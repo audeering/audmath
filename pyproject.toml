@@ -208,6 +208,7 @@ convention = 'google'
 #
 # Find all (sub-)modules of the Python package
 [tool.setuptools.packages.find]
+include = ['audmath*']
 
 # ----- setuptools_scm ----------------------------------------------------
 #
