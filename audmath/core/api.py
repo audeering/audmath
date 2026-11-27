@@ -639,7 +639,11 @@ def rms(
     x = np.array(x)
     if x.size == 0:
         return np.float64(0.0)
-    return np.sqrt(np.mean(np.square(x), axis=axis, keepdims=keepdims))
+    if np.issubdtype(x.dtype, np.integer):
+        x = np.square(x, dtype=np.float64)
+    else:
+        x = np.square(x)
+    return np.sqrt(np.mean(x, axis=axis, keepdims=keepdims))
 
 
 def samples(
